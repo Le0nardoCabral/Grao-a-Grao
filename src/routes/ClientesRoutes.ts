@@ -1,0 +1,10 @@
+import { Router } from "express";
+import { NotImplemented } from "./NotImplemented.js";
+export const ClientesRoutes = Router();
+ClientesRoutes.post("/", NotImplemented);
+ClientesRoutes.get("/", NotImplemented);
+ClientesRoutes.get("/:id/extrato", NotImplemented);
+ClientesRoutes.post("/:id/trocar-plano", NotImplemented);
+ClientesRoutes.get("/:id", NotImplemented);
+ClientesRoutes.put("/:id", NotImplemented);
+ClientesRoutes.delete("/:id", NotImplemented);

@@ -1,0 +1,38 @@
+services:
+  api:
+    build:
+      context: .
+      target: development
+    container_name: grao-a-grao-api
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: mysql://grao:grao_dev@db:3306/grao_a_grao
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      - ./src:/app/src
+      - ./prisma:/app/prisma
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mysql:8.4
+    container_name: grao-a-grao-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_dev
+      MYSQL_DATABASE: grao_a_grao
+      MYSQL_USER: grao
+      MYSQL_PASSWORD: grao_dev
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+volumes:
+  mysql_data:

@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Perfil {
+  ADMIN
+  ATENDENTE
+}
+
+enum StatusLote {
+  ATIVO
+  PARCIAL
+  CONSUMIDO
+  EXPIRADO
+}
+
+model Usuario {
+  id           Int      @id @default(autoincrement())
+  nome         String   @db.VarChar(120)
+  email        String   @unique @db.VarChar(190)
+  senhaHash    String   @db.VarChar(255)
+  perfil       Perfil   @default(ATENDENTE)
+  ativo        Boolean  @default(true)
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+  compras      Compra[]
+}
+
+model Cliente {
+  id             Int            @id @default(autoincrement())
+  nome           String         @db.VarChar(120)
+  email          String?        @unique @db.VarChar(190)
+  telefone       String?        @db.VarChar(30)
+  dataNascimento DateTime?      @db.Date
+  planoId        Int
+  ativo          Boolean        @default(true)
+  criadoEm       DateTime       @default(now())
+  atualizadoEm   DateTime       @updatedAt
+  plano          Plano          @relation(fields: [planoId], references: [id])
+  compras        Compra[]
+  lotes          LoteCashback[]
+
+  @@index([planoId])
+}
+
+model Plano {
+  id                Int       @id @default(autoincrement())
+  nome              String    @unique @db.VarChar(80)
+  percentualBps     Int
+  limiteCentavos    Int
+  minimoUsoCentavos Int       @default(2000)
+  dobroAniversario  Boolean   @default(false)
+  validadeDias      Int       @default(180)
+  ativo             Boolean   @default(true)
+  criadoEm          DateTime  @default(now())
+  atualizadoEm      DateTime  @updatedAt
+  clientes          Cliente[]
+}
+
+model Produto {
+  id            Int          @id @default(autoincrement())
+  nome          String       @db.VarChar(120)
+  descricao     String?      @db.Text
+  precoCentavos Int
+  ativo         Boolean      @default(true)
+  criadoEm      DateTime     @default(now())
+  atualizadoEm  DateTime     @updatedAt
+  itens         ItemCompra[]
+
+  @@index([nome])
+  @@index([ativo])
+}
+
+model Compra {
+  id                     Int           @id @default(autoincrement())
+  clienteId              Int
+  usuarioId              Int
+  valorBrutoCentavos     Int
+  cashbackUsadoCentavos  Int           @default(0)
+  valorPagoCentavos      Int
+  cashbackGeradoCentavos Int           @default(0)
+  criadaEm               DateTime      @default(now())
+  cliente                Cliente       @relation(fields: [clienteId], references: [id])
+  usuario                Usuario       @relation(fields: [usuarioId], references: [id])
+  itens                  ItemCompra[]
+  loteGerado             LoteCashback?
+  usos                   UsoCashback[]
+
+  @@index([clienteId, criadaEm])
+  @@index([usuarioId, criadaEm])
+}
+
+model ItemCompra {
+  id                    Int     @id @default(autoincrement())
+  compraId              Int
+  produtoId             Int
+  quantidade            Int
+  precoUnitarioCentavos Int
+  subtotalCentavos      Int
+  compra                Compra  @relation(fields: [compraId], references: [id])
+  produto               Produto @relation(fields: [produtoId], references: [id])
+
+  @@index([compraId])
+  @@index([produtoId])
+}
+
+model LoteCashback {
+  id                    Int           @id @default(autoincrement())
+  clienteId             Int
+  compraOrigemId        Int           @unique
+  valorOriginalCentavos Int
+  saldoCentavos         Int
+  geradoEm              DateTime      @default(now())
+  venceEm               DateTime
+  status                StatusLote    @default(ATIVO)
+  cliente               Cliente       @relation(fields: [clienteId], references: [id])
+  compraOrigem          Compra        @relation(fields: [compraOrigemId], references: [id])
+  usos                  UsoCashback[]
+
+  @@index([clienteId, status, venceEm])
+  @@index([clienteId, geradoEm])
+}
+
+model UsoCashback {
+  id            Int          @id @default(autoincrement())
+  compraId      Int
+  loteId        Int
+  valorCentavos Int
+  criadoEm      DateTime     @default(now())
+  compra        Compra       @relation(fields: [compraId], references: [id])
+  lote          LoteCashback @relation(fields: [loteId], references: [id])
+
+  @@index([compraId])
+  @@index([loteId])
+}
