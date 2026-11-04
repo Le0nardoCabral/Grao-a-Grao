@@ -64,7 +64,7 @@ model Plano {
 
 model Produto {
   id            Int          @id @default(autoincrement())
-  nome          String       @db.VarChar(120)
+  nome          String       @unique @db.VarChar(120)
   descricao     String?      @db.Text
   precoCentavos Int
   ativo         Boolean      @default(true)
