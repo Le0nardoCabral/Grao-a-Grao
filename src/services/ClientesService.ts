@@ -1,1 +1,35 @@
-export class ClientesService {}
+import { Prisma } from "@prisma/client";
+import { AppError } from "../errors/AppError.js";
+import { ClientesRepository } from "../repositories/ClientesRepository.js";
+
+const repository = new ClientesRepository();
+
+export type NovoCliente = {
+  nome: string;
+  email?: string | null;
+  telefone?: string | null;
+  dataNascimento?: Date | null;
+  planoId: number;
+};
+
+export class ClientesService {
+  async criar(data: NovoCliente) {
+    const plano = await repository.buscarPlanoAtivo(data.planoId);
+    if (!plano) throw new AppError("Plano ativo não encontrado.", 404, "PLAN_NOT_FOUND");
+
+    try {
+      return await repository.criar({
+        nome: data.nome,
+        email: data.email,
+        telefone: data.telefone,
+        dataNascimento: data.dataNascimento,
+        plano: { connect: { id: data.planoId } },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+        throw new AppError("Já existe um cliente com esse e-mail.", 409, "CLIENT_ALREADY_EXISTS");
+      }
+      throw error;
+    }
+  }
+}

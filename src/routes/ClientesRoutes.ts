@@ -1,7 +1,12 @@
 import { Router } from "express";
+import { ClientesController } from "../controllers/ClientesController.js";
+import { Authenticate } from "../middlewares/Authenticate.js";
+import { AuthorizeRole } from "../middlewares/AuthorizeRole.js";
+import { Validate } from "../middlewares/Validate.js";
+import { CriarClienteSchema } from "../validators/ClienteSchemas.js";
 import { NotImplemented } from "./NotImplemented.js";
 export const ClientesRoutes = Router();
-ClientesRoutes.post("/", NotImplemented);
+ClientesRoutes.post("/", Authenticate, AuthorizeRole("ADMIN", "ATENDENTE"), Validate(CriarClienteSchema), ClientesController.criar);
 ClientesRoutes.get("/", NotImplemented);
 ClientesRoutes.get("/:id/extrato", NotImplemented);
 ClientesRoutes.post("/:id/trocar-plano", NotImplemented);
