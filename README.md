@@ -150,7 +150,7 @@ compose.yaml  API e MySQL em contêineres
 
 ## Integrantes
 
-- Integrante 1: preencher nome
-- Integrante 2: preencher nome
-- Integrante 3: preencher nome
-- Integrante 4: preencher nome
+- Integrante 1: David Vanjao
+- Integrante 2: Leonardo Cabral
+- Integrante 3: Nathália Rodrigues
+- Integrante 4: Pedro Lucas
