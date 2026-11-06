@@ -12,10 +12,21 @@ export type NovoCliente = {
   planoId: number;
 };
 
+export type FiltrosListagemClientes = {
+  page: number;
+  limit: number;
+  busca?: string;
+  planoId?: number;
+  ativo?: boolean;
+};
+
 export class ClientesService {
   async criar(data: NovoCliente) {
     const plano = await repository.buscarPlanoAtivo(data.planoId);
-    if (!plano) throw new AppError("Plano ativo não encontrado.", 404, "PLAN_NOT_FOUND");
+
+    if (!plano) {
+      throw new AppError("Plano ativo não encontrado.", 404, "PLAN_NOT_FOUND");
+    }
 
     try {
       return await repository.criar({
@@ -26,10 +37,40 @@ export class ClientesService {
         plano: { connect: { id: data.planoId } },
       });
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-        throw new AppError("Já existe um cliente com esse e-mail.", 409, "CLIENT_ALREADY_EXISTS");
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        throw new AppError(
+          "Já existe um cliente com esse e-mail.",
+          409,
+          "CLIENT_ALREADY_EXISTS"
+        );
       }
+
       throw error;
     }
+  }
+
+  async listar(filtros: FiltrosListagemClientes) {
+    const skip = (filtros.page - 1) * filtros.limit;
+
+    const { clientes, total } = await repository.listar({
+      skip,
+      take: filtros.limit,
+      busca: filtros.busca,
+      planoId: filtros.planoId,
+      ativo: filtros.ativo,
+    });
+
+    return {
+      clientes,
+      paginacao: {
+        pagina: filtros.page,
+        limite: filtros.limit,
+        total,
+        totalPaginas: Math.ceil(total / filtros.limit),
+      },
+    };
   }
 }
