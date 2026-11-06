@@ -1,22 +1,39 @@
 # Grão a Grão
 
-API REST para um programa de cashback de cafeterias. Clientes vinculados a planos acumulam saldo em lotes com validade e podem usar o cashback em compras futuras. A aplicação já implementa autenticação por JWT, CRUD de produtos e registro transacional de compras; os demais recursos seguem como estrutura planejada.
+API REST de um programa de cashback para cafeterias. Clientes pertencem a planos,
+acumulam cashback em lotes com validade e podem usar o saldo em compras futuras.
+
+A especificação vigente está em [`context/indice.md`](./context/indice.md). O
+`ARQUITETURA.md` da raiz registra a proposta inicial e não representa sozinho o
+estado atual do projeto.
 
 ## Tecnologias
 
-- Node.js 22 e TypeScript
-- Express 5
+- Node.js 22, TypeScript 5.9 e Express 5
 - Prisma ORM 6 e MySQL 8.4
-- Docker Compose
-- Helmet, CORS e Zod (estrutura preparada para segurança e validação)
+- Zod 4, JWT, bcrypt, Helmet e CORS
+- Docker e Docker Compose
+- `node:test` com execução TypeScript por `tsx`
 
-A arquitetura e as regras completas estão em [ARQUITETURA.md](./ARQUITETURA.md).
+## Estado atual
 
-## Pré-requisitos
+| Recurso | Situação |
+|---|---|
+| Login com JWT | Implementado |
+| Cadastro de usuário | Pendente; responde `501` |
+| Clientes | Cadastro, listagem e extrato implementados |
+| Planos | Pendente; rotas respondem `501` |
+| Produtos | CRUD implementado |
+| Compra e cashback | Implementação transacional existente, ainda sem idempotência |
+| OpenAPI/Swagger | Pendente |
 
-Para execução local: Node.js 22+, npm e MySQL 8+. Para execução conteinerizada: Docker e Docker Compose.
+O extrato informa o saldo disponível, os lotes que vencem nos próximos 30 dias
+e até 50 movimentos recentes de crédito, uso e expiração. Lotes vencidos são
+ignorados no saldo mesmo antes de sua situação ser materializada no banco.
 
-## Rodar localmente
+## Executar localmente
+
+Pré-requisitos: Node.js 22+, npm e MySQL 8+.
 
 1. Instale as dependências:
 
@@ -24,133 +41,133 @@ Para execução local: Node.js 22+, npm e MySQL 8+. Para execução conteineriza
    npm install
    ```
 
-2. Crie seu arquivo de ambiente:
+2. Crie o arquivo de ambiente a partir do exemplo:
 
    ```bash
    cp .env.example .env
    ```
 
-   Troque `JWT_SECRET` por um valor aleatório antes de iniciar:
-
-   ```bash
-   openssl rand -base64 32
-   ```
-
-3. Edite `DATABASE_URL` no `.env` para apontar para seu MySQL local. Crie o banco `grao_a_grao` e configure usuário e senha correspondentes.
+3. Substitua `JWT_SECRET` por uma chave aleatória, configure o banco e defina as
+   credenciais do primeiro administrador. Não compartilhe nem versione o `.env`.
 
 4. Gere o Prisma Client e aplique a migration inicial:
 
    ```bash
-   npx prisma generate
+   npm run prisma:generate
    npx prisma migrate dev --name inicial
    ```
 
-5. Popule o banco de demonstração:
+   A migration inicial ainda não está versionada no repositório. Uma pessoa do
+   grupo deve gerá-la e commitá-la antes da entrega.
+
+5. Carregue os planos iniciais e o primeiro administrador:
 
    ```bash
    npm run db:seed
    ```
 
-O seed cria os três planos, dez produtos, usuários `admin@grao.local` e `atendente@grao.local`, três clientes e duas compras com lotes de cashback para a cliente Ana quando ainda não há compras no banco. As senhas de demonstração ficam em `SEED_ADMIN_PASSWORD` e `SEED_ATTENDANT_PASSWORD` no `.env`; altere-as antes de compartilhar o ambiente.
+   A carga pode ser repetida: ela não duplica nem sobrescreve planos ou o
+   administrador existentes. Não cria produtos, clientes ou compras fictícias.
 
-6. Inicie a API em desenvolvimento:
+6. Inicie a API:
 
    ```bash
    npm run dev
    ```
 
-A API fica em `http://localhost:3000`. A rota `GET /health` verifica o servidor.
+A API fica em `http://localhost:3000`. `GET /health` verifica se o processo HTTP
+está respondendo.
 
-## Fluxo de catálogo e compra implementado
+## Testes e compilação
 
-As rotas de produtos e compra exigem token JWT. As credenciais criadas pelo seed estão nas variáveis `SEED_ADMIN_*` e `SEED_ATTENDANT_*` do `.env.example`. O usuário admin cadastra produtos; admin e atendente consultam o catálogo e registram compras.
+```bash
+npm test
+npm run build
+```
 
-1. Faça login e copie o `token` retornado:
+Os testes atuais cobrem o calendário de Brasília usado nos lotes e a montagem do
+extrato. A compra ainda precisa de cobertura automatizada para cálculo, limite,
+FIFO, expiração, idempotência e concorrência.
 
-   ```bash
-   curl -X POST http://localhost:3000/auth/login \
-     -H 'Content-Type: application/json' \
-     -d '{"email":"atendente@grao.local","senha":"Atendente123!"}'
-   ```
+## Rotas disponíveis
 
-2. Consulte os produtos:
+Todas as rotas abaixo, exceto login e health check, exigem
+`Authorization: Bearer <token>`.
 
-   ```bash
-   curl http://localhost:3000/produtos -H 'Authorization: Bearer SEU_TOKEN'
-   ```
+| Método | Rota | Perfis | Situação |
+|---|---|---|---|
+| GET | `/health` | Público | Implementado |
+| POST | `/auth/login` | Público | Implementado |
+| POST | `/auth/register` | ADMIN | Pendente |
+| POST | `/clientes` | ADMIN, ATENDENTE | Implementado |
+| GET | `/clientes` | ADMIN, ATENDENTE | Implementado |
+| GET | `/clientes/:id/extrato` | ADMIN, ATENDENTE | Implementado |
+| GET, PUT, DELETE | `/clientes/:id` | Conforme especificação | Pendente |
+| POST | `/clientes/:id/trocar-plano` | ADMIN | Pendente |
+| CRUD | `/planos` | Conforme especificação | Pendente |
+| CRUD | `/produtos` | Conforme especificação | Implementado |
+| POST | `/compras` | ADMIN, ATENDENTE | Implementado parcialmente |
 
-3. O seed imprime os IDs da cliente Ana e do produto Latte. Use esses IDs para registrar uma compra de demonstração e consumir parte do lote mais antigo:
+Para consultar o extrato de um cliente ativo:
 
-   ```bash
-   ANA_ID=ID_IMPRESSO_PELO_SEED
-   LATTE_ID=ID_IMPRESSO_PELO_SEED
-   curl -X POST http://localhost:3000/compras \
-     -H 'Authorization: Bearer SEU_TOKEN' \
-     -H 'Content-Type: application/json' \
-     -d "{\"clienteId\":${ANA_ID},\"itens\":[{\"produtoId\":${LATTE_ID},\"quantidade\":25}],\"cashbackSolicitadoCentavos\":2500}"
-   ```
+```bash
+curl http://localhost:3000/clientes/1/extrato \
+  -H 'Authorization: Bearer SEU_TOKEN'
+```
 
-O valor bruto é recalculado com os preços do catálogo. O fluxo marca lotes vencidos, consome cashback pelos lotes com vencimento mais próximo, aplica mínimo do plano e limite de saldo e grava compra, itens, usos e novo lote na mesma transação. Os dois lotes de demonstração somam saldo suficiente para o mínimo do plano Básico; o uso de 2.500 centavos consome primeiro o lote mais antigo.
+Somente o ADMIN pode consultar cliente desativado, usando
+`?incluirInativos=true`.
 
-## Rodar com Docker Compose
+## Docker Compose
 
-1. Crie as variáveis locais:
+Depois de criar o `.env`:
 
-   ```bash
-   cp .env.example .env
-   ```
+```bash
+docker compose up --build
+```
 
-2. Construa e inicie a API e o MySQL:
-
-   ```bash
-   docker compose up --build
-   ```
-
-O Compose aguarda o MySQL ficar saudável antes de iniciar a API. Em outro terminal, crie a migration e carregue os dados de demonstração:
+Em outro terminal, prepare o banco e execute a carga inicial:
 
 ```bash
 docker compose exec api npx prisma migrate dev --name inicial
 docker compose exec api npm run db:seed
 ```
 
-A API fica em `http://localhost:3000`; o MySQL fica disponível na porta `3306`. Use `Ctrl+C` para parar e `docker compose down` para remover os contêineres. Os dados ficam no volume `mysql_data`; para apagá-los junto, execute `docker compose down -v`.
-
-## Rotas previstas
-
-| Grupo | Rotas |
-|---|---|
-| Autenticação | `POST /auth/register`, `POST /auth/login` |
-| Clientes | `POST /clientes`, `GET /clientes`, `GET /clientes/:id`, `PUT /clientes/:id`, `DELETE /clientes/:id`, `GET /clientes/:id/extrato`, `POST /clientes/:id/trocar-plano` |
-| Planos | `POST /planos`, `GET /planos`, `GET /planos/:id`, `PUT /planos/:id`, `DELETE /planos/:id` |
-| Produtos (implementado) | `POST /produtos`, `GET /produtos`, `GET /produtos/:id`, `PUT /produtos/:id`, `DELETE /produtos/:id` |
-| Compras (implementado) | `POST /compras` |
-
-Além delas, `GET /health` responde quando o servidor está ativo. O login já funciona para os usuários do seed; `POST /auth/register` e as rotas de clientes, planos e extrato continuam como pontos de extensão e respondem HTTP 501. Os contratos, modelo de dados, regras e fluxo de compra estão no `ARQUITETURA.md`.
+Os dados permanecem no volume `mysql_data` quando os contêineres são parados.
 
 ## Estrutura
 
 ```text
-src/          aplicação Express, rotas, controllers, services e repositories
-prisma/       schema do banco e seed dos dados de demonstração
-Dockerfile    imagem de desenvolvimento e produção
-compose.yaml  API e MySQL em contêineres
+src/          rotas, controllers, services, repositories e middlewares
+prisma/       schema e carga inicial
+tests/        testes automatizados
+context/      especificação vigente de negócio, API, dados e arquitetura
 ```
 
-## Scripts npm
+## Scripts
 
 | Comando | Descrição |
 |---|---|
-| `npm run dev` | Inicia em desenvolvimento com recarga automática. |
-| `npm run build` | Compila TypeScript para `dist/`. |
-| `npm start` | Inicia a versão compilada. |
-| `npm run prisma:generate` | Gera Prisma Client. |
-| `npm run db:migrate` | Cria/aplica migrations em desenvolvimento. |
-| `npm run db:deploy` | Aplica migrations existentes. |
-| `npm run db:seed` | Insere/atualiza planos, produtos, usuários e clientes; adiciona compras de demonstração se o banco ainda não tiver compras. |
+| `npm run dev` | Inicia a API com recarga automática. |
+| `npm test` | Executa os testes automatizados. |
+| `npm run build` | Compila TypeScript em `dist/`. |
+| `npm start` | Executa a versão compilada. |
+| `npm run prisma:generate` | Gera o Prisma Client. |
+| `npm run db:migrate` | Cria ou aplica migrations em desenvolvimento. |
+| `npm run db:deploy` | Aplica migrations versionadas. |
+| `npm run db:seed` | Cria os planos iniciais e o primeiro admin sem sobrescrever dados. |
+
+## Pendências prioritárias
+
+1. Criar e versionar a migration inicial.
+2. Corrigir o cálculo da compra para usar o valor pago como base.
+3. Implementar idempotência e persistir o cashback cortado pelo limite.
+4. Completar clientes, planos, reativação e cadastro de atendentes.
+5. Publicar OpenAPI 3.1 e Swagger quando os contratos implementados estiverem estáveis.
 
 ## Integrantes
 
-- Integrante 1: David Vanjao
-- Integrante 2: Leonardo Cabral
-- Integrante 3: Nathália Rodrigues
-- Integrante 4: Pedro Lucas
+- David Vanjao
+- Leonardo Cabral
+- Nathália Rodrigues
+- Pedro Lucas
