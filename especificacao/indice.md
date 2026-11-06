@@ -15,7 +15,7 @@ Documentação nova, construída por etapas. O `ARQUITETURA.md` da raiz do repos
 | (raiz) | Regras para IA e mapa da documentação | `aiRules.md`, `indice.md` | existem |
 | `decisoes/` | Registro das decisões, com índice no topo | `decisoes.md` | existe |
 | `negocio/` | Contexto, regras de negócio e requisitos | `contexto.md`, `glossario.md`, `regrasDeNegocio.md`, `requisitos.md` | existem |
-| `api/` | Contrato HTTP | `endpoints.md`, `contratos.md`, `erros.md`, `swagger.md` | a criar |
+| `api/` | Contrato HTTP | `endpoints.md` (existe); `contratos.md`, `erros.md`, `swagger.md` | parcial |
 | `api/arquitetura/` | Como o sistema é organizado | `stack.md` (existe); `camadas.md`, `estruturaDePastas.md` | parcial |
 | `api/dados/` | Banco de dados | `modeloDeDados.md`, `migrations.md` | a criar |
 | `api/seguranca/` | Autenticação, perfis e proteção | `autenticacao.md`, `perfis.md`, `protecaoDeDados.md` | a criar |
@@ -53,4 +53,5 @@ As etapas A a D estão escritas, e as 38 regras de negócio (RN-01 a RN-38) est�
 - Regras de negócio (RN-01 a RN-38) aprovadas em `negocio/regrasDeNegocio.md`, incluindo a idempotência do `POST /compras` (RN-11).
 - Requisitos funcionais (RF-01 a RF-24), não funcionais (RNF-01 a RNF-14) e fora de escopo aprovados em `negocio/requisitos.md`.
 - Contexto (`negocio/contexto.md`) e glossário (`negocio/glossario.md`) aprovados.
+- Endpoints (`api/endpoints.md`): 24 rotas aprovadas.
 - As regras de trabalho com IA (Blocos 1 a 7 do `aiRules.md`) estão aprovadas e registradas nas decisões 7.1 a 7.26.

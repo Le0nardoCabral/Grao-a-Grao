@@ -2,13 +2,25 @@
 
 Regras que qualquer IA usada pelos 4 integrantes deve seguir neste projeto. Este arquivo é escrito **bloco a bloco**; novos blocos entram abaixo, com o mesmo formato.
 
+## Sumário
+
+| Bloco | Assunto |
+|---|---|
+| 1 | Antes de começar qualquer task |
+| 2 | Implementação e ao terminar |
+| 3 | Mapa de leitura |
+| 4 | Convenções de código |
+| 5 | Trabalho em equipe e Git |
+| 6 | Como escrever a documentação |
+| 7 | Honestidade e proibições |
+
 ---
 
 ## Bloco 1 — Antes de começar qualquer task
 
 ### Passos obrigatórios, nesta ordem
 
-1. **Ler, a cada task,** este arquivo (`aiRules.md`), o [indice.md](indice.md), a especificação ligada à task (regras `RN` e requisitos `RF`/`RNF`) e as decisões: ler o **índice** de `decisoes/decisoes.md` e abrir só as decisões do tema da task, nunca o arquivo inteiro. Não confiar em leitura feita antes na conversa.
+1. **Ler, a cada task,** este arquivo (`aiRules.md`), o [indice.md](indice.md), a especificação ligada à task (regras `RN` e requisitos `RF`/`RNF`) e as decisões: ler o **índice** de `decisoes/decisoes.md` e abrir só as decisões do tema da task (o tema vem do Bloco 3, regra 6), nunca o arquivo inteiro. Não confiar em leitura feita antes na conversa.
 2. **Reler a regra no momento de implementar.** Em conversa longa a IA esquece; antes de escrever o código, abrir de novo a regra que ele atende.
 3. **Confirmar o entendimento em 2 ou 3 linhas**: o que será feito e qual regra ou requisito atende. Exemplo: "Vou implementar o cadastro de plano (RF-10) nos arquivos A e B." Se o usuário discordar, corrigir antes de seguir.
 4. **Ler o código vizinho** (um service, controller ou repository parecido) **só para seguir o estilo**, com estas ressalvas:
@@ -88,13 +100,13 @@ Regras que qualquer IA usada pelos 4 integrantes deve seguir neste projeto. Este
 | Qualquer task | `aiRules.md`, `indice.md`, índice de `decisoes/decisoes.md` | — | existem |
 | Cashback, planos, compra, saldo, validade, perfis de negócio | `negocio/contexto.md`, `negocio/regrasDeNegocio.md`, `negocio/glossario.md` | `negocio` | existem |
 | O que o sistema deve fazer ou como deve se comportar, e o que fica fora de escopo | `negocio/requisitos.md` | `negocio` | escrito |
-| Rota, controller, service ou repository | `api/arquitetura/camadas.md` e o bloco de convenções de código deste arquivo (Bloco 4) | `codigo` | `camadas.md` a criar; Bloco 4 escrito |
+| Rota, controller, service ou repository | `api/endpoints.md`, `api/arquitetura/camadas.md` e o bloco de convenções de código deste arquivo (Bloco 4) | `codigo` | `camadas.md` a criar; Bloco 4 escrito |
 | Dependência nova, biblioteca, ferramenta de teste, lint ou Swagger | `api/arquitetura/stack.md` | `codigo` | escrito |
-| Endpoint, corpo, resposta, erro, paginação, Swagger | `api/endpoints.md`, `api/contratos.md`, `api/erros.md`, `api/swagger.md` | `api` | a criar |
+| Endpoint, corpo, resposta, erro, paginação, Swagger | `api/endpoints.md`, `api/contratos.md`, `api/erros.md`, `api/swagger.md` | `api` | `endpoints.md` existe; os demais a criar |
 | Login, perfis de acesso, senha, token, proteção de dados | `api/seguranca/` | `seguranca` | a criar |
 | Schema, migration, seed, banco de teste | `api/dados/modeloDeDados.md`, `api/dados/migrations.md` e as regras de banco de dados do Bloco 5 (regras 6 a 8) | `dados` | `api/dados/` a criar; Bloco 5 escrito |
 | Commit, push, pull ou mensagem de commit | Bloco 5 deste arquivo (Git e mensagem de commit) | `git` | escrito |
-| Alterar a especificação, o `aiRules.md` ou as decisões | Bloco 1 deste arquivo (pasta somente leitura) | `processoIa`, `documentacao` | escrito |
+| Alterar a especificação, o `aiRules.md` ou as decisões | Blocos 1 e 6 deste arquivo (pasta somente leitura e como escrever a documentação) | `processoIa`, `documentacao` | escrito |
 
 A coluna "Situação" é atualizada quando cada arquivo nascer.
 
@@ -112,7 +124,7 @@ A coluna "Situação" é atualizada quando cada arquivo nascer.
 5. **Idioma:** domínio em português (`cliente`, `compra`); termos técnicos e códigos de erro em inglês; mensagens ao usuário em português.
    - **Código de erro é inteiro em inglês, inclusive o termo de domínio traduzido** (`CLIENT_`, `PLAN_`, `PRODUCT_`, `PURCHASE_`).
    - **Sem acento, cedilha ou til nos identificadores** (variáveis, funções, campos, rotas, arquivos, pastas, códigos de erro): `situacao` e não `situação`, `nao` e não `não`.
-6. **Rotas:** plural, minúsculas, em português (`/produtos`); ação composta com hífen (`/trocar-plano`).
+6. **Rotas:** plural, minúsculas, em português (`/produtos`); ação composta com hífen (`/trocar-plano`). Exceções: `/auth` e `/docs`, nomes consagrados.
 
 ### Dinheiro e números
 
