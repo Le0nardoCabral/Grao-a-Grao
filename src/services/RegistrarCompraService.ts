@@ -1,6 +1,7 @@
 import { Prisma, StatusLote } from "@prisma/client";
 import { AppError } from "../errors/AppError.js";
 import { ComprasRepository } from "../repositories/ComprasRepository.js";
+import { adicionarDiasEmBrasilia, mesEmBrasilia } from "./CashbackDateService.js";
 
 type ItemCompraInput = { produtoId: number; quantidade: number };
 type CompraInput = {
@@ -13,12 +14,6 @@ const repository = new ComprasRepository();
 
 function calcularCashback(valorCentavos: number, percentualBps: number, multiplicador: number): number {
   return Number((BigInt(valorCentavos) * BigInt(percentualBps) * BigInt(multiplicador)) / 10_000n);
-}
-
-function adicionarDias(data: Date, dias: number): Date {
-  const vencimento = new Date(data);
-  vencimento.setDate(vencimento.getDate() + dias);
-  return vencimento;
 }
 
 export class RegistrarCompraService {
@@ -67,7 +62,7 @@ export class RegistrarCompraService {
             status: { in: [StatusLote.ATIVO, StatusLote.PARCIAL] },
             venceEm: { lte: agora },
           },
-          data: { saldoCentavos: 0, status: StatusLote.EXPIRADO },
+          data: { status: StatusLote.EXPIRADO },
         });
 
         const lotes = await transaction.loteCashback.findMany({
@@ -77,7 +72,7 @@ export class RegistrarCompraService {
             saldoCentavos: { gt: 0 },
             venceEm: { gt: agora },
           },
-          orderBy: [{ geradoEm: "asc" }, { id: "asc" }],
+          orderBy: [{ venceEm: "asc" }, { geradoEm: "asc" }, { id: "asc" }],
         });
         const saldoDisponivelCentavos = lotes.reduce((total, lote) => total + lote.saldoCentavos, 0);
         const cashbackUsadoCentavos = input.cashbackSolicitadoCentavos ?? 0;
@@ -125,7 +120,7 @@ export class RegistrarCompraService {
         const saldoAposUsoCentavos = saldoDisponivelCentavos - cashbackUsadoCentavos;
         const valorPagoCentavos = valorBrutoCentavos - cashbackUsadoCentavos;
         const noMesDeAniversario = cliente.dataNascimento !== null
-          && cliente.dataNascimento.getUTCMonth() === agora.getUTCMonth();
+          && cliente.dataNascimento.getUTCMonth() + 1 === mesEmBrasilia(agora);
         const multiplicador = cliente.plano.dobroAniversario && noMesDeAniversario ? 2 : 1;
         const cashbackCalculadoCentavos = calcularCashback(
           valorBrutoCentavos,
@@ -165,7 +160,7 @@ export class RegistrarCompraService {
               valorOriginalCentavos: cashbackGeradoCentavos,
               saldoCentavos: cashbackGeradoCentavos,
               geradoEm: agora,
-              venceEm: adicionarDias(agora, cliente.plano.validadeDias),
+              venceEm: adicionarDiasEmBrasilia(agora, cliente.plano.validadeDias),
               status: StatusLote.ATIVO,
             },
           });

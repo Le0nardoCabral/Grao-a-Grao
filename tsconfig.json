@@ -5,6 +5,6 @@
     "forceConsistentCasingInFileNames": true, "skipLibCheck": true,
     "resolveJsonModule": true, "noEmitOnError": true
   },
-  "include": ["src/**/*.ts", "prisma/Seed.ts", "prisma/SeedAdmin.ts"],
+  "include": ["src/**/*.ts", "prisma/Seed.ts", "prisma/SeedAdmin.ts", "tests/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
