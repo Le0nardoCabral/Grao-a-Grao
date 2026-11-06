@@ -3,8 +3,11 @@ import {
   ClientesService,
   type FiltrosListagemClientes,
 } from "../services/ClientesService.js";
+import { AppError } from "../errors/AppError.js";
+import { ExtratoService } from "../services/ExtratoService.js";
 
 const service = new ClientesService();
+const extratoService = new ExtratoService();
 
 export class ClientesController {
   static criar: RequestHandler = async (request, response) => {
@@ -35,6 +38,19 @@ export class ClientesController {
 
     const resultado = await service.listar(filtros);
 
+    response.status(200).json(resultado);
+  };
+
+  static extrato: RequestHandler = async (request, response) => {
+    const incluirInativos = request.query.incluirInativos === "true";
+    if (incluirInativos && request.auth?.perfil !== "ADMIN") {
+      throw new AppError("Somente admin pode consultar clientes inativos.", 403, "FORBIDDEN");
+    }
+
+    const resultado = await extratoService.executar(
+      Number(request.params.id),
+      incluirInativos,
+    );
     response.status(200).json(resultado);
   };
 }

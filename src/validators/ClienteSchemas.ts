@@ -36,3 +36,11 @@ export const ListarClientesSchema = z.object({
 
   ativo: z.enum(["true", "false"]).optional(),
 }).strict();
+
+export const ClienteIdSchema = z.object({
+  id: z.coerce.number().int().positive().safe(),
+}).strict();
+
+export const IncluirInativosSchema = z.object({
+  incluirInativos: z.enum(["true", "false"]).optional().default("false"),
+}).strict();
