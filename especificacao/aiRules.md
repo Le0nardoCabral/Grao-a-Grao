@@ -102,7 +102,7 @@ Regras que qualquer IA usada pelos 4 integrantes deve seguir neste projeto. Este
 | O que o sistema deve fazer ou como deve se comportar, e o que fica fora de escopo | `negocio/requisitos.md` | `negocio` | escrito |
 | Rota, controller, service ou repository | `api/endpoints.md`, `api/arquitetura/camadas.md` e o bloco de convenções de código deste arquivo (Bloco 4) | `codigo` | `camadas.md` a criar; Bloco 4 escrito |
 | Dependência nova, biblioteca, ferramenta de teste, lint ou Swagger | `api/arquitetura/stack.md` | `codigo` | escrito |
-| Endpoint, corpo, resposta, erro, paginação, Swagger | `api/endpoints.md`, `api/contratos.md`, `api/erros.md`, `api/swagger.md` | `api` | `endpoints.md` existe; os demais a criar |
+| Endpoint, corpo, resposta, erro, paginação, Swagger | `api/endpoints.md`, `api/contratos.md`, `api/swagger.md` | `api` | `endpoints.md` e `contratos.md` existem; `swagger.md` a criar |
 | Login, perfis de acesso, senha, token, proteção de dados | `api/seguranca/` | `seguranca` | a criar |
 | Schema, migration, seed, banco de teste | `api/dados/modeloDeDados.md`, `api/dados/migrations.md` e as regras de banco de dados do Bloco 5 (regras 6 a 8) | `dados` | `api/dados/` a criar; Bloco 5 escrito |
 | Commit, push, pull ou mensagem de commit | Bloco 5 deste arquivo (Git e mensagem de commit) | `git` | escrito |
