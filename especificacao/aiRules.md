@@ -10,7 +10,7 @@ Regras que qualquer IA usada pelos 4 integrantes deve seguir neste projeto. Este
 
 1. **Ler, a cada task,** este arquivo (`aiRules.md`), o [indice.md](indice.md), a especificação ligada à task (regras `RN` e requisitos `RF`/`RNF`) e as decisões: ler o **índice** de `decisoes/decisoes.md` e abrir só as decisões do tema da task, nunca o arquivo inteiro. Não confiar em leitura feita antes na conversa.
 2. **Reler a regra no momento de implementar.** Em conversa longa a IA esquece; antes de escrever o código, abrir de novo a regra que ele atende.
-3. **Confirmar o entendimento em 2 ou 3 linhas**: o que será feito e qual regra ou requisito atende. Exemplo: "Vou implementar o cadastro de plano (RF-05) nos arquivos A e B." Se o usuário discordar, corrigir antes de seguir.
+3. **Confirmar o entendimento em 2 ou 3 linhas**: o que será feito e qual regra ou requisito atende. Exemplo: "Vou implementar o cadastro de plano (RF-10) nos arquivos A e B." Se o usuário discordar, corrigir antes de seguir.
 4. **Ler o código vizinho** (um service, controller ou repository parecido) **só para seguir o estilo**, com estas ressalvas:
    - **Este arquivo é a autoridade sobre como o código é escrito.** O comportamento do sistema está nas pastas de especificação (Bloco 3).
    - O código existente é só **referência de estilo**. Se ele contradisser este arquivo ou a especificação, seguir este arquivo e **avisar o usuário** da divergência, sem copiar o erro.
@@ -87,12 +87,12 @@ Regras que qualquer IA usada pelos 4 integrantes deve seguir neste projeto. Este
 |---|---|---|---|
 | Qualquer task | `aiRules.md`, `indice.md`, índice de `decisoes/decisoes.md` | — | existem |
 | Cashback, planos, compra, saldo, validade, perfis de negócio | `negocio/regrasDeNegocio.md`, `negocio/glossario.md` | `negocio` | a criar |
-| O que o sistema deve fazer ou como deve se comportar | `requisitos/requisitosFuncionais.md`, `requisitos/requisitosNaoFuncionais.md`, `requisitos/foraDeEscopo.md` | `negocio` | a criar |
-| Rota, controller, service ou repository | `arquitetura/camadas.md` e o bloco de convenções de código deste arquivo (Bloco 4) | `codigo` | `camadas.md` a criar; Bloco 4 escrito |
-| Dependência nova, biblioteca, ferramenta de teste, lint ou Swagger | `arquitetura/stack.md` | `codigo` | escrito |
+| O que o sistema deve fazer ou como deve se comportar, e o que fica fora de escopo | `negocio/requisitos.md` | `negocio` | escrito |
+| Rota, controller, service ou repository | `api/arquitetura/camadas.md` e o bloco de convenções de código deste arquivo (Bloco 4) | `codigo` | `camadas.md` a criar; Bloco 4 escrito |
+| Dependência nova, biblioteca, ferramenta de teste, lint ou Swagger | `api/arquitetura/stack.md` | `codigo` | escrito |
 | Endpoint, corpo, resposta, erro, paginação, Swagger | `api/endpoints.md`, `api/contratos.md`, `api/erros.md`, `api/swagger.md` | `api` | a criar |
-| Login, perfis de acesso, senha, token, proteção de dados | `seguranca/` | `seguranca` | a criar |
-| Schema, migration, seed, banco de teste | `dados/modeloDeDados.md`, `dados/migrations.md` e as regras de banco de dados do Bloco 5 (regras 6 a 8) | `dados` | `dados/` a criar; Bloco 5 escrito |
+| Login, perfis de acesso, senha, token, proteção de dados | `api/seguranca/` | `seguranca` | a criar |
+| Schema, migration, seed, banco de teste | `api/dados/modeloDeDados.md`, `api/dados/migrations.md` e as regras de banco de dados do Bloco 5 (regras 6 a 8) | `dados` | `api/dados/` a criar; Bloco 5 escrito |
 | Commit, push, pull ou mensagem de commit | Bloco 5 deste arquivo (Git e mensagem de commit) | `git` | escrito |
 | Alterar a especificação, o `aiRules.md` ou as decisões | Bloco 1 deste arquivo (pasta somente leitura) | `processoIa`, `documentacao` | escrito |
 
@@ -150,7 +150,7 @@ A coluna "Situação" é atualizada quando cada arquivo nascer.
 
 ### O que não está neste bloco
 
-Regras de **comportamento do sistema** (segurança, dados, contratos de resposta) ficam nas pastas de especificação e são lidas pelo mapa de leitura (Bloco 3): `seguranca/`, `dados/` e `api/`.
+Regras de **comportamento do sistema** (segurança, dados, contratos de resposta) ficam na pasta `api/` (com as subpastas `arquitetura/`, `dados/` e `seguranca/`) e são lidas pelo mapa de leitura (Bloco 3).
 
 ---
 
@@ -195,7 +195,7 @@ Regras de **comportamento do sistema** (segurança, dados, contratos de resposta
 
 Valem para os arquivos de `especificacao/`, quando o usuário pedir ou aprovar uma mudança (Bloco 1).
 
-1. **Numeração fixa.** Cada regra e requisito tem um número que nunca é reaproveitado: `RN-01` (negócio), `RF-01` (funcional), `RNF-01` (não funcional). Item removido fica marcado `removido`, sem renumerar os outros.
+1. **Numeração fixa.** Cada regra e requisito tem um número que nunca é reaproveitado: `RN-01` (negócio), `RF-01` (funcional), `RNF-01` (não funcional). Item removido fica marcado `removido`, sem renumerar os outros. A numeração passa a ser fixa a partir da primeira versão commitada do arquivo; antes disso ela pode ser reorganizada.
 2. **Status em todo item:** `aprovado`, `proposto` ou `em aberto`. Só vira `aprovado` com a confirmação do usuário (Bloco 7, regra 13). Dúvida vira `em aberto`.
 3. **Texto curto e verificável.** Frases curtas, sem ambiguidade. Evitar termos que ninguém consegue testar ("de forma adequada", "rápido"). Preferir tabelas a parágrafos longos.
 4. **Rastreabilidade.** Endpoint, tabela e decisão apontam para o `RN`, `RF` ou `RNF` que atendem.
@@ -204,7 +204,7 @@ Valem para os arquivos de `especificacao/`, quando o usuário pedir ou aprovar u
 7. **Idioma.** Português do Brasil, com acento nos textos. As regras de identificadores sem acento valem só para o código (Bloco 4).
 8. **O enunciado do trabalho não é citado** na documentação.
 9. **Registro de decisões** em `decisoes/decisoes.md`:
-   - toda decisão nova ganha o **próximo ID da seção 7** (7.25, 7.26...), com a decisão e o porquê, e entra no **índice no mesmo passo**;
+   - toda decisão nova ganha o **próximo ID livre da seção 7**, com a decisão e o porquê, e entra no **índice no mesmo passo**;
    - decisão **nunca é apagada**. Quando outra a substitui, a nova diz "substitui a X" e o índice marca a antiga como "substituído pela Y";
    - o título no índice é curto, o tema é um dos listados no topo do arquivo, e o status é `aprovado` ou `proposto`.
 

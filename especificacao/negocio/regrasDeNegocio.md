@@ -2,7 +2,7 @@
 
 Regras do programa de cashback Grão a Grão.
 
-- **Versão:** 0.2
+- **Versão:** 0.4
 - **Data:** 2026-11-06
 - **Status:** `aprovado`, `proposto` (aguarda confirmação) ou `em aberto` (depende de uma decisão).
 
@@ -84,6 +84,7 @@ O mínimo de R$ 20,00 do Intermediário é uma escolha do grupo, para manter a m
 |---|---|---|
 | RN-31 | Clientes, planos e produtos **não são apagados**: são desativados, para preservar o histórico de compras e de cashback. O desativado some das listagens e não participa de operações novas. | aprovado |
 | RN-37 | O **ADMIN** pode reativar um cliente, plano ou produto desativado. Enquanto estiver desativado, o nome (ou o e-mail do cliente) continua ocupado. | aprovado |
+| RN-38 | Um cliente desativado **só é reativado** se o seu plano estiver ativo. Caso contrário, a reativação é **recusada**, e o ADMIN reativa o plano antes. | aprovado |
 
 ## 8. Perfis de acesso
 
@@ -99,4 +100,4 @@ O mínimo de R$ 20,00 do Intermediário é uma escolha do grupo, para manter a m
 
 ## Pontos em aberto
 
-Nenhum. Todas as regras (RN-01 a RN-37) estão `aprovado`.
+Nenhum. Todas as regras (RN-01 a RN-38) estão `aprovado`.

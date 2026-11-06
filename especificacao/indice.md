@@ -14,14 +14,13 @@ Documentação nova, construída por etapas. O `ARQUITETURA.md` da raiz do repos
 |---|---|---|---|
 | (raiz) | Regras para IA e mapa da documentação | `aiRules.md`, `indice.md` | existem |
 | `decisoes/` | Registro das decisões, com índice no topo | `decisoes.md` | existe |
-| `negocio/` | Contexto e regras do negócio | `regrasDeNegocio.md` (existe); `contexto.md`, `glossario.md` | parcial |
-| `requisitos/` | O que o sistema deve fazer e como deve se comportar | `requisitosFuncionais.md`, `requisitosNaoFuncionais.md`, `foraDeEscopo.md` | a criar |
-| `arquitetura/` | Como o sistema é organizado | `stack.md` (existe); `camadas.md`, `estruturaDePastas.md` | parcial |
-| `dados/` | Banco de dados | `modeloDeDados.md`, `migrations.md` | a criar |
+| `negocio/` | Regras de negócio e requisitos | `regrasDeNegocio.md` e `requisitos.md` (existem); `contexto.md`, `glossario.md` | parcial |
 | `api/` | Contrato HTTP | `endpoints.md`, `contratos.md`, `erros.md`, `swagger.md` | a criar |
-| `seguranca/` | Autenticação, perfis e proteção | `autenticacao.md`, `perfis.md`, `protecaoDeDados.md` | a criar |
+| `api/arquitetura/` | Como o sistema é organizado | `stack.md` (existe); `camadas.md`, `estruturaDePastas.md` | parcial |
+| `api/dados/` | Banco de dados | `modeloDeDados.md`, `migrations.md` | a criar |
+| `api/seguranca/` | Autenticação, perfis e proteção | `autenticacao.md`, `perfis.md`, `protecaoDeDados.md` | a criar |
 
-As convenções de código ficam no `aiRules.md` (Bloco 4), e não em `arquitetura/`.
+As convenções de código ficam no `aiRules.md` (Bloco 4), e não em `api/arquitetura/`.
 
 ## Blocos do aiRules.md
 
@@ -43,13 +42,14 @@ As convenções de código ficam no `aiRules.md` (Bloco 4), e não em `arquitetu
 | B | Uso do saldo (FIFO, mínimo) | `negocio/regrasDeNegocio.md` | escrito (aprovado) |
 | C | Validade e expiração | `negocio/regrasDeNegocio.md` | escrito (aprovado) |
 | D | Acesso e perfis | `negocio/regrasDeNegocio.md` | escrito (aprovado) |
-| E | Requisitos funcionais | `requisitos/requisitosFuncionais.md` | pendente |
-| F | Requisitos não funcionais | `requisitos/requisitosNaoFuncionais.md` | pendente |
+| E | Requisitos funcionais | `negocio/requisitos.md` | escrito (aprovado) |
+| F | Requisitos não funcionais e fora de escopo | `negocio/requisitos.md` | escrito (aprovado) |
 | G | Demais pastas, na ordem da tabela de estrutura | — | pendente |
 
-As etapas A a D estão escritas, e as 37 regras de negócio (RN-01 a RN-37) estão aprovadas.
+As etapas A a D estão escritas, e as 38 regras de negócio (RN-01 a RN-38) estão aprovadas.
 
 ## Pontos já decididos
 
-- Regras de negócio (RN-01 a RN-37) aprovadas em `negocio/regrasDeNegocio.md`, incluindo a idempotência do `POST /compras` (RN-11).
+- Regras de negócio (RN-01 a RN-38) aprovadas em `negocio/regrasDeNegocio.md`, incluindo a idempotência do `POST /compras` (RN-11).
+- Requisitos funcionais (RF-01 a RF-24), não funcionais (RNF-01 a RNF-14) e fora de escopo aprovados em `negocio/requisitos.md`.
 - As regras de trabalho com IA (Blocos 1 a 7 do `aiRules.md`) estão aprovadas e registradas nas decisões 7.1 a 7.26.
