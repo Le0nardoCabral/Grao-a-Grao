@@ -89,6 +89,7 @@ Regras que qualquer IA usada pelos 4 integrantes deve seguir neste projeto. Este
 | Cashback, planos, compra, saldo, validade, perfis de negócio | `negocio/regrasDeNegocio.md`, `negocio/glossario.md` | `negocio` | a criar |
 | O que o sistema deve fazer ou como deve se comportar | `requisitos/requisitosFuncionais.md`, `requisitos/requisitosNaoFuncionais.md`, `requisitos/foraDeEscopo.md` | `negocio` | a criar |
 | Rota, controller, service ou repository | `arquitetura/camadas.md` e o bloco de convenções de código deste arquivo (Bloco 4) | `codigo` | `camadas.md` a criar; Bloco 4 escrito |
+| Dependência nova, biblioteca, ferramenta de teste, lint ou Swagger | `arquitetura/stack.md` | `codigo` | escrito |
 | Endpoint, corpo, resposta, erro, paginação, Swagger | `api/endpoints.md`, `api/contratos.md`, `api/erros.md`, `api/swagger.md` | `api` | a criar |
 | Login, perfis de acesso, senha, token, proteção de dados | `seguranca/` | `seguranca` | a criar |
 | Schema, migration, seed, banco de teste | `dados/modeloDeDados.md`, `dados/migrations.md` e as regras de banco de dados do Bloco 5 (regras 6 a 8) | `dados` | `dados/` a criar; Bloco 5 escrito |

@@ -16,7 +16,7 @@ Documentação nova, construída por etapas. O `ARQUITETURA.md` da raiz do repos
 | `decisoes/` | Registro das decisões, com índice no topo | `decisoes.md` | existe |
 | `negocio/` | Contexto e regras do negócio | `regrasDeNegocio.md` (existe); `contexto.md`, `glossario.md` | parcial |
 | `requisitos/` | O que o sistema deve fazer e como deve se comportar | `requisitosFuncionais.md`, `requisitosNaoFuncionais.md`, `foraDeEscopo.md` | a criar |
-| `arquitetura/` | Como o sistema é organizado | `camadas.md`, `estruturaDePastas.md` | a criar |
+| `arquitetura/` | Como o sistema é organizado | `stack.md` (existe); `camadas.md`, `estruturaDePastas.md` | parcial |
 | `dados/` | Banco de dados | `modeloDeDados.md`, `migrations.md` | a criar |
 | `api/` | Contrato HTTP | `endpoints.md`, `contratos.md`, `erros.md`, `swagger.md` | a criar |
 | `seguranca/` | Autenticação, perfis e proteção | `autenticacao.md`, `perfis.md`, `protecaoDeDados.md` | a criar |
