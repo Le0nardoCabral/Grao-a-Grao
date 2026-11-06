@@ -86,7 +86,7 @@ Regras que qualquer IA usada pelos 4 integrantes deve seguir neste projeto. Este
 | A task mexe em... | Ler antes | Tema das decisões | Situação |
 |---|---|---|---|
 | Qualquer task | `aiRules.md`, `indice.md`, índice de `decisoes/decisoes.md` | — | existem |
-| Cashback, planos, compra, saldo, validade, perfis de negócio | `negocio/regrasDeNegocio.md`, `negocio/glossario.md` | `negocio` | a criar |
+| Cashback, planos, compra, saldo, validade, perfis de negócio | `negocio/contexto.md`, `negocio/regrasDeNegocio.md`, `negocio/glossario.md` | `negocio` | existem |
 | O que o sistema deve fazer ou como deve se comportar, e o que fica fora de escopo | `negocio/requisitos.md` | `negocio` | escrito |
 | Rota, controller, service ou repository | `api/arquitetura/camadas.md` e o bloco de convenções de código deste arquivo (Bloco 4) | `codigo` | `camadas.md` a criar; Bloco 4 escrito |
 | Dependência nova, biblioteca, ferramenta de teste, lint ou Swagger | `api/arquitetura/stack.md` | `codigo` | escrito |
