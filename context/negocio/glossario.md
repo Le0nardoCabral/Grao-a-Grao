@@ -67,3 +67,4 @@ Termos usados na especificação, com o significado que eles têm neste projeto.
 | **Troca de plano** | Mudança do plano de um cliente, feita pelo ADMIN. O saldo e os lotes são mantidos. | RN-28, RN-29, RN-30 | aprovado |
 | **Desativar** | Tirar de uso sem apagar. O item some das listagens por padrão, mas o histórico fica. | RN-31 | aprovado |
 | **Reativar** | Voltar a usar um item desativado. | RN-37, RN-38 | aprovado |
+| **Carga inicial** | Dados criados na instalação: os três planos iniciais e o primeiro admin. | RN-03, RN-36, RNF-14 | aprovado |

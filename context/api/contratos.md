@@ -2,7 +2,7 @@
 
 O que cada rota recebe e devolve: campos, formatos e limites. As rotas estão em [endpoints.md](endpoints.md).
 
-- **Versão:** 0.4
+- **Versão:** 0.7
 - **Data:** 2026-11-06
 - **Status:** `aprovado`.
 
@@ -57,32 +57,32 @@ Outro erro (`404`), sem `detalhes`:
 
 ### Catálogo de códigos
 
-| Código | Status HTTP | Quando |
-|---|---|---|
-| `VALIDATION_ERROR` | 400 | Dados da requisição inválidos: JSON malformado, `Content-Type` errado, tipo errado, campo fora do limite, campo desconhecido, `produtoId` repetido, ou combinação inválida num `PUT` de plano. |
-| `IDEMPOTENCY_KEY_REQUIRED` | 400 | A compra chegou sem o cabeçalho `Idempotency-Key`. |
-| `INVALID_PURCHASE_AMOUNT` | 400 | O valor bruto da compra passa do teto. |
-| `CASHBACK_EXCEEDS_PURCHASE` | 400 | O cashback solicitado é maior que o valor bruto da compra. |
-| `CASHBACK_BELOW_PLAN_MINIMUM` | 400 | O cashback solicitado é menor que o mínimo de uso do plano. |
-| `UNAUTHENTICATED` | 401 | Token ausente, inválido ou vencido, ou usuário inativo. |
-| `INVALID_CREDENTIALS` | 401 | E-mail ou senha incorretos no login, ou usuário inativo. |
-| `FORBIDDEN` | 403 | O perfil não tem permissão, ou o ATENDENTE enviou `incluirInativos`. |
-| `NOT_FOUND` | 404 | A rota não existe. |
-| `CLIENT_NOT_FOUND` | 404 | Cliente inexistente, ou desativado e consultado sem `incluirInativos`. |
-| `PLAN_NOT_FOUND` | 404 | Plano inexistente, ou desativado e consultado sem `incluirInativos`. |
-| `PRODUCT_NOT_FOUND` | 404 | Produto inexistente, ou desativado e consultado sem `incluirInativos`. |
-| `USER_ALREADY_EXISTS` | 409 | Já existe um usuário com esse e-mail. |
-| `CLIENT_ALREADY_EXISTS` | 409 | Já existe um cliente com esse e-mail. |
-| `PLAN_ALREADY_EXISTS` | 409 | Já existe um plano com esse nome. |
-| `PRODUCT_ALREADY_EXISTS` | 409 | Já existe um produto com esse nome. |
-| `CLIENT_INACTIVE` | 409 | A compra é de um cliente desativado. |
-| `PLAN_INACTIVE` | 409 | O plano está desativado e a operação exige um plano ativo: cadastro de cliente, compra, troca de plano ou reativação de cliente. |
-| `PRODUCT_INACTIVE` | 409 | A compra inclui um produto desativado. |
-| `PLAN_HAS_ACTIVE_CLIENTS` | 409 | Tentativa de desativar um plano que ainda tem clientes ativos. |
-| `ALREADY_ACTIVE` | 409 | Tentativa de reativar um cliente, plano ou produto que já está ativo. |
-| `INSUFFICIENT_CASHBACK` | 409 | O cashback solicitado é maior que o saldo disponível. |
-| `IDEMPOTENCY_KEY_CONFLICT` | 409 | A mesma `Idempotency-Key` chegou com conteúdo diferente. |
-| `INTERNAL_ERROR` | 500 | Falha inesperada. A resposta nunca traz detalhe interno. |
+| Código | Status HTTP | Quando | Rotas |
+|---|---|---|---|
+| `VALIDATION_ERROR` | 400 | Dados da requisição inválidos: JSON malformado, `Content-Type` errado, tipo errado, campo fora do limite, campo desconhecido, `produtoId` repetido, ou combinação inválida num `PUT` de plano. | Toda rota com corpo, parâmetro ou filtro |
+| `IDEMPOTENCY_KEY_REQUIRED` | 400 | A compra chegou sem o cabeçalho `Idempotency-Key`. | `POST /compras` |
+| `INVALID_PURCHASE_AMOUNT` | 400 | O valor bruto da compra passa do teto. | `POST /compras` |
+| `CASHBACK_EXCEEDS_PURCHASE` | 400 | O cashback solicitado é maior que o valor bruto da compra. | `POST /compras` |
+| `CASHBACK_BELOW_PLAN_MINIMUM` | 400 | O cashback solicitado é menor que o mínimo de uso do plano. | `POST /compras` |
+| `UNAUTHENTICATED` | 401 | Token ausente, inválido ou vencido, ou usuário inativo. | Toda rota privada |
+| `INVALID_CREDENTIALS` | 401 | E-mail ou senha incorretos no login, ou usuário inativo. | `POST /auth/login` |
+| `FORBIDDEN` | 403 | O perfil não tem permissão, ou o ATENDENTE enviou `incluirInativos`. | Rotas exclusivas do ADMIN; listagens, consultas e extrato |
+| `NOT_FOUND` | 404 | A rota não existe. | Qualquer caminho inexistente |
+| `CLIENT_NOT_FOUND` | 404 | Cliente inexistente, ou desativado e consultado sem `incluirInativos`. | Rotas de cliente com `:id`, extrato, troca de plano, reativação de cliente, `POST /compras` |
+| `PLAN_NOT_FOUND` | 404 | Plano inexistente, ou desativado e consultado sem `incluirInativos`. | Rotas de plano com `:id`, reativação de plano, `POST /clientes`, troca de plano |
+| `PRODUCT_NOT_FOUND` | 404 | Produto inexistente, ou desativado e consultado sem `incluirInativos`. | Rotas de produto com `:id`, reativação de produto, `POST /compras` |
+| `USER_ALREADY_EXISTS` | 409 | Já existe um usuário com esse e-mail. | `POST /auth/register` |
+| `CLIENT_ALREADY_EXISTS` | 409 | Já existe um cliente com esse e-mail. | `POST /clientes`, `PUT /clientes/:id` |
+| `PLAN_ALREADY_EXISTS` | 409 | Já existe um plano com esse nome. | `POST /planos`, `PUT /planos/:id` |
+| `PRODUCT_ALREADY_EXISTS` | 409 | Já existe um produto com esse nome. | `POST /produtos`, `PUT /produtos/:id` |
+| `CLIENT_INACTIVE` | 409 | A compra é de um cliente desativado. | `POST /compras` |
+| `PLAN_INACTIVE` | 409 | O plano está desativado e a operação exige um plano ativo: cadastro de cliente, compra, troca de plano ou reativação de cliente. | `POST /clientes`, `POST /compras`, troca de plano, reativação de cliente |
+| `PRODUCT_INACTIVE` | 409 | A compra inclui um produto desativado. | `POST /compras` |
+| `PLAN_HAS_ACTIVE_CLIENTS` | 409 | Tentativa de desativar um plano que ainda tem clientes ativos. | `DELETE /planos/:id` |
+| `ALREADY_ACTIVE` | 409 | Tentativa de reativar um cliente, plano ou produto que já está ativo. | As três rotas de reativação |
+| `INSUFFICIENT_CASHBACK` | 409 | O cashback solicitado é maior que o saldo disponível. | `POST /compras` |
+| `IDEMPOTENCY_KEY_CONFLICT` | 409 | A mesma `Idempotency-Key` chegou com conteúdo diferente. | `POST /compras` |
+| `INTERNAL_ERROR` | 500 | Falha inesperada. A resposta nunca traz detalhe interno. | Qualquer rota |
 
 Todo código usado pelo sistema precisa constar nesta tabela. O catálogo do código (`ErrorCodes`) usa exatamente estes nomes.
 
@@ -272,6 +272,23 @@ Quando a compra tem mais de um problema, vale o **primeiro** encontrado nesta or
 
 ---
 
-## 9. Documentação
+## 9. Documentação (Swagger)
 
-`GET /docs` devolve a página do Swagger. Não tem contrato de dados: a descrição de todas as rotas vem gerada dos schemas de validação.
+`GET /docs` devolve a página do Swagger, onde as rotas podem ser lidas e testadas. A rota não tem contrato de dados.
+
+| # | Regra | Status |
+|---|---|---|
+| 1 | A documentação segue o padrão **OpenAPI 3.1** e cobre as 23 rotas da API. | aprovado |
+| 2 | A descrição é **gerada dos schemas Zod** que validam cada rota, para a documentação e a validação não divergirem. O Zod 4 já converte schema em esquema JSON, e o documento OpenAPI é montado em `docs/openApi.ts`, sem gerador extra. | aprovado |
+| 3 | A página é servida por **`swagger-ui-express`**, uma dependência nova, com os tipos (`@types/swagger-ui-express`) em desenvolvimento. | aprovado |
+| 4 | Cada rota informa o resumo, se é pública ou privada, os campos de entrada, o corpo de resposta e os códigos de erro possíveis, tirados do catálogo desta página. | aprovado |
+| 5 | A autenticação aparece como **Bearer (JWT)**, com o botão "Authorize" para colar o token uma vez. | aprovado |
+| 6 | O cabeçalho `Idempotency-Key` aparece como obrigatório na compra. | aprovado |
+
+### Como usar a página
+
+1. Subir a API e abrir `http://localhost:3000/docs`.
+2. Em `POST /auth/login`, clicar em **Try it out**, preencher e-mail e senha e executar.
+3. Copiar o `token` da resposta e colá-lo no botão **Authorize**.
+4. Abrir qualquer rota, clicar em **Try it out**, preencher os campos e executar.
+5. Conferir o código e o corpo da resposta, que aparecem abaixo.

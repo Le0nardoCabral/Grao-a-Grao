@@ -15,12 +15,12 @@ Documentação nova, construída por etapas. O `ARQUITETURA.md` da raiz do repos
 | (raiz) | Regras para IA e mapa da documentação | `aiRules.md`, `indice.md` | existem |
 | `decisoes/` | Registro das decisões, com índice no topo | `decisoes.md` | existe |
 | `negocio/` | Contexto, regras de negócio e requisitos | `contexto.md`, `glossario.md`, `regrasDeNegocio.md`, `requisitos.md` | existem |
-| `api/` | Contrato HTTP | `endpoints.md`, `contratos.md` (existem); `swagger.md` | parcial |
-| `api/arquitetura/` | Como o sistema é organizado | `stack.md` (existe); `camadas.md`, `estruturaDePastas.md` | parcial |
-| `api/dados/` | Banco de dados | `modeloDeDados.md`, `migrations.md` | a criar |
-| `api/seguranca/` | Autenticação, perfis e proteção | `autenticacao.md`, `perfis.md`, `protecaoDeDados.md` | a criar |
+| `api/` | Contrato HTTP | `endpoints.md`, `contratos.md` | existem |
+| `arquitetura/` | Como o sistema é organizado | `stack.md`, `arquitetura.md` | existem |
+| `dados/` | Banco de dados | `modeloDeDados.md` | existe |
+| `seguranca/` | Autenticação, perfis e proteção | `seguranca.md` | existe |
 
-As convenções de código ficam no `aiRules.md` (Bloco 4), e não em `api/arquitetura/`.
+As convenções de código ficam no `aiRules.md` (Bloco 4), e não em `arquitetura/`.
 
 ## Blocos do aiRules.md
 
@@ -44,7 +44,7 @@ As convenções de código ficam no `aiRules.md` (Bloco 4), e não em `api/arqui
 | D | Acesso e perfis | `negocio/regrasDeNegocio.md` | escrito (aprovado) |
 | E | Requisitos funcionais | `negocio/requisitos.md` | escrito (aprovado) |
 | F | Requisitos não funcionais e fora de escopo | `negocio/requisitos.md` | escrito (aprovado) |
-| G | Demais pastas, na ordem da tabela de estrutura | — | pendente |
+| G | Demais pastas: api, dados, segurança e arquitetura | `api/`, `dados/`, `seguranca/`, `arquitetura/` | escrito (aprovado) |
 
 As etapas A a D estão escritas, e as 38 regras de negócio (RN-01 a RN-38) estão aprovadas.
 
@@ -55,4 +55,5 @@ As etapas A a D estão escritas, e as 38 regras de negócio (RN-01 a RN-38) est�
 - Contexto (`negocio/contexto.md`) e glossário (`negocio/glossario.md`) aprovados.
 - Endpoints (`api/endpoints.md`): 24 rotas aprovadas.
 - Contratos (`api/contratos.md`): campos, formato do erro, catálogo de 24 códigos, paginação e ordem das verificações da compra, aprovados.
-- As regras de trabalho com IA (Blocos 1 a 7 do `aiRules.md`) estão aprovadas e registradas nas decisões 7.1 a 7.26.
+- Swagger (seção 9 do `api/contratos.md`), modelo de dados (`dados/modeloDeDados.md`), segurança (`seguranca/seguranca.md`), arquitetura (`arquitetura/arquitetura.md`) e stack com as variáveis de ambiente (`arquitetura/stack.md`), aprovados.
+- As regras de trabalho com IA (Blocos 1 a 7 do `aiRules.md`) estão aprovadas.

@@ -2,7 +2,7 @@
 
 Tecnologias do projeto Grão a Grão.
 
-- **Versão:** 0.3
+- **Versão:** 0.6
 - **Data:** 2026-11-06
 - **Status:** `aprovado`, `proposto` (aguarda confirmação) ou `em aberto` (depende de uma decisão).
 
@@ -26,7 +26,9 @@ Tecnologias do projeto Grão a Grão.
 | Execução em desenvolvimento | `tsx` | 4 | aprovado |
 | Ambiente com contêineres | Docker e Docker Compose | — | aprovado |
 | Testes | `node:test`, o executor nativo do Node, rodado com `tsx` | nativo | aprovado |
-| Documentação da API | OpenAPI (Swagger) gerada a partir dos schemas Zod | — | aprovado |
+| Documentação da API | OpenAPI 3.1 (Swagger) gerada a partir dos schemas Zod | — | aprovado |
+| Página do Swagger | `swagger-ui-express` | a definir | aprovado |
+| Tipos da página do Swagger | `@types/swagger-ui-express`, só em desenvolvimento | a definir | aprovado |
 
 As versões são as de hoje no `package.json`, no `Dockerfile` e no `compose.yaml`. Ao atualizar uma dependência, atualizar esta tabela.
 
@@ -35,6 +37,26 @@ As versões são as de hoje no `package.json`, no `Dockerfile` e no `compose.yam
 | Área | Situação | Status |
 |---|---|---|
 | Lint e formatação | Não serão usados. As convenções do `aiRules.md` (Bloco 4) são cumpridas por revisão, sem verificação automática. | aprovado |
+
+## Variáveis de ambiente
+
+Ficam no arquivo `.env`, **fora do Git**. O `.env.example` traz só valores falsos.
+
+| Variável | Obrigatória | Para quê | Padrão ou exemplo | Status |
+|---|---|---|---|---|
+| `DATABASE_URL` | sim | Endereço do banco da aplicação. | `mysql://usuario:senha@host:3306/grao_a_grao` | aprovado |
+| `DATABASE_URL_TEST` | só nos testes | Endereço do banco de teste. | `.../grao_a_grao_teste` | aprovado |
+| `JWT_SECRET` | sim | Chave que assina o token. No mínimo 32 caracteres e diferente do valor de exemplo. | — | aprovado |
+| `JWT_EXPIRES_IN` | não | Validade do token. | `1d` | aprovado |
+| `BCRYPT_COST` | não | Custo do hash da senha. | `10` | aprovado |
+| `CORS_ORIGIN` | não | Origens liberadas no CORS, separadas por vírgula. Vazio libera nenhuma. | vazio | aprovado |
+| `PORT` | não | Porta da API. | `3000` | aprovado |
+| `NODE_ENV` | não | Ambiente de execução. | `development` | aprovado |
+| `SEED_ADMIN_EMAIL` | só na carga inicial | E-mail do primeiro admin. | — | aprovado |
+| `SEED_ADMIN_PASSWORD` | só na carga inicial | Senha do primeiro admin, com no mínimo 8 caracteres. | — | aprovado |
+| `SEED_ADMIN_NAME` | não | Nome do primeiro admin. | `Administrador` | aprovado |
+
+O servidor valida essas variáveis ao iniciar e **não sobe** se uma obrigatória faltar ou se a `JWT_SECRET` for insegura.
 
 ## Regras de uso
 
