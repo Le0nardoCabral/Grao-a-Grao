@@ -156,7 +156,7 @@ Os tetos de valor (preço, quantidade, valor bruto, limite do plano) estão em `
 | # | Regra |
 |---|---|
 | 1 | O schema do Prisma é a fonte do modelo, e cada mudança vira uma **migration**. |
-| 2 | A primeira migration se chama `inicial` e cria as oito tabelas, os índices e as chaves. **Ela ainda não existe.** |
+| 2 | A primeira migration se chama `inicial` e cria as oito tabelas, os índices e as chaves. **Ela já existe** (`20261109120000_inicial`). |
 | 3 | Uma pessoa gera a migration e a commita. Migration já commitada **não é editada**: mudança de schema entra em migration nova (Bloco 5 do `aiRules.md`). |
 | 4 | Os testes rodam em um **banco de teste próprio**, indicado pela variável `DATABASE_URL_TEST` (por exemplo, `grao_a_grao_teste`, criado local), nunca no banco compartilhado. As tabelas desse banco são criadas por `migrate deploy` apontando para `DATABASE_URL_TEST`. Cada teste limpa só as tabelas que usa, sem `migrate reset`. |
 

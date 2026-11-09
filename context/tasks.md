@@ -43,7 +43,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 
 **Fase 2 — Base**
 - [x] **Task 5 — Migration inicial** · 1 teste · depende de: 1
-- [ ] **Task 6 — Infraestrutura de testes** · 1 teste · depende de: 5
+- [x] **Task 6 — Infraestrutura de testes** · 1 teste · depende de: 5
 - [ ] **Task 7 — Base de erros** · 1 teste · depende de: 6
 
 **Fase 3 — Acesso**

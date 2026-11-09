@@ -110,66 +110,6 @@ Peças de apoio:
 
 ## 3. Estrutura de pastas
 
-```text
-src/
-├── app.ts
-├── server.ts
-├── config/
-│   └── env.ts
-├── routes/
-│   ├── routes.ts
-│   ├── authRoutes.ts
-│   ├── clientesRoutes.ts
-│   ├── planosRoutes.ts
-│   ├── produtosRoutes.ts
-│   ├── comprasRoutes.ts
-│   └── docsRoutes.ts
-├── controllers/
-│   ├── authController.ts
-│   ├── clientesController.ts
-│   ├── planosController.ts
-│   ├── produtosController.ts
-│   └── comprasController.ts
-├── services/
-│   ├── authService.ts
-│   ├── clientesService.ts
-│   ├── planosService.ts
-│   ├── produtosService.ts
-│   ├── registrarCompraService.ts
-│   ├── trocarPlanoService.ts
-│   └── extratoService.ts
-├── repositories/
-│   ├── prismaClient.ts
-│   ├── usuariosRepository.ts
-│   ├── clientesRepository.ts
-│   ├── planosRepository.ts
-│   ├── produtosRepository.ts
-│   ├── comprasRepository.ts
-│   └── lotesRepository.ts
-├── middlewares/
-│   ├── authenticate.ts
-│   ├── authorizeRole.ts
-│   ├── validate.ts
-│   └── errorHandler.ts
-├── validators/
-│   ├── authSchemas.ts
-│   ├── clientesSchemas.ts
-│   ├── planosSchemas.ts
-│   ├── produtosSchemas.ts
-│   └── comprasSchemas.ts
-├── errors/
-│   ├── appError.ts
-│   └── errorCodes.ts
-└── docs/
-    └── openApi.ts
-
-prisma/
-├── schema.prisma
-├── seed.ts
-└── migrations/
-
-tests/
-└── <arquivo testado>.test.ts   (por exemplo, registrarCompraService.test.ts, com node:test)
-```
+A árvore de pastas está na seção 1, com os nomes reais dos arquivos.
 
 A estrutura é a de partida: pasta ou arquivo novo entra quando uma responsabilidade nova aparecer.
