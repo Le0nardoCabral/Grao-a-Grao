@@ -17,10 +17,12 @@ O que cada rota recebe e devolve: campos, formatos e limites. As rotas estão em
 | 3 | **Dinheiro** em centavos inteiros, nos campos com sufixo `Centavos`. **Percentual** em pontos-base, no campo `percentualBps` (2% é 200). |
 | 4 | **Datas e horas** em ISO 8601 e UTC (`2026-11-06T13:00:00.000Z`). A data de nascimento é só a data (`1990-05-17`). |
 | 5 | Campo que não existe no contrato é **rejeitado** com `400`. |
-| 6 | Campo opcional pode ser omitido ou vir `null`. |
+| 6 | Campo opcional pode ser **omitido**. `null` só é aceito nos campos marcados "ou `null`" (e-mail, telefone, data de nascimento e descrição). Nos demais, `null` responde `VALIDATION_ERROR`. Campo com padrão (`validadeDias`, `dobroAniversario`, `cashbackSolicitadoCentavos`) usa o padrão **só no cadastro**. Em uma **atualização** (`PUT`), campo omitido **mantém o valor gravado**. |
 | 7 | Cabeçalhos: `Authorization: Bearer <token>` nas rotas privadas, `Content-Type: application/json` nas que têm corpo e `Idempotency-Key` na compra. |
 | 8 | `DELETE` responde `204` sem corpo. |
 | 9 | Valores têm **limites** para caber no banco: preço de produto até 10.000.000 centavos, quantidade até 1.000 por item, até 100 itens por compra e **valor bruto da compra até 100.000.000 centavos** (R$ 1 milhão). Acima disso, `400`. |
+| 10 | Um registro **desativado** é tratado como **inexistente** (`404`) quando é o alvo da rota (o `:id` da URL), exceto na reativação e na consulta com `incluirInativos` (ADMIN). Quando o desativado é uma **referência no corpo** (`clienteId`, `produtoId`, `planoId`), a resposta é `409` com `CLIENT_INACTIVE`, `PRODUCT_INACTIVE` ou `PLAN_INACTIVE`. |
+| 11 | Desativar de novo um registro já desativado, ou atualizar um desativado, responde `404`. Trocar o cliente para o plano em que ele já está responde `200`, sem alterar nada. |
 
 ## 2. Resposta de erro
 
@@ -66,7 +68,7 @@ Outro erro (`404`), sem `detalhes`:
 | `CASHBACK_BELOW_PLAN_MINIMUM` | 400 | O cashback solicitado é menor que o mínimo de uso do plano. | `POST /compras` |
 | `UNAUTHENTICATED` | 401 | Token ausente, inválido ou vencido, ou usuário inativo. | Toda rota privada |
 | `INVALID_CREDENTIALS` | 401 | E-mail ou senha incorretos no login, ou usuário inativo. | `POST /auth/login` |
-| `FORBIDDEN` | 403 | O perfil não tem permissão, ou o ATENDENTE enviou `incluirInativos`. | Rotas exclusivas do ADMIN; listagens, consultas e extrato |
+| `FORBIDDEN` | 403 | O perfil não tem permissão, ou o ATENDENTE enviou `incluirInativos=true`. | Rotas exclusivas do ADMIN; listagens, consultas e extrato |
 | `NOT_FOUND` | 404 | A rota não existe. | Qualquer caminho inexistente |
 | `CLIENT_NOT_FOUND` | 404 | Cliente inexistente, ou desativado e consultado sem `incluirInativos`. | Rotas de cliente com `:id`, extrato, troca de plano, reativação de cliente, `POST /compras` |
 | `PLAN_NOT_FOUND` | 404 | Plano inexistente, ou desativado e consultado sem `incluirInativos`. | Rotas de plano com `:id`, reativação de plano, `POST /clientes`, troca de plano |
@@ -82,6 +84,7 @@ Outro erro (`404`), sem `detalhes`:
 | `ALREADY_ACTIVE` | 409 | Tentativa de reativar um cliente, plano ou produto que já está ativo. | As três rotas de reativação |
 | `INSUFFICIENT_CASHBACK` | 409 | O cashback solicitado é maior que o saldo disponível. | `POST /compras` |
 | `IDEMPOTENCY_KEY_CONFLICT` | 409 | A mesma `Idempotency-Key` chegou com conteúdo diferente. | `POST /compras` |
+| `PURCHASE_CONFLICT` | 409 | Conflito temporário ao registrar a compra: a espera pelo bloqueio esgotou ou o banco abortou a transação. Repetir com a mesma chave. | `POST /compras` |
 | `INTERNAL_ERROR` | 500 | Falha inesperada. A resposta nunca traz detalhe interno. | Qualquer rota |
 
 Todo código usado pelo sistema precisa constar nesta tabela. O catálogo do código (`ErrorCodes`) usa exatamente estes nomes.
@@ -90,7 +93,8 @@ Todo código usado pelo sistema precisa constar nesta tabela. O catálogo do có
 
 | Item | Definição |
 |---|---|
-| Entrada | Query `pagina` (padrão 1) e `limite` (padrão 20, máximo 100). |
+| Entrada | Query `pagina` (padrão 1, mínimo 1) e `limite` (padrão 20, de 1 a 100). Fora desses valores, `400`. |
+| Ordem | Por `nome` crescente e, em empate, por `id` crescente. |
 | Saída | `{ "dados": [...], "pagina": 1, "limite": 20, "total": 134 }` |
 | Filtro | `incluirInativos=true`, só para o ADMIN. |
 
@@ -156,10 +160,21 @@ Resposta `201`: `id`, `nome`, `email`, `perfil` (sempre `ATENDENTE`) e `ativo`. 
 |---|---|---|
 | `clienteId` | inteiro | |
 | `saldoDisponivelCentavos` | inteiro | Soma dos lotes não vencidos. |
-| `lotesAVencer` | lista | Lotes que vencem nos próximos 30 dias: `id`, `saldoCentavos`, `venceEm`. |
+| `lotesAVencer` | lista | Lotes com `agora < venceEm <= agora + 30 dias`, do que vence primeiro ao que vence depois: `id`, `saldoCentavos`, `venceEm`. |
 | `movimentos` | lista | Os últimos 50, do mais novo ao mais antigo: `tipo`, `valorCentavos`, `ocorreuEm`, `compraId`, `loteId`. O `compraId` é `null` na expiração, que não vem de uma compra. |
 
 O `tipo` do movimento é um valor de enum: `CREDITO`, `USO` ou `EXPIRACAO`.
+
+**Critérios do extrato**, para a resposta ser sempre a mesma:
+
+| # | Critério |
+|---|---|
+| 1 | Uma compra que consome três lotes gera **três movimentos de uso**, um por lote. |
+| 2 | A `ocorreuEm` de uma expiração é o `venceEm` do lote. |
+| 3 | A ordem é do mais novo ao mais antigo por `ocorreuEm`. Em empate, vale a ordem fixa de tipo `CREDITO`, `USO`, `EXPIRACAO` e, dentro do mesmo tipo, o maior id da origem (lote ou uso). |
+| 4 | O corte nos 50 movimentos acontece **depois** dessa ordenação. |
+| 5 | Como o extrato não grava nada, o lote vencido aparece como expiração mesmo antes de ser marcado no banco. A resposta é a mesma antes e depois dessa marcação. |
+| 6 | Só um lote `ATIVO` ou `PARCIAL`, **com saldo positivo**, produz expiração. Um lote `CONSUMIDO` não gera movimento de perda, mesmo depois de vencido. |
 
 ---
 
@@ -174,7 +189,7 @@ O `tipo` do movimento é um valor de enum: `CREDITO`, `USO` ou `EXPIRACAO`.
 | `percentualBps` | inteiro | De 1 a 5.000 (de 0,01% a 50%), para que o dobro do aniversário chegue no máximo a 100%. |
 | `limiteCentavos` | inteiro | Maior que zero, até 100.000.000. |
 | `minimoUsoCentavos` | inteiro | De zero até 100.000.000, e **não maior que o `limiteCentavos`** do mesmo plano. |
-| `dobroAniversario` | booleano | |
+| `dobroAniversario` | booleano | Padrão falso. |
 | `validadeDias` | inteiro | De 1 a 3.650 (10 anos). Padrão 180. |
 | `ativo` | booleano | |
 | `criadoEm`, `atualizadoEm` | data e hora | |
@@ -227,6 +242,16 @@ No `PUT`, a regra "mínimo de uso não maior que o limite" vale sobre os **valor
 ### `POST /compras`
 
 **Cabeçalho obrigatório:** `Idempotency-Key`, texto livre de 1 a 64 caracteres. Para reenviar a mesma compra, use a mesma chave.
+
+**Idempotência, em detalhe**
+
+| # | Regra |
+|---|---|
+| 1 | A chave vale **por usuário**: o mesmo texto de dois usuários são chaves diferentes. |
+| 2 | "Mesmo conteúdo" é o mesmo `clienteId`, os mesmos itens (`produtoId` e `quantidade`), **sem importar a ordem**, e o mesmo cashback solicitado (omitido vale zero). |
+| 3 | Duas requisições simultâneas com a mesma chave: a primeira grava, e a segunda espera dentro dos limites da transação. A segunda recebe `200` com a compra gravada se o conteúdo for igual, ou `409` se for diferente. |
+| 4 | A chave **só existe se a compra foi gravada**. Uma primeira tentativa desfeita (por falha ou conflito) **não reserva a chave**. |
+| 5 | Se a espera esgotar, ou o banco abortar uma transação por conflito, a resposta é `409` com `PURCHASE_CONFLICT`. Não há nova tentativa interna: quem chama repete a compra com a **mesma chave**. |
 
 **Corpo**
 

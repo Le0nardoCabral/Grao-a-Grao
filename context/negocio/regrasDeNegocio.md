@@ -67,7 +67,7 @@ O mínimo de R$ 20,00 do Intermediário é uma escolha do grupo, para manter a m
 |---|---|---|
 | RN-24 | O lote vence na data de geração mais a **validade do plano vigente no momento da compra**. O vencimento é calculado e comparado no horário de **Brasília**. | aprovado |
 | RN-25 | Um lote vencido **não conta** no saldo e **não pode ser usado**, mesmo antes de ser marcado como expirado. No **instante exato** do vencimento, o lote já está vencido. | aprovado |
-| RN-26 | Um lote vencido passa a **expirado**, e o valor que expirou **fica registrado**, para o extrato mostrar o que se perdeu. | aprovado |
+| RN-26 | Um lote vencido **que ainda tinha saldo** passa a **expirado**, e o valor que expirou **fica registrado**, para o extrato mostrar o que se perdeu. Um lote totalmente usado continua **consumido**, sem perda. | aprovado |
 | RN-27 | Um lote ainda não usado fica **ativo**. Um lote totalmente usado fica **consumido**. Um lote parcialmente usado fica **parcial**. | aprovado |
 
 ## 6. Troca de plano

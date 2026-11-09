@@ -146,6 +146,8 @@ erDiagram
 | 4 | Lotes vencidos são marcados `EXPIRADO` só dentro da transação da compra. O **extrato não grava nada**: ele trata o lote vencido como expirado ao calcular. O saldo disponível soma só os lotes `ATIVO` ou `PARCIAL` que ainda não venceram. |
 | 5 | Compras antigas guardam o preço da época nos itens, então mudar o preço de um produto não as altera. |
 | 6 | A `chaveIdempotencia` é comparada de forma **exata** (`ABC` e `abc` são chaves diferentes). Nomes e e-mails únicos ignoram maiúsculas e acentos, o padrão do MySQL, para evitar duplicatas como "Café" e "Cafe". |
+| 7 | Desativar um plano e vincular um cliente a ele (cadastro, reativação ou troca de plano) **bloqueiam a linha do plano** (`SELECT ... FOR UPDATE`), para a RN-05 nunca ser violada por duas operações ao mesmo tempo. |
+| 8 | Na compra, o **instante de referência é obtido depois de conseguir o bloqueio do cliente** e vale para tudo: o saldo, os vencimentos, o aniversário, `criadaEm` e `geradoEm`. Assim, uma espera pelo bloqueio nunca mistura dois momentos. |
 
 Os tetos de valor (preço, quantidade, valor bruto, limite do plano) estão em `contratos.md` e cabem em `Int`.
 

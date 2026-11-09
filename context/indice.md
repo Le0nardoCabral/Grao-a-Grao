@@ -12,11 +12,11 @@ Documentação nova, construída por etapas. O `ARQUITETURA.md` da raiz do repos
 
 | Pasta | Conteúdo | Arquivos | Situação |
 |---|---|---|---|
-| (raiz) | Regras para IA e mapa da documentação | `aiRules.md`, `indice.md` | existem |
+| (raiz) | Regras para IA, mapa da documentação e lista de tasks | `aiRules.md`, `indice.md`, `tasks.md` | existem |
 | `decisoes/` | Registro das decisões, com índice no topo | `decisoes.md` | existe |
 | `negocio/` | Contexto, regras de negócio e requisitos | `contexto.md`, `glossario.md`, `regrasDeNegocio.md`, `requisitos.md` | existem |
 | `api/` | Contrato HTTP | `endpoints.md`, `contratos.md` | existem |
-| `arquitetura/` | Como o sistema é organizado | `stack.md`, `arquitetura.md` | existem |
+| `arquitetura/` | Como o sistema é organizado | `stack.md`, `arquitetura.md`, `visaoGeralDaApi.md` | existem |
 | `dados/` | Banco de dados | `modeloDeDados.md` | existe |
 | `seguranca/` | Autenticação, perfis e proteção | `seguranca.md` | existe |
 
@@ -54,6 +54,7 @@ As etapas A a D estão escritas, e as 38 regras de negócio (RN-01 a RN-38) est�
 - Requisitos funcionais (RF-01 a RF-24), não funcionais (RNF-01 a RNF-14) e fora de escopo aprovados em `negocio/requisitos.md`.
 - Contexto (`negocio/contexto.md`) e glossário (`negocio/glossario.md`) aprovados.
 - Endpoints (`api/endpoints.md`): 24 rotas aprovadas.
-- Contratos (`api/contratos.md`): campos, formato do erro, catálogo de 24 códigos, paginação e ordem das verificações da compra, aprovados.
+- Contratos (`api/contratos.md`): campos, formato do erro, catálogo de 25 códigos, paginação e ordem das verificações da compra, aprovados.
 - Swagger (seção 9 do `api/contratos.md`), modelo de dados (`dados/modeloDeDados.md`), segurança (`seguranca/seguranca.md`), arquitetura (`arquitetura/arquitetura.md`) e stack com as variáveis de ambiente (`arquitetura/stack.md`), aprovados.
 - As regras de trabalho com IA (Blocos 1 a 7 do `aiRules.md`) estão aprovadas.
+- Lista de 18 tasks e 20 testes em `tasks.md`, aprovada.

@@ -60,7 +60,9 @@ Regras que qualquer IA usada pelos 4 integrantes deve seguir neste projeto. Este
    - Se a IA achar que o teste está errado, ela para, explica o motivo ao usuário e espera. Só altera o teste se o usuário pedir, e o motivo é registrado em `decisoes/decisoes.md`.
    - Teste novo é permitido quando o plano aprovado o prevê.
 7. **Teste primeiro.** Para cada task, a IA escreve os testes **a partir da especificação** (`RN`, `RF`, `RNF`), sem ler a implementação. Os testes entram no plano de implementação (Bloco 1, regra 5) e só são criados depois da aprovação do usuário.
-8. **Ver os testes falharem antes de implementar.** Rodar os testes novos e confirmar que falham porque a funcionalidade ainda não existe. Só então implementar, até passarem, sem alterar os testes (regra 6). Teste que já passa antes da implementação não está testando nada: a IA avisa o usuário.
+8. **Rodar os testes antes de implementar.**
+   - Para **comportamento novo** ou defeito reproduzido, o teste deve **falhar** antes: confirmar que falha porque a funcionalidade ainda não existe, e só então implementar, até passar, sem alterar os testes (regra 6). Se esse teste já passar, a IA avisa o usuário.
+   - Para task que **preserva comportamento** (limpeza, renomeação), o teste deve **passar antes e depois**.
 9. **Nada de atalhos.** Nunca engolir erro (`try/catch` vazio), nunca trocar uma regra por um valor fixo para o teste passar, nunca desligar validação ou autenticação "só para funcionar".
 10. **Sem `TODO` solto no código.** Pendência vai para o relatório final, com responsável.
 11. **Avisar antes de qualquer comando que execute algo** (instalar pacote, rodar migration, seed ou testes), informando o que vai rodar e em qual ambiente.
@@ -79,6 +81,7 @@ Regras que qualquer IA usada pelos 4 integrantes deve seguir neste projeto. Este
    - a mensagem de commit proposta (sem referência a task nem a requisito);
    - divergências encontradas entre a especificação e o código.
 5. **O relatório vem antes de a task ser considerada concluída.** Sem relatório, a task não terminou. O commit só acontece depois que o usuário aprova o relatório e pede (Bloco 5, regra 9).
+6. **Marcar a task como concluída** em `tasks.md` (`[x]`) **só depois de perguntar ao usuário e ele permitir**. A IA nunca marca sozinha, e desmarca se o usuário pedir.
 
 ---
 
@@ -106,6 +109,7 @@ Regras que qualquer IA usada pelos 4 integrantes deve seguir neste projeto. Este
 | Login, perfis de acesso, senha, token, proteção de dados | `seguranca/seguranca.md` | `seguranca` | existe |
 | Schema, migration, seed, banco de teste | `dados/modeloDeDados.md` e as regras de banco de dados do Bloco 5 (regras 6 a 8) | `dados` | existe; Bloco 5 escrito |
 | Commit, push, pull ou mensagem de commit | Bloco 5 deste arquivo (Git e mensagem de commit) | `git` | escrito |
+| Escolher, planejar ou acompanhar uma task | `tasks.md` | `processoIa` | existe |
 | Alterar a especificação, o `aiRules.md` ou as decisões | Blocos 1 e 6 deste arquivo (pasta somente leitura e como escrever a documentação) | `processoIa`, `documentacao` | escrito |
 
 A coluna "Situação" é atualizada quando cada arquivo nascer.

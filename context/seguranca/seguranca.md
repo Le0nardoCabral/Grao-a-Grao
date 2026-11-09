@@ -10,7 +10,7 @@ Como a API protege o acesso e os dados. Simples e suficiente para o projeto.
 
 | # | Tema | Regra |
 |---|---|---|
-| 1 | **Login** | O usuário entra com e-mail e senha e recebe um **token** (JWT) que vale **1 dia**. |
+| 1 | **Login** | O usuário entra com e-mail e senha e recebe um **token** (JWT). A validade é **configurável** (`JWT_EXPIRES_IN`), com padrão de **1 dia**. |
 | 2 | **Token** | Vai em `Authorization: Bearer <token>`. A cada requisição o usuário é conferido no banco e, se for desativado nele, perde o acesso na hora. |
 | 3 | **Senha** | Guardada só como **hash bcrypt**, com custo 10 configurável. O hash nunca sai em resposta. |
 | 4 | **Perfis** | `ADMIN` e `ATENDENTE`. Cada rota diz quem a usa em [endpoints.md](../api/endpoints.md). Sem permissão, a resposta é `403`. |
