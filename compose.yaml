@@ -29,6 +29,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./prisma/initDb.sql:/docker-entrypoint-initdb.d/initDb.sql:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot_dev"]
       interval: 5s
