@@ -2,7 +2,7 @@
 
 Lista das tasks para construir a API, na ordem de execução, com o teste de cada uma.
 
-- **Versão:** 2.4
+- **Versão:** 2.5
 - **Data:** 2026-11-06
 - **Marcação:** `[ ]` pendente e `[x]` concluída. Só o usuário permite marcar.
 
@@ -16,7 +16,7 @@ Cada task segue o `aiRules.md`: plano aprovado antes, **teste escrito primeiro**
 
 | # | Regra |
 |---|---|
-| 1 | **Um teste simples por task**, que confere o resultado principal. A compra tem 3, por ser a regra principal. Total: **20 testes**. |
+| 1 | **Um teste simples por task**, que confere o resultado principal. A compra tem 3, por ser a regra principal. Total: **19 testes**. |
 | 2 | Ferramenta: `node:test`, rodado por `npm test`, no banco de teste (`DATABASE_URL_TEST`). Antes de o `npm test` existir (task 2), o teste roda com `node --import tsx --test`. |
 | 3 | A saída mostra `✔` quando passou e `✖` quando falhou, com o que veio de errado. |
 | 4 | O teste fica em `tests/<arquivo testado>.test.ts`. |
@@ -37,12 +37,12 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 
 **Fase 1 — Ambiente e limpeza**
 - [x] **Task 1 — Ambiente local** · 1 teste · depende de: —
-- [ ] **Task 2 — Configuração do projeto** · 1 teste · depende de: 1
+- [x] **Task 2 — Configuração do projeto** · 1 teste · depende de: 1
 - [ ] **Task 3 — Limpeza dos arquivos antigos** · 1 teste · depende de: 2
-- [ ] **Task 4 — Padronização de nomes e pastas** · 1 teste · depende de: 3
+- [ ] ~~Task 4 — Padronização de nomes e pastas~~ · **dispensada** · 0 testes · os nomes de `src/` já seguem a convenção
 
 **Fase 2 — Base**
-- [ ] **Task 5 — Migration inicial** · 1 teste · depende de: 1, 4
+- [ ] **Task 5 — Migration inicial** · 1 teste · depende de: 1, 3
 - [ ] **Task 6 — Infraestrutura de testes** · 1 teste · depende de: 5
 - [ ] **Task 7 — Base de erros** · 1 teste · depende de: 6
 
@@ -65,7 +65,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 - [ ] **Task 17 — Swagger** · 1 teste · depende de: 7
 - [ ] **Task 18 — Fechamento** · 1 teste · depende de: todas
 
-**Total:** 18 tasks e 20 testes.
+**Total:** 18 tasks (a 4 foi dispensada) e 19 testes.
 
 ---
 
@@ -82,15 +82,13 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 - **Teste:** *o projeto compila* (`npm run build` termina sem erro).
 
 ### Task 3 — Limpeza dos arquivos antigos
-- **Entrega:** remover o que a especificação não prevê e que nada usa: `src/config/Security.ts`, a pasta `src/dtos/` e qualquer arquivo solto sem uso. Os arquivos de uma linha que serão reescritos (`PlanosService`, `ExtratoService` e outros) ficam, com o nome novo, até a task deles. O `NotImplemented.ts` sai na task 18, quando nenhuma rota depender dele. A lista exata é definida no plano da task, depois de ler o código.
+- **Entrega:** remover o que a especificação não prevê e que nada usa: `src/config/Security.ts`, a pasta `src/dtos/` e qualquer arquivo solto sem uso. Os arquivos de uma linha que serão reescritos (`PlanosService`, `TrocarPlanoService` e outros) ficam, com o mesmo nome, até a task deles. O `NotImplemented.ts` sai na task 18, quando nenhuma rota depender dele. A lista exata é definida no plano da task, depois de ler o código.
 - **Decisão do usuário nesta task:** o destino do `ARQUITETURA.md` e do PDF do enunciado na raiz do repositório, já que a documentação agora está em `context/`.
 - **Atende:** `arquitetura/arquitetura.md`.
 - **Teste:** *o projeto continua compilando depois da limpeza*. Como a task preserva o comportamento, o teste **passa antes e depois**.
 
-### Task 4 — Padronização de nomes e pastas
-- **Entrega:** renomear os arquivos de `src/` para `camelCase` no padrão `<recurso><Papel>.ts` (`App.ts` vira `app.ts`, `Server.ts` vira `server.ts`, `Routes.ts` vai para `routes/routes.ts`, `PrismaClient.ts` vira `prismaClient.ts`), com `git mv` e os imports ajustados. Sem mudar nenhum comportamento.
-- **Atende:** Bloco 4 do `aiRules.md`, `arquitetura/arquitetura.md`.
-- **Teste:** *a API sobe e `GET /produtos` sem token responde `401`*, para provar que nada quebrou. Como a task preserva o comportamento, o teste **passa antes e depois**.
+
+- **Motivo:** o grupo decidiu manter a convenção que o código já usa (arquivos em `PascalCase`, no padrão `<Recurso><Papel>.ts`), então não há nada a renomear em `src/`. A task fica registrada para não renumerar as demais, e **não tem teste**.
 
 ---
 
@@ -183,7 +181,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 ### Task 18 — Fechamento
 - **Entrega:** remover o `NotImplemented.ts`, atualizar o README (instalação, execução e como rodar os testes) e a revisão final, que inclui a **revisão manual da segurança**: limite do corpo, Helmet, CORS, token, senha com hash, logs sem segredos e o hash fictício do login.
 - **Atende:** RNF-05, RNF-14.
-- **Teste:** *o servidor não sobe quando falta uma variável obrigatória, como a `JWT_SECRET`*. Ao fim, `npm test` roda os 20 testes.
+- **Teste:** *o servidor não sobe quando falta uma variável obrigatória, como a `JWT_SECRET`*. Ao fim, `npm test` roda os 19 testes.
 
 ---
 

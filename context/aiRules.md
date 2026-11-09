@@ -120,11 +120,11 @@ A coluna "Situação" é atualizada quando cada arquivo nascer.
 
 ### Nomes
 
-1. **camelCase:** variáveis, funções, métodos, parâmetros, instâncias, campos de JSON e do banco, schemas Zod, middlewares, routers e **nomes de arquivo**. Ex.: `valorBrutoCentavos`, `criarProdutoSchema`, `authenticate`, `produtosRoutes`.
-2. **PascalCase:** classes, tipos, interfaces, nomes de enum, objetos de constantes que fazem papel de enum e models do Prisma. Ex.: `ProdutosService`, `AppError`, `StatusLote`, `ErrorCodes`, `LoteCashback`.
+1. **camelCase:** variáveis, funções, métodos, parâmetros, instâncias e campos de JSON e do banco. Ex.: `valorBrutoCentavos`, `precoUnitarioCentavos`.
+2. **PascalCase:** classes, tipos, interfaces, nomes de enum, objetos de constantes que fazem papel de enum, models do Prisma, **peças exportadas do sistema (schemas Zod, middlewares e routers)** e **nomes de arquivo de código**, como o código do projeto já faz. Ex.: `ProdutosService`, `AppError`, `StatusLote`, `ErrorCodes`, `LoteCashback`, `CriarProdutoSchema`, `Authenticate`, `ProdutosRoutes`.
 3. **MAIÚSCULAS:** valores de enum, entradas de objetos de constantes que fazem papel de enum, códigos de erro (com `_`) e constantes fixas. Ex.: `ADMIN`, `ErrorCodes.CLIENT_NOT_FOUND`, `MAX_ITENS`.
-4. **Arquivos de código:** `camelCase`, no padrão `<recurso><Papel>.ts`, com o **recurso no plural**, igual à rota, e o mesmo em todos os papéis. Ex.: `produtosService.ts`, `produtosRoutes.ts`, `produtosSchemas.ts`. Pastas em minúsculas.
-   - **Exceção:** middlewares e casos de uso que não pertencem a um só recurso usam o **nome da ação**, sem recurso no plural. Os arquivos de infraestrutura (`app.ts`, `server.ts`, `env.ts`, `routes.ts`, `prismaClient.ts`) também ficam fora do padrão. Ex.: `authenticate.ts`, `validate.ts`, `errorHandler.ts`, `registrarCompraService.ts`, `trocarPlanoService.ts`.
+4. **Arquivos de código:** `PascalCase`, no padrão `<Recurso><Papel>.ts`, com o **recurso no plural**, igual à rota, como o código já faz. Ex.: `ProdutosService.ts`, `ProdutosRoutes.ts`, `ProdutosController.ts`. Os `Schemas` usam o recurso no singular, como no código (`ProdutoSchemas.ts`, `ClienteSchemas.ts`). Pastas em minúsculas.
+   - **Exceção:** middlewares e casos de uso que não pertencem a um só recurso usam o **nome da ação**, sem recurso no plural. Ex.: `Authenticate.ts`, `Validate.ts`, `ErrorHandler.ts`, `RegistrarCompraService.ts`, `TrocarPlanoService.ts`.
 5. **Idioma:** domínio em português (`cliente`, `compra`); termos técnicos e códigos de erro em inglês; mensagens ao usuário em português.
    - **Código de erro é inteiro em inglês, inclusive o termo de domínio traduzido** (`CLIENT_`, `PLAN_`, `PRODUCT_`, `PURCHASE_`).
    - **Sem acento, cedilha ou til nos identificadores** (variáveis, funções, campos, rotas, arquivos, pastas, códigos de erro): `situacao` e não `situação`, `nao` e não `não`.
@@ -139,7 +139,7 @@ A coluna "Situação" é atualizada quando cada arquivo nascer.
 ### Validação
 
 10. Toda entrada (`body`, `params`, `query`) é validada com **Zod** antes de chegar ao service.
-11. Schemas ficam em `validators/`, com sufixo `Schema` e prefixo de ação (`criarProdutoSchema`, `atualizarProdutoSchema`).
+11. Schemas ficam em `validators/`, com sufixo `Schema` e prefixo de ação (`CriarProdutoSchema`, `AtualizarProdutoSchema`).
 
 ### Erros
 
@@ -149,7 +149,7 @@ A coluna "Situação" é atualizada quando cada arquivo nascer.
 
 ### TypeScript
 
-15. Modo `strict`. Imports locais terminam em `.js` (ESM), com o nome do arquivo em camelCase. Usar `import type` para tipos.
+15. Modo `strict`. Imports locais terminam em `.js` (ESM), com o nome do arquivo exatamente como ele é (em PascalCase). Usar `import type` para tipos.
 16. Sem `any`. Quando o tipo for desconhecido, usar `unknown` e validar.
 17. **Comentários:**
     - Só quando necessário. **Funções** recebem uma linha com o propósito, sem narrar os passos.
@@ -216,7 +216,7 @@ Valem para os arquivos de `context/`, quando o usuário pedir ou aprovar uma mud
 3. **Texto curto e verificável.** Frases curtas, sem ambiguidade. Evitar termos que ninguém consegue testar ("de forma adequada", "rápido"). Preferir tabelas a parágrafos longos.
 4. **Rastreabilidade.** Endpoint, tabela e decisão apontam para o `RN`, `RF` ou `RNF` que atendem.
 5. **Uma fonte por assunto.** Não copiar texto de outro arquivo: apontar para ele. Ao mudar uma regra, mudar só o arquivo de origem.
-6. **Arquivos.** Nome em `camelCase`, sem acento nem espaço. O arquivo só nasce quando houver conteúdo confirmado (Bloco 7, regra 12).
+6. **Arquivos de documentação.** Nome em `camelCase`, sem acento nem espaço. O arquivo só nasce quando houver conteúdo confirmado (Bloco 7, regra 12).
 7. **Idioma.** Português do Brasil, com acento nos textos. As regras de identificadores sem acento valem só para o código (Bloco 4).
 8. **O enunciado do trabalho não é citado** na documentação.
 9. **Registro de decisões** em `decisoes/decisoes.md`:

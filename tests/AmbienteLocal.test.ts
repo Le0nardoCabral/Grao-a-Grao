@@ -10,7 +10,7 @@ test("os bancos locais de desenvolvimento e teste respondem a uma consulta simpl
     assert.ok(valor, `${variavel} deve estar definida`);
     const url = new URL(valor);
     assert.equal(url.protocol, "mysql:");
-    assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(url.hostname), `${variavel} deve apontar para um banco local`);
+    assert.ok(["localhost", "127.0.0.1", "[::1]", "db"].includes(url.hostname), `${variavel} deve apontar para um banco local`);
     return url;
   });
 

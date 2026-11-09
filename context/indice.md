@@ -57,4 +57,4 @@ As etapas A a D estão escritas, e as 38 regras de negócio (RN-01 a RN-38) est�
 - Contratos (`api/contratos.md`): campos, formato do erro, catálogo de 25 códigos, paginação e ordem das verificações da compra, aprovados.
 - Swagger (seção 9 do `api/contratos.md`), modelo de dados (`dados/modeloDeDados.md`), segurança (`seguranca/seguranca.md`), arquitetura (`arquitetura/arquitetura.md`) e stack com as variáveis de ambiente (`arquitetura/stack.md`), aprovados.
 - As regras de trabalho com IA (Blocos 1 a 7 do `aiRules.md`) estão aprovadas.
-- Lista de 18 tasks e 20 testes em `tasks.md`, aprovada.
+- Lista de 18 tasks (uma dispensada) e 19 testes em `tasks.md`, aprovada.

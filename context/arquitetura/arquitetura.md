@@ -2,7 +2,7 @@
 
 Como o código é dividido e onde cada coisa fica. As tecnologias estão em [stack.md](stack.md), e as convenções de escrita no Bloco 4 do `aiRules.md`.
 
-- **Versão:** 0.3
+- **Versão:** 0.4
 - **Data:** 2026-11-06
 - **Status:** `aprovado`.
 
@@ -13,7 +13,70 @@ Como o código é dividido e onde cada coisa fica. As tecnologias estão em [sta
 A arquitetura é **em camadas**. Cada requisição passa pelas camadas nesta ordem, e cada camada só chama a seguinte.
 
 ```text
-rota  →  controller  →  service  →  repository  →  banco
+src/
+├── App.ts
+├── Server.ts
+├── Routes.ts
+├── config/
+│   └── Env.ts
+├── routes/
+│   ├── AuthRoutes.ts
+│   ├── ClientesRoutes.ts
+│   ├── PlanosRoutes.ts
+│   ├── ProdutosRoutes.ts
+│   ├── ComprasRoutes.ts
+│   └── DocsRoutes.ts
+├── controllers/
+│   ├── AuthController.ts
+│   ├── ClientesController.ts
+│   ├── PlanosController.ts
+│   ├── ProdutosController.ts
+│   └── ComprasController.ts
+├── services/
+│   ├── AuthService.ts
+│   ├── ClientesService.ts
+│   ├── PlanosService.ts
+│   ├── ProdutosService.ts
+│   ├── RegistrarCompraService.ts
+│   ├── TrocarPlanoService.ts
+│   ├── ExtratoService.ts
+│   └── CashbackDateService.ts
+├── repositories/
+│   ├── PrismaClient.ts
+│   ├── UsuariosRepository.ts
+│   ├── ClientesRepository.ts
+│   ├── PlanosRepository.ts
+│   ├── ProdutosRepository.ts
+│   ├── ComprasRepository.ts
+│   ├── ExtratoRepository.ts
+│   └── LotesRepository.ts
+├── middlewares/
+│   ├── Authenticate.ts
+│   ├── AuthorizeRole.ts
+│   ├── Validate.ts
+│   └── ErrorHandler.ts
+├── validators/
+│   ├── AuthSchemas.ts
+│   ├── ClienteSchemas.ts
+│   ├── PlanoSchemas.ts
+│   ├── ProdutoSchemas.ts
+│   └── CompraSchemas.ts
+├── errors/
+│   ├── AppError.ts
+│   └── ErrorCodes.ts
+├── types/
+│   └── Express.d.ts
+└── docs/
+    └── OpenApi.ts
+
+prisma/
+├── schema.prisma
+├── Seed.ts
+├── InitDb.sql
+└── migrations/
+
+tests/
+└── <Arquivo testado>.test.ts   (por exemplo, RegistrarCompraService.test.ts, com node:test)
 ```
 
 | Camada | Pasta | Faz | Não faz |
@@ -41,9 +104,9 @@ Peças de apoio:
 | 3 | A compra roda em uma transação. O service a abre por uma função do `prismaClient.ts`, e os repositórios aceitam o cliente da transação. |
 | 4 | O service devolve o **objeto no formato do contrato**, e nunca o registro do banco (por exemplo, sem `senhaHash`). O controller só o repassa. |
 | 5 | Erros de negócio são lançados como `AppError` e tratados em um único middleware. |
-| 6 | Código novo segue o padrão de nomes `<recurso><Papel>.ts` (Bloco 4 do `aiRules.md`). Os arquivos de infraestrutura (`app.ts`, `server.ts`, `env.ts`, `routes.ts`, `prismaClient.ts`) são a exceção. |
+| 6 | Código novo segue o padrão de nomes `<Recurso><Papel>.ts`, em PascalCase (Bloco 4 do `aiRules.md`), que é o que o código já usa. |
 | 7 | O middleware `authenticate` lê o usuário pelo `usuariosRepository`, sem falar com o Prisma. |
-| 8 | Os arquivos de teste ficam em `tests/` e se chamam `<arquivo testado>.test.ts`. |
+| 8 | Os arquivos de teste ficam em `tests/` e se chamam `<Arquivo testado>.test.ts`. |
 
 ## 3. Estrutura de pastas
 

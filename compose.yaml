@@ -8,11 +8,13 @@ services:
       - .env
     environment:
       DATABASE_URL: mysql://grao:grao_dev@db:3306/grao_a_grao
+      DATABASE_URL_TEST: mysql://grao:grao_dev@db:3306/grao_a_grao_teste
     ports:
       - "${PORT:-3000}:3000"
     volumes:
       - ./src:/app/src
       - ./prisma:/app/prisma
+      - ./tests:/app/tests
     depends_on:
       db:
         condition: service_healthy
@@ -29,7 +31,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./prisma/initDb.sql:/docker-entrypoint-initdb.d/initDb.sql:ro
+      - ./prisma/InitDb.sql:/docker-entrypoint-initdb.d/InitDb.sql:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot_dev"]
       interval: 5s
