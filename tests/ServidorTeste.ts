@@ -1,5 +1,7 @@
 import { App } from "../src/App.js";
+import { validarEnv } from "../src/config/Env.js";
 
+validarEnv();
 const servidor = App.listen(0, "127.0.0.1", () => {
   const endereco = servidor.address();
   if (endereco && typeof endereco !== "string") process.send?.({ porta: endereco.port });

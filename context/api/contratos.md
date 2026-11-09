@@ -61,7 +61,7 @@ Outro erro (`404`), sem `detalhes`:
 
 | Código | Status HTTP | Quando | Rotas |
 |---|---|---|---|
-| `VALIDATION_ERROR` | 400 | Dados da requisição inválidos: JSON malformado, `Content-Type` errado, tipo errado, campo fora do limite, campo desconhecido, `produtoId` repetido, ou combinação inválida num `PUT` de plano. | Toda rota com corpo, parâmetro ou filtro |
+| `VALIDATION_ERROR` | 400 | Dados da requisição inválidos: JSON malformado, corpo acima de 100 KB, `Content-Type` errado, tipo errado, campo fora do limite, campo desconhecido, `produtoId` repetido, ou combinação inválida num `PUT` de plano. | Toda rota com corpo, parâmetro ou filtro |
 | `IDEMPOTENCY_KEY_REQUIRED` | 400 | A compra chegou sem o cabeçalho `Idempotency-Key`. | `POST /compras` |
 | `INVALID_PURCHASE_AMOUNT` | 400 | O valor bruto da compra passa do teto. | `POST /compras` |
 | `CASHBACK_EXCEEDS_PURCHASE` | 400 | O cashback solicitado é maior que o valor bruto da compra. | `POST /compras` |

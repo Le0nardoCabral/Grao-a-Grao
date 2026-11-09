@@ -5,6 +5,6 @@ export const CriarCompraSchema = z.object({
   itens: z.array(z.object({
     produtoId: z.number().int().positive().safe(),
     quantidade: z.number().int().positive().safe(),
-  })).min(1).max(100),
+  }).strict()).min(1).max(100),
   cashbackSolicitadoCentavos: z.number().int().nonnegative().safe().optional(),
-});
+}).strict();
