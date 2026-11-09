@@ -2,7 +2,7 @@
 
 Lista das tasks para construir a API, na ordem de execução, com o teste de cada uma.
 
-- **Versão:** 2.3
+- **Versão:** 2.4
 - **Data:** 2026-11-06
 - **Marcação:** `[ ]` pendente e `[x]` concluída. Só o usuário permite marcar.
 
@@ -36,7 +36,7 @@ Exemplo de saída:
 Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x]` depois de perguntar ao usuário e ele permitir.**
 
 **Fase 1 — Ambiente e limpeza**
-- [ ] **Task 1 — Ambiente local** · 1 teste · depende de: —
+- [x] **Task 1 — Ambiente local** · 1 teste · depende de: —
 - [ ] **Task 2 — Configuração do projeto** · 1 teste · depende de: 1
 - [ ] **Task 3 — Limpeza dos arquivos antigos** · 1 teste · depende de: 2
 - [ ] **Task 4 — Padronização de nomes e pastas** · 1 teste · depende de: 3
@@ -72,7 +72,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 ## Fase 1 — Ambiente e limpeza
 
 ### Task 1 — Ambiente local
-- **Entrega:** dependências instaladas, `.env` criado a partir do `.env.example`, MySQL no Docker Compose com **dois bancos** (desenvolvimento e teste, ambos locais) e a API subindo com `npm run dev`. O banco compartilhado, se continuar em uso, serve só ao desenvolvimento, nunca aos testes.
+- **Entrega:** Node.js 22 instalado, dependências instaladas, `.env` criado a partir do `.env.example`, MySQL no Docker Compose com **dois bancos** (desenvolvimento e teste, ambos locais) e a API subindo com `npm run dev`. O banco compartilhado, se continuar em uso, serve só ao desenvolvimento, nunca aos testes.
 - **Atende:** RNF-05, RNF-14.
 - **Teste:** *os dois bancos, o de desenvolvimento e o de teste, respondem a uma consulta simples*.
 
