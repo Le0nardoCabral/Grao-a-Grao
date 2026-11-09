@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { Prisma, StatusLote } from "@prisma/client";
 import { AppError } from "../errors/AppError.js";
 import { ComprasRepository } from "../repositories/ComprasRepository.js";
@@ -141,6 +142,8 @@ export class RegistrarCompraService {
             cashbackUsadoCentavos,
             valorPagoCentavos,
             cashbackGeradoCentavos,
+            // Provisório: a Task 14 usará o cabeçalho Idempotency-Key.
+            chaveIdempotencia: randomUUID(),
             itens: { create: itensCalculados },
           },
           include: { itens: { include: { produto: true } } },

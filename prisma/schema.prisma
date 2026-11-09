@@ -84,6 +84,8 @@ model Compra {
   cashbackUsadoCentavos  Int           @default(0)
   valorPagoCentavos      Int
   cashbackGeradoCentavos Int           @default(0)
+  cashbackCortadoCentavos Int          @default(0)
+  chaveIdempotencia      String        @db.VarChar(64)
   criadaEm               DateTime      @default(now())
   cliente                Cliente       @relation(fields: [clienteId], references: [id])
   usuario                Usuario       @relation(fields: [usuarioId], references: [id])
@@ -93,6 +95,7 @@ model Compra {
 
   @@index([clienteId, criadaEm])
   @@index([usuarioId, criadaEm])
+  @@unique([usuarioId, chaveIdempotencia])
 }
 
 model ItemCompra {
