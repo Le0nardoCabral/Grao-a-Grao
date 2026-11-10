@@ -47,7 +47,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 - [x] **Task 7 — Base de erros** · 1 teste · depende de: 6
 
 **Fase 3 — Acesso**
-- [ ] **Task 8 — Login** · 1 teste · depende de: 7
+- [x] **Task 8 — Login** · 1 teste · depende de: 7
 - [ ] **Task 9 — Carga inicial (seed)** · 1 teste · depende de: 5, 6
 - [ ] **Task 10 — Cadastro de usuário** · 1 teste · depende de: 8, 9
 
@@ -116,7 +116,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 - **Teste:** *login válido devolve `token` e `usuario`, sem senha nem hash*.
 
 ### Task 9 — Carga inicial (seed)
-- **Entrega:** `prisma/seed.ts` e `npm run db:seed`, que criam os três planos (com as mensalidades da RN-03) e o primeiro admin a partir das variáveis de ambiente. Os arquivos antigos `Seed.ts` e `SeedAdmin.ts` saem aqui.
+- **Entrega:** `prisma/Seed.ts` (o arquivo já existe: ajustar ao que a RN-03 e a RN-36 pedem) e `npm run db:seed`, que criam os três planos (com as mensalidades da RN-03) e o primeiro admin a partir das variáveis de ambiente. O arquivo antigo `SeedAdmin.ts` sai aqui.
 - **Atende:** RN-03, RN-36, RNF-14.
 - **Teste:** *a carga cria 3 planos e 1 admin, e rodar de novo não duplica*.
 

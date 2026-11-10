@@ -7,6 +7,15 @@ import bcrypt from "bcryptjs";
 
 type Tabela = "usoCashback" | "itemCompra" | "loteCashback" | "compra" | "cliente" | "produto" | "plano" | "usuario";
 
+// Obtém um token pela rota de login.
+export async function obterToken(urlDoServidor: string, email: string, senha: string): Promise<string> {
+  const resposta = await fetch(`${urlDoServidor}/auth/login`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, senha }) });
+  if (!resposta.ok) throw new Error(`Login de teste falhou: ${resposta.status}`);
+  const corpo: unknown = await resposta.json();
+  if (typeof corpo !== "object" || corpo === null || !("token" in corpo) || typeof corpo.token !== "string") throw new Error("Token de teste inválido");
+  return corpo.token;
+}
+
 // Confere que o endereço pertence ao banco local de teste.
 function enderecoTeste(): string {
   const endereco = process.env.DATABASE_URL_TEST;

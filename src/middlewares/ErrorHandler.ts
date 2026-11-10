@@ -14,5 +14,11 @@ export const ErrorHandler: ErrorRequestHandler = (error: unknown, _request, resp
     return;
   }
 
+  if (error instanceof Error) {
+    const stack = error.stack?.replace(error.message, "").split("\n").filter((linha) => /^\s+at\s/.test(linha)).join("\n");
+    console.error({ name: error.name, stack });
+  } else {
+    console.error("Erro interno inesperado ao processar requisição.");
+  }
   response.status(500).json({ erro: { codigo: "INTERNAL_ERROR", mensagem: "Erro interno do servidor." } });
 };

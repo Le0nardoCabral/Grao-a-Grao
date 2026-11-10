@@ -9,8 +9,7 @@ export const Authenticate: RequestHandler = async (request, _response, next) => 
   const token = request.headers.authorization?.match(/^Bearer\s+(.+)$/i)?.[1];
   if (!token) return next(new AppError("Token de autenticação ausente.", 401, "UNAUTHENTICATED"));
 
-  const secret = process.env.JWT_SECRET;
-  if (!secret) return next(new AppError("JWT_SECRET não está configurado.", 500, "CONFIGURATION_ERROR"));
+  const secret = process.env.JWT_SECRET!;
 
   let payload: JwtPayload;
   try {
