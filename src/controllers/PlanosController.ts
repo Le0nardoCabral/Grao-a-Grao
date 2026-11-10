@@ -14,4 +14,26 @@ export class PlanosController {
 
     response.status(200).json(planos);
   };
+
+  static buscarPorId: RequestHandler = async (request, response) => {
+    const id = Number(request.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      response.status(400).json({
+        mensagem: "ID inválido.",
+      });
+      return;
+    }
+
+    const plano = await service.buscarPorId(id);
+
+    if (!plano) {
+      response.status(404).json({
+        mensagem: "Plano não encontrado.",
+      });
+      return;
+    }
+
+    response.status(200).json(plano);
+  };
 }

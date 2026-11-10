@@ -14,4 +14,10 @@ export class PlanosRepository {
       orderBy: { nome: "asc" },
     });
   }
-}
+
+  async buscarPorId(id: number) {
+    return prisma.plano.findUnique({
+      where: { id },
+    });
+  }
+} 

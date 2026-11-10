@@ -6,4 +6,8 @@ export class PlanosService {
   async listar(ativo?: boolean) {
     return repository.listar(ativo);
   }
+
+  async buscarPorId(id: number) {
+    return repository.buscarPorId(id);
+  }
 }
