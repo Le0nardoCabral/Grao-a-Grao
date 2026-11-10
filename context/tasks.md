@@ -57,9 +57,9 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 - [ ] **Task 13 — Clientes** · 1 teste · depende de: 12
 
 **Fase 5 — Compra**
-- [ ] **Task 14 — Compra** · 3 testes · depende de: 11, 13
-- [ ] **Task 15 — Troca de plano** · 1 teste · depende de: 13, 14
-- [ ] **Task 16 — Extrato** · 1 teste · depende de: 14
+- [x] **Task 14 — Compra** · 3 testes · depende de: 11, 13
+- [x] **Task 15 — Troca de plano** · 1 teste · depende de: 13, 14
+- [x] **Task 16 — Extrato** · 1 teste · depende de: 14
 
 **Fase 6 — Fechamento**
 - [ ] **Task 17 — Swagger** · 1 teste · depende de: 7
