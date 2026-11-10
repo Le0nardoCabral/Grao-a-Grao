@@ -1,9 +1,18 @@
 import type { RequestHandler } from "express";
-import { PlanosService } from "../services/PlanosService.js";
+import {
+  PlanosService,
+  type NovoPlano,
+} from "../services/PlanosService.js";
 
 const service = new PlanosService();
 
 export class PlanosController {
+  static criar: RequestHandler = async (request, response) => {
+    const plano = await service.criar(request.body as NovoPlano);
+
+    response.status(201).json(plano);
+  };
+
   static listar: RequestHandler = async (request, response) => {
     const ativo =
       typeof request.query.ativo === "string"

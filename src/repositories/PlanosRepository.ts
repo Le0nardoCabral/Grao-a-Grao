@@ -20,4 +20,10 @@ export class PlanosRepository {
       where: { id },
     });
   }
-} 
+
+  async criar(data: Prisma.PlanoCreateInput) {
+    return prisma.plano.create({
+      data,
+    });
+  }
+}

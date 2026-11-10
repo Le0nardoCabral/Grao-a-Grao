@@ -49,17 +49,18 @@ model Cliente {
 }
 
 model Plano {
-  id                Int       @id @default(autoincrement())
-  nome              String    @unique @db.VarChar(80)
-  percentualBps     Int
-  limiteCentavos    Int
-  minimoUsoCentavos Int       @default(2000)
-  dobroAniversario  Boolean   @default(false)
-  validadeDias      Int       @default(180)
-  ativo             Boolean   @default(true)
-  criadoEm          DateTime  @default(now())
-  atualizadoEm      DateTime  @updatedAt
-  clientes          Cliente[]
+  id                  Int       @id @default(autoincrement())
+  nome                String    @unique @db.VarChar(80)
+  percentualBps       Int
+  limiteCentavos      Int
+  mensalidadeCentavos Int
+  minimoUsoCentavos   Int       @default(2000)
+  dobroAniversario    Boolean   @default(false)
+  validadeDias        Int       @default(180)
+  ativo               Boolean   @default(true)
+  criadoEm            DateTime  @default(now())
+  atualizadoEm        DateTime  @updatedAt
+  clientes            Cliente[]
 }
 
 model Produto {
