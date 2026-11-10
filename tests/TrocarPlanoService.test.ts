@@ -13,8 +13,8 @@ test("troca de plano mantém saldo e lote e aplica o novo limite na próxima com
   await limparTabelas(["usoCashback", "itemCompra", "loteCashback", "compra", "cliente", "produto", "plano", "usuario"]);
   const admin = await criarUsuario("ADMIN", "SenhaTeste123!");
   const prisma = criarClienteTeste();
-  const planoAntigo = await prisma.plano.create({ data: { nome: `Antigo ${randomUUID()}`, percentualBps: 200, limiteCentavos: 50_000, minimoUsoCentavos: 0 } });
-  const planoNovo = await prisma.plano.create({ data: { nome: `Novo ${randomUUID()}`, percentualBps: 200, limiteCentavos: 4_000, minimoUsoCentavos: 0 } });
+  const planoAntigo = await prisma.plano.create({ data: { nome: `Antigo ${randomUUID()}`, percentualBps: 200, limiteCentavos: 50_000, mensalidadeCentavos: 0, minimoUsoCentavos: 0 } });
+  const planoNovo = await prisma.plano.create({ data: { nome: `Novo ${randomUUID()}`, percentualBps: 200, limiteCentavos: 4_000, mensalidadeCentavos: 0, minimoUsoCentavos: 0 } });
   const cliente = await prisma.cliente.create({ data: { nome: "Cliente de teste", planoId: planoAntigo.id } });
   const produto = await prisma.produto.create({ data: { nome: `Produto ${randomUUID()}`, precoCentavos: 10_000 } });
   const origem = await prisma.compra.create({

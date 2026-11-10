@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 const initialPlans = [
   {
     nome: "Básico",
+    mensalidadeCentavos: 1_990,
     percentualBps: 200,
     limiteCentavos: 20_000,
     minimoUsoCentavos: 2_000,
@@ -15,6 +16,7 @@ const initialPlans = [
   },
   {
     nome: "Intermediário",
+    mensalidadeCentavos: 3_990,
     percentualBps: 500,
     limiteCentavos: 50_000,
     minimoUsoCentavos: 2_000,
@@ -23,6 +25,7 @@ const initialPlans = [
   },
   {
     nome: "Premium",
+    mensalidadeCentavos: 6_990,
     percentualBps: 800,
     limiteCentavos: 100_000,
     minimoUsoCentavos: 0,

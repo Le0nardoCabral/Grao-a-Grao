@@ -54,7 +54,7 @@ export async function criarUsuario(perfil: Perfil, senha: string) {
 export async function criarPlano() {
   const prisma = criarClienteTeste();
   try {
-    return await prisma.plano.create({ data: { nome: `Teste ${randomUUID()}`, percentualBps: 200, limiteCentavos: 10000, minimoUsoCentavos: 100, dobroAniversario: false } });
+    return await prisma.plano.create({ data: { nome: `Teste ${randomUUID()}`, percentualBps: 200, limiteCentavos: 10000, mensalidadeCentavos: 0, minimoUsoCentavos: 100, dobroAniversario: false } });
   } finally { await prisma.$disconnect(); }
 }
 

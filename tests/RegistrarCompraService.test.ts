@@ -14,7 +14,7 @@ async function prepararCompra() {
   const usuario = await criarUsuario("ATENDENTE", "SenhaTeste123!");
   const prisma = criarClienteTeste();
   const plano = await prisma.plano.create({
-    data: { nome: `Plano ${randomUUID()}`, percentualBps: 200, limiteCentavos: 1_000_000, minimoUsoCentavos: 0, validadeDias: 180 },
+    data: { nome: `Plano ${randomUUID()}`, percentualBps: 200, limiteCentavos: 1_000_000, mensalidadeCentavos: 0, minimoUsoCentavos: 0, validadeDias: 180 },
   });
   const cliente = await prisma.cliente.create({ data: { nome: "Cliente de teste", planoId: plano.id } });
   await prisma.$disconnect();
