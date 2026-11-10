@@ -28,6 +28,7 @@ Temas: `processoIa`, `codigo`, `git`, `negocio`, `api`, `seguranca`, `dados`, `d
 | 7.11 | Task 3 (limpeza dos arquivos antigos) dispensada | processoIa | aprovado |
 | 7.12 | Corpo acima de 100 KB responde 400 VALIDATION_ERROR | api | aprovado |
 | 7.13 | Tasks 14 a 16 concluídas e marcadas | processoIa | aprovado |
+| 7.14 | Plano ganha a mensalidade, só informativa | negocio | aprovado |
 
 ---
 
@@ -48,3 +49,4 @@ Temas: `processoIa`, `codigo`, `git`, `negocio`, `api`, `seguranca`, `dados`, `d
 | 7.11 | O usuário decidiu **dispensar a Task 3**. Nada importa `src/config/Security.ts` nem `src/dtos/`, então os arquivos antigos não atrapalham e ficam, assim como o `ARQUITETURA.md` e o PDF do enunciado na raiz. A Task 5 passou a depender só da 1, e o total ficou em **18 tasks (a 3 e a 4 dispensadas) e 18 testes** (`tasks.md` versão 2.6). | Remover arquivos sem uso não muda o comportamento e não é necessário para as próximas tasks. |
 | 7.12 | O limite de **100 KB** no corpo da requisição (`seguranca.md`) não tinha resposta definida no catálogo de erros. O usuário aprovou responder **`400 VALIDATION_ERROR`**, o código de entrada inválida, sem criar um 26º código. O `contratos.md` passou a listar "corpo acima de 100 KB" na descrição do `VALIDATION_ERROR`. | O catálogo fica fechado em 25 códigos, e um corpo grande demais é, na prática, uma entrada inválida. |
 | 7.13 | As **Tasks 14, 15 e 16** foram marcadas como concluídas no `tasks.md` após implementar compra, troca de plano e extrato e passar os 14 testes da suíte. | O usuário autorizou marcar as tarefas realizadas depois que a implementação e a validação foram relatadas. |
+| 7.14 | O plano passou a ter a **mensalidade** (`mensalidadeCentavos`), campo que um integrante já tinha colocado no código. O usuário decidiu que ela é **só informativa**: a API não cobra a mensalidade e **não gera cashback sobre ela**; o cashback continua só sobre a compra de produtos (RN-13). Valores de demonstração dos planos iniciais: Básico R$ 19,90, Intermediário R$ 39,90 e Premium R$ 69,90. A RN-02 e a RN-03, o `modeloDeDados.md`, o `contratos.md`, a `visaoGeralDaApi.md`, o glossário e as Tasks 9 e 12 foram atualizados. A coluna entra por uma **migration nova**, porque a `inicial` já está commitada. | A mensalidade é o preço do plano e não altera o programa de cashback, então o menor caminho é guardá-la e mostrá-la, sem fluxo de cobrança. |

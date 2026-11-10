@@ -14,7 +14,7 @@ Explicação da API em linguagem simples, com o diagrama do banco e os fluxos pr
 
 Como o programa funciona:
 
-1. Cada cliente pertence a **um plano** (Básico, Intermediário ou Premium), que define quanto ele ganha, quanto pode acumular e quanto precisa juntar para usar.
+1. Cada cliente pertence a **um plano** (Básico, Intermediário ou Premium), que tem uma mensalidade só informativa e define quanto ele ganha, quanto pode acumular e quanto precisa juntar para usar.
 2. Cada **compra** gera cashback, que vira um **lote** com data de vencimento (180 dias, por padrão).
 3. Nas compras seguintes, o cliente pode **usar o saldo**. A API gasta primeiro o lote que vence antes (**FIFO**).
 4. O saldo tem um **limite** por plano, e lote **vencido** deixa de valer.
@@ -131,6 +131,7 @@ erDiagram
         string nome UK
         int percentualBps "2% é 200"
         int limiteCentavos
+        int mensalidadeCentavos "só informativa"
         int minimoUsoCentavos
         boolean dobroAniversario
         int validadeDias "padrão 180"

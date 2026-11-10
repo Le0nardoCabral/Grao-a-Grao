@@ -188,6 +188,7 @@ O `tipo` do movimento é um valor de enum: `CREDITO`, `USO` ou `EXPIRACAO`.
 | `nome` | texto | Único. De 2 a 80 caracteres. |
 | `percentualBps` | inteiro | De 1 a 5.000 (de 0,01% a 50%), para que o dobro do aniversário chegue no máximo a 100%. |
 | `limiteCentavos` | inteiro | Maior que zero, até 100.000.000. |
+| `mensalidadeCentavos` | inteiro | De zero até 100.000.000. Preço mensal do plano, só informativo. |
 | `minimoUsoCentavos` | inteiro | De zero até 100.000.000, e **não maior que o `limiteCentavos`** do mesmo plano. |
 | `dobroAniversario` | booleano | Padrão falso. |
 | `validadeDias` | inteiro | De 1 a 3.650 (10 anos). Padrão 180. |
@@ -198,7 +199,7 @@ O `tipo` do movimento é um valor de enum: `CREDITO`, `USO` ou `EXPIRACAO`.
 
 | Rota | Entrada | Saída |
 |---|---|---|
-| `POST /planos` | `nome`, `percentualBps`, `limiteCentavos`, `minimoUsoCentavos` (obrigatórios); `dobroAniversario`, `validadeDias` | `201` com o plano |
+| `POST /planos` | `nome`, `percentualBps`, `limiteCentavos`, `mensalidadeCentavos`, `minimoUsoCentavos` (obrigatórios); `dobroAniversario`, `validadeDias` | `201` com o plano |
 | `GET /planos` | Paginação e `incluirInativos` | `200` com a página de planos |
 | `GET /planos/:id` | `incluirInativos` | `200` com o plano |
 | `PUT /planos/:id` | Qualquer campo do cadastro. Ao menos um. | `200` com o plano |

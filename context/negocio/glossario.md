@@ -13,7 +13,7 @@ Termos usados na especificação, com o significado que eles têm neste projeto.
 | Termo | Significado | Regras | Status |
 |---|---|---|---|
 | **Cashback** | Parte do valor de uma compra que volta ao cliente como crédito. | RN-13 | aprovado |
-| **Plano** | Conjunto de regras do cliente: percentual, limite de saldo, mínimo de uso, bônus de aniversário e validade. | RN-02 | aprovado |
+| **Plano** | Conjunto de regras do cliente: mensalidade (só informativa), percentual, limite de saldo, mínimo de uso, bônus de aniversário e validade. | RN-02 | aprovado |
 | **Percentual** | Quanto do valor pago volta como cashback. Ex.: 2% no plano Básico. | RN-13 | aprovado |
 | **Pontos-base** | Forma de guardar o percentual sem decimais: 2% é 200 e 5% é 500. | — | aprovado |
 | **Limite de saldo** | Valor máximo de cashback que o cliente pode acumular. | RN-15 | aprovado |

@@ -13,20 +13,22 @@ Regras do programa de cashback Grão a Grão.
 | ID | Regra | Status |
 |---|---|---|
 | RN-01 | Todo cliente pertence a **exatamente um plano**. | aprovado |
-| RN-02 | Cada plano define: nome (único), percentual de cashback, limite de saldo, mínimo de uso, bônus de aniversário (sim ou não) e validade dos lotes em dias (padrão 180). | aprovado |
+| RN-02 | Cada plano define: nome (único), mensalidade, percentual de cashback, limite de saldo, mínimo de uso, bônus de aniversário (sim ou não) e validade dos lotes em dias (padrão 180). | aprovado |
 | RN-03 | Os planos iniciais são os da tabela abaixo. | aprovado |
 | RN-04 | Alterar um plano **não altera** compras nem lotes já gerados. | aprovado |
 | RN-05 | Só um plano **ativo** recebe clientes novos ou trocas de plano. Um plano que ainda tem clientes ativos não pode ser desativado. | aprovado |
 
 ### Planos iniciais (RN-03)
 
-| Plano | Cashback | Limite de saldo | Mínimo de uso | Bônus de aniversário | Validade |
-|---|---:|---:|---:|---|---:|
-| Básico | 2% | R$ 200,00 | R$ 20,00 | não | 180 dias |
-| Intermediário | 5% | R$ 500,00 | R$ 20,00 | sim | 180 dias |
-| Premium | 8% | R$ 1.000,00 | R$ 0,00 | sim | 180 dias |
+| Plano | Mensalidade | Cashback | Limite de saldo | Mínimo de uso | Bônus de aniversário | Validade |
+|---|---:|---:|---:|---:|---|---:|
+| Básico | R$ 19,90 | 2% | R$ 200,00 | R$ 20,00 | não | 180 dias |
+| Intermediário | R$ 39,90 | 5% | R$ 500,00 | R$ 20,00 | sim | 180 dias |
+| Premium | R$ 69,90 | 8% | R$ 1.000,00 | R$ 0,00 | sim | 180 dias |
 
 O mínimo de R$ 20,00 do Intermediário é uma escolha do grupo, para manter a mesma regra do Básico.
+
+A **mensalidade** é o preço do plano e é **só informativa**: a API não cobra a mensalidade nem gera cashback sobre ela. O cashback vem apenas da compra de produtos (RN-13). Os valores acima são de demonstração.
 
 ## 2. Compra
 

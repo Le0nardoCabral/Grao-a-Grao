@@ -39,6 +39,7 @@ Tabelas, campos e regras de integridade do banco, e como as migrations são trat
 | `nome` | texto (80) | **Único.** |
 | `percentualBps` | inteiro | |
 | `limiteCentavos` | inteiro | |
+| `mensalidadeCentavos` | inteiro | Preço mensal do plano. Só informativo. |
 | `minimoUsoCentavos` | inteiro | |
 | `dobroAniversario` | booleano | |
 | `validadeDias` | inteiro | Padrão 180. |

@@ -116,7 +116,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 - **Teste:** *login válido devolve `token` e `usuario`, sem senha nem hash*.
 
 ### Task 9 — Carga inicial (seed)
-- **Entrega:** `prisma/seed.ts` e `npm run db:seed`, que criam os três planos e o primeiro admin a partir das variáveis de ambiente. Os arquivos antigos `Seed.ts` e `SeedAdmin.ts` saem aqui.
+- **Entrega:** `prisma/seed.ts` e `npm run db:seed`, que criam os três planos (com as mensalidades da RN-03) e o primeiro admin a partir das variáveis de ambiente. Os arquivos antigos `Seed.ts` e `SeedAdmin.ts` saem aqui.
 - **Atende:** RN-03, RN-36, RNF-14.
 - **Teste:** *a carga cria 3 planos e 1 admin, e rodar de novo não duplica*.
 
@@ -135,7 +135,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 - **Teste:** *criar, desativar (some da lista) e reativar (volta)*.
 
 ### Task 12 — Planos
-- **Entrega:** as cinco rotas de plano, a reativação, e a recusa de desativar um plano com clientes ativos.
+- **Entrega:** as cinco rotas de plano, a reativação, e a recusa de desativar um plano com clientes ativos. Inclui a coluna `mensalidadeCentavos`: uma **migration nova** (a `inicial` não se edita) e o ajuste dos auxiliares e testes que criam plano direto no banco (decisão 7.14).
 - **Atende:** RF-10 a RF-14, RF-21, RN-05.
 - **Teste:** *criar, consultar, desativar e reativar; desativar um plano com cliente ativo responde `409`*.
 

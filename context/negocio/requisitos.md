@@ -36,7 +36,7 @@ Perfis: **ADMIN** e **ATENDENTE**. "Ambos" significa os dois perfis.
 
 | ID | Requisito | Quem | Regras | Status |
 |---|---|---|---|---|
-| RF-10 | Cadastrar um plano com percentual, limite de saldo, mínimo de uso, bônus de aniversário e validade. | ADMIN | RN-02, RN-03 | aprovado |
+| RF-10 | Cadastrar um plano com mensalidade (informativa), percentual, limite de saldo, mínimo de uso, bônus de aniversário e validade. | ADMIN | RN-02, RN-03 | aprovado |
 | RF-11 | Listar planos. O ADMIN pode incluir os desativados. | Ambos | RN-31 | aprovado |
 | RF-12 | Consultar um plano pelo identificador. O ADMIN pode consultar também os desativados. | Ambos | RN-31 | aprovado |
 | RF-13 | Atualizar um plano. | ADMIN | RN-04 | aprovado |
