@@ -11,6 +11,7 @@ type Credito = {
   geradoEm: Date;
 };
 type Uso = {
+  id: number;
   compraId: number;
   loteId: number;
   valorCentavos: number;
@@ -33,6 +34,7 @@ type Movimento = {
   ocorreuEm: Date;
   compraId: number | null;
   loteId: number;
+  origemId: number;
 };
 
 export class ExtratoService {
@@ -60,6 +62,7 @@ export class ExtratoService {
         ocorreuEm: credito.geradoEm,
         compraId: credito.compraOrigemId,
         loteId: credito.id,
+        origemId: credito.id,
       })),
       ...usos.map((uso) => ({
         tipo: "USO" as const,
@@ -67,6 +70,7 @@ export class ExtratoService {
         ocorreuEm: uso.criadoEm,
         compraId: uso.compraId,
         loteId: uso.loteId,
+        origemId: uso.id,
       })),
       ...expiracoes.map((expiracao) => ({
         tipo: "EXPIRACAO" as const,
@@ -74,11 +78,22 @@ export class ExtratoService {
         ocorreuEm: expiracao.venceEm,
         compraId: null,
         loteId: expiracao.id,
+        origemId: expiracao.id,
       })),
     ]
-      .sort((first, second) => second.ocorreuEm.getTime() - first.ocorreuEm.getTime())
+      .sort((first, second) => {
+        const porData = second.ocorreuEm.getTime() - first.ocorreuEm.getTime();
+        if (porData !== 0) return porData;
+        const prioridade = { CREDITO: 0, USO: 1, EXPIRACAO: 2 };
+        return prioridade[first.tipo] - prioridade[second.tipo] || second.origemId - first.origemId;
+      })
       .slice(0, 50);
 
-    return { clienteId, saldoDisponivelCentavos, lotesAVencer, movimentos };
+    return {
+      clienteId,
+      saldoDisponivelCentavos,
+      lotesAVencer,
+      movimentos: movimentos.map(({ origemId: _origemId, ...movimento }) => movimento),
+    };
   }
 }

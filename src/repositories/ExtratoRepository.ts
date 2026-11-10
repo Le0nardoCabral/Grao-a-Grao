@@ -58,6 +58,7 @@ export class ExtratoRepository {
       orderBy: [{ criadoEm: "desc" }, { id: "desc" }],
       take: 50,
       select: {
+        id: true,
         compraId: true,
         loteId: true,
         valorCentavos: true,

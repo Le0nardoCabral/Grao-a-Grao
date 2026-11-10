@@ -25,6 +25,7 @@ function createRepository(overrides: Partial<ExtratoRepositoryPort> = {}): Extra
     ],
     buscarUsosRecentes: async () => [
       {
+        id: 1,
         compraId: 11,
         loteId: 3,
         valorCentavos: 1_000,

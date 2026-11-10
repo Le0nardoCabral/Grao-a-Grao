@@ -5,9 +5,11 @@ import {
 } from "../services/ClientesService.js";
 import { AppError } from "../errors/AppError.js";
 import { ExtratoService } from "../services/ExtratoService.js";
+import { TrocarPlanoService } from "../services/TrocarPlanoService.js";
 
 const service = new ClientesService();
 const extratoService = new ExtratoService();
+const trocarPlanoService = new TrocarPlanoService();
 
 export class ClientesController {
   static criar: RequestHandler = async (request, response) => {
@@ -52,5 +54,10 @@ export class ClientesController {
       incluirInativos,
     );
     response.status(200).json(resultado);
+  };
+
+  static trocarPlano: RequestHandler = async (request, response) => {
+    const cliente = await trocarPlanoService.executar(Number(request.params.id), request.body.planoId);
+    response.status(200).json(cliente);
   };
 }

@@ -41,6 +41,10 @@ export const ClienteIdSchema = z.object({
   id: z.coerce.number().int().positive().safe(),
 }).strict();
 
+export const TrocarPlanoSchema = z.object({
+  planoId: z.number().int().positive().safe(),
+}).strict();
+
 export const IncluirInativosSchema = z.object({
   incluirInativos: z.enum(["true", "false"]).optional().default("false"),
 }).strict();

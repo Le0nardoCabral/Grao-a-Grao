@@ -9,6 +9,7 @@ import {
   CriarClienteSchema,
   IncluirInativosSchema,
   ListarClientesSchema,
+  TrocarPlanoSchema,
 } from "../validators/ClienteSchemas.js";
 export const ClientesRoutes = Router();
 ClientesRoutes.post("/", Authenticate, AuthorizeRole("ADMIN", "ATENDENTE"), Validate(CriarClienteSchema), ClientesController.criar);
@@ -21,7 +22,14 @@ ClientesRoutes.get(
   Validate(IncluirInativosSchema, "query"),
   ClientesController.extrato,
 );
-ClientesRoutes.post("/:id/trocar-plano", NotImplemented);
+ClientesRoutes.post(
+  "/:id/trocar-plano",
+  Authenticate,
+  AuthorizeRole("ADMIN"),
+  Validate(ClienteIdSchema, "params"),
+  Validate(TrocarPlanoSchema),
+  ClientesController.trocarPlano,
+);
 ClientesRoutes.get("/:id", NotImplemented);
 ClientesRoutes.put("/:id", NotImplemented);
 ClientesRoutes.delete("/:id", NotImplemented);
