@@ -66,6 +66,7 @@ Perfis: **ADMIN** e **ATENDENTE**. "Ambos" significa os dois perfis.
 |---|---|---|---|---|
 | RF-23 | Registrar a compra de um cliente com os itens (produto e quantidade), o cashback a usar (opcional) e a chave de idempotência. | Ambos | RN-06 a RN-27 | aprovado |
 | RF-24 | Na resposta da compra, informar valor bruto, cashback usado, valor pago, cashback gerado e, quando nada for gerado, o motivo. Quando o limite cortar parte do valor, informar também o valor cortado. | Ambos | RN-17 | aprovado |
+| RF-25 | Consultar a receita mensal estimada por plano: para cada plano ativo, o número de clientes ativos e a mensalidade multiplicada por esse número, mais o total. | ADMIN | RN-39 | aprovado |
 
 ---
 

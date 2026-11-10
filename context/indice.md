@@ -46,15 +46,15 @@ As convenções de código ficam no `aiRules.md` (Bloco 4), e não em `arquitetu
 | F | Requisitos não funcionais e fora de escopo | `negocio/requisitos.md` | escrito (aprovado) |
 | G | Demais pastas: api, dados, segurança e arquitetura | `api/`, `dados/`, `seguranca/`, `arquitetura/` | escrito (aprovado) |
 
-As etapas A a D estão escritas, e as 38 regras de negócio (RN-01 a RN-38) estão aprovadas.
+As etapas A a D estão escritas, e as 39 regras de negócio (RN-01 a RN-39) estão aprovadas.
 
 ## Pontos já decididos
 
-- Regras de negócio (RN-01 a RN-38) aprovadas em `negocio/regrasDeNegocio.md`, incluindo a idempotência do `POST /compras` (RN-11).
-- Requisitos funcionais (RF-01 a RF-24), não funcionais (RNF-01 a RNF-14) e fora de escopo aprovados em `negocio/requisitos.md`.
+- Regras de negócio (RN-01 a RN-39) aprovadas em `negocio/regrasDeNegocio.md`, incluindo a idempotência do `POST /compras` (RN-11).
+- Requisitos funcionais (RF-01 a RF-25), não funcionais (RNF-01 a RNF-14) e fora de escopo aprovados em `negocio/requisitos.md`.
 - Contexto (`negocio/contexto.md`) e glossário (`negocio/glossario.md`) aprovados.
-- Endpoints (`api/endpoints.md`): 24 rotas aprovadas.
+- Endpoints (`api/endpoints.md`): 25 rotas aprovadas.
 - Contratos (`api/contratos.md`): campos, formato do erro, catálogo de 25 códigos, paginação e ordem das verificações da compra, aprovados.
 - Swagger (seção 9 do `api/contratos.md`), modelo de dados (`dados/modeloDeDados.md`), segurança (`seguranca/seguranca.md`), arquitetura (`arquitetura/arquitetura.md`) e stack com as variáveis de ambiente (`arquitetura/stack.md`), aprovados.
 - As regras de trabalho com IA (Blocos 1 a 7 do `aiRules.md`) estão aprovadas.
-- Lista de 18 tasks (duas dispensadas) e 18 testes em `tasks.md`, aprovada.
+- Lista de 18 tasks (duas dispensadas) e 19 testes em `tasks.md`, aprovada.

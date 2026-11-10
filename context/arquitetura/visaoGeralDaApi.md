@@ -46,13 +46,13 @@ A API é consumida por uma interface de atendimento e administração, que não 
 
 ## 3. Mapa das rotas
 
-São **24 rotas**. A lista completa, com quem pode usar cada uma e as respostas, está em [endpoints.md](../api/endpoints.md). Os campos de entrada e saída estão em [contratos.md](../api/contratos.md).
+São **25 rotas**. A lista completa, com quem pode usar cada uma e as respostas, está em [endpoints.md](../api/endpoints.md). Os campos de entrada e saída estão em [contratos.md](../api/contratos.md).
 
 | Grupo | Rotas | O que faz | Quem |
 |---|---|---|---|
 | Acesso | 2 | Entrar no sistema (`POST /auth/login`) e cadastrar um atendente (`POST /auth/register`). | Público e ADMIN |
 | Clientes | 7 | Cadastrar, listar, consultar, atualizar, desativar, trocar de plano e ver o extrato. | Ambos; desativar e trocar plano só ADMIN |
-| Planos | 5 | Cadastrar, listar, consultar, atualizar e desativar. | Leitura para ambos; escrita só ADMIN |
+| Planos | 6 | Cadastrar, listar, consultar, atualizar, desativar e ver a receita mensal estimada (`GET /planos/receita-mensal`). | Leitura para ambos; escrita e receita só ADMIN |
 | Produtos | 5 | Cadastrar, listar, consultar, atualizar e desativar. | Leitura para ambos; escrita só ADMIN |
 | Reativação | 3 | `POST /clientes/:id/reativar`, `POST /planos/:id/reativar` e `POST /produtos/:id/reativar`. | ADMIN |
 | Compras | 1 | `POST /compras`: registra a compra, usa o saldo e gera o cashback. | Ambos |

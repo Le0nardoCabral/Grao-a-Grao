@@ -16,7 +16,7 @@ Cada task segue o `aiRules.md`: plano aprovado antes, **teste escrito primeiro**
 
 | # | Regra |
 |---|---|
-| 1 | **Um teste simples por task**, que confere o resultado principal. A compra tem 3, por ser a regra principal. Total: **18 testes**. |
+| 1 | **Um teste simples por task**, que confere o resultado principal. A compra tem 3, por ser a regra principal. Total: **19 testes**. |
 | 2 | Ferramenta: `node:test`, rodado por `npm test`, no banco de teste (`DATABASE_URL_TEST`). Antes de o `npm test` existir (task 2), o teste roda com `node --import tsx --test`. |
 | 3 | A saída mostra `✔` quando passou e `✖` quando falhou, com o que veio de errado. |
 | 4 | O teste fica em `tests/<arquivo testado>.test.ts`. |
@@ -54,7 +54,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 **Fase 4 — Cadastros**
 - [ ] **Task 11 — Produtos** · 1 teste · depende de: 8, 9
 - [ ] **Task 12 — Planos** · 1 teste · depende de: 8, 9
-- [ ] **Task 13 — Clientes** · 1 teste · depende de: 12
+- [ ] **Task 13 — Clientes** · 2 testes · depende de: 12
 
 **Fase 5 — Compra**
 - [x] **Task 14 — Compra** · 3 testes · depende de: 11, 13
@@ -65,7 +65,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 - [ ] **Task 17 — Swagger** · 1 teste · depende de: 7
 - [ ] **Task 18 — Fechamento** · 1 teste · depende de: todas
 
-**Total:** 18 tasks (a 3 e a 4 foram dispensadas) e 18 testes.
+**Total:** 18 tasks (a 3 e a 4 foram dispensadas) e 19 testes.
 
 ---
 
@@ -140,9 +140,9 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 - **Teste:** *criar, consultar, desativar e reativar; desativar um plano com cliente ativo responde `409`*.
 
 ### Task 13 — Clientes
-- **Entrega:** consultar, atualizar (sem mudar o plano), desativar e reativar cliente, mais os ajustes de cadastro e listagem (plano ativo, paginação, `incluirInativos`).
-- **Atende:** RF-03 a RF-07, RF-20, RN-38.
-- **Teste:** *criar, atualizar, desativar e reativar*.
+- **Entrega:** consultar, atualizar (sem mudar o plano), desativar e reativar cliente, mais os ajustes de cadastro e listagem (plano ativo, paginação, `incluirInativos`), e a rota `GET /planos/receita-mensal` (só ADMIN, declarada antes de `/planos/:id`), que precisa dos clientes.
+- **Atende:** RF-03 a RF-07, RF-20, RF-25, RN-38, RN-39.
+- **Teste:** *criar, atualizar, desativar e reativar* e *a receita por plano soma os clientes ativos vezes a mensalidade, e o ATENDENTE recebe `403`*.
 
 ---
 
@@ -178,7 +178,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 ### Task 18 — Fechamento
 - **Entrega:** remover o `NotImplemented.ts`, atualizar o README (instalação, execução e como rodar os testes) e a revisão final, que inclui a **revisão manual da segurança**: limite do corpo, Helmet, CORS, token, senha com hash, logs sem segredos e o hash fictício do login.
 - **Atende:** RNF-05, RNF-14.
-- **Teste:** *o servidor não sobe quando falta uma variável obrigatória, como a `JWT_SECRET`*. Ao fim, `npm test` roda os 18 testes.
+- **Teste:** *o servidor não sobe quando falta uma variável obrigatória, como a `JWT_SECRET`*. Ao fim, `npm test` roda os 19 testes.
 
 ---
 

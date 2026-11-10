@@ -205,6 +205,23 @@ O `tipo` do movimento é um valor de enum: `CREDITO`, `USO` ou `EXPIRACAO`.
 | `PUT /planos/:id` | Qualquer campo do cadastro. Ao menos um. | `200` com o plano |
 | `DELETE /planos/:id` | — | `204` |
 | `POST /planos/:id/reativar` | — | `200` com o plano |
+| `GET /planos/receita-mensal` | — | `200` com a receita por plano (abaixo) |
+
+### Receita mensal por plano
+
+`GET /planos/receita-mensal` é só do ADMIN, não tem entrada e não é paginada. A rota é declarada **antes** de `/planos/:id`.
+
+| Campo | Tipo | Observação |
+|---|---|---|
+| `planos[]` | lista | Só os planos **ativos**, ordenados por `id`. |
+| `planos[].id`, `planos[].nome` | inteiro e texto | Identificam o plano. |
+| `planos[].mensalidadeCentavos` | inteiro | A mensalidade do plano. |
+| `planos[].clientesAtivos` | inteiro | Clientes **ativos** do plano. Zero quando não há nenhum. |
+| `planos[].receitaMensalCentavos` | inteiro | `clientesAtivos` × `mensalidadeCentavos`. |
+| `totalClientesAtivos` | inteiro | Soma de `clientesAtivos`. |
+| `receitaMensalTotalCentavos` | inteiro | Soma de `receitaMensalCentavos`. |
+
+É uma **estimativa informativa** (RN-39): não depende de pagamentos. Erros possíveis: `UNAUTHENTICATED` (401) e `FORBIDDEN` (403).
 
 No `PUT`, a regra "mínimo de uso não maior que o limite" vale sobre os **valores resultantes**: o que foi enviado junto com o que já estava gravado. Se a combinação ficar inválida, a resposta é `VALIDATION_ERROR` (`400`).
 
@@ -304,7 +321,7 @@ Quando a compra tem mais de um problema, vale o **primeiro** encontrado nesta or
 
 | # | Regra | Status |
 |---|---|---|
-| 1 | A documentação segue o padrão **OpenAPI 3.1** e cobre as 23 rotas da API. | aprovado |
+| 1 | A documentação segue o padrão **OpenAPI 3.1** e cobre as 24 rotas da API. | aprovado |
 | 2 | A descrição é **gerada dos schemas Zod** que validam cada rota, para a documentação e a validação não divergirem. O Zod 4 já converte schema em esquema JSON, e o documento OpenAPI é montado em `docs/openApi.ts`, sem gerador extra. | aprovado |
 | 3 | A página é servida por **`swagger-ui-express`**, uma dependência nova, com os tipos (`@types/swagger-ui-express`) em desenvolvimento. | aprovado |
 | 4 | Cada rota informa o resumo, se é pública ou privada, os campos de entrada, o corpo de resposta e os códigos de erro possíveis, tirados do catálogo desta página. | aprovado |

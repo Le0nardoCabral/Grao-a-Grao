@@ -17,6 +17,7 @@ Regras do programa de cashback Grão a Grão.
 | RN-03 | Os planos iniciais são os da tabela abaixo. | aprovado |
 | RN-04 | Alterar um plano **não altera** compras nem lotes já gerados. | aprovado |
 | RN-05 | Só um plano **ativo** recebe clientes novos ou trocas de plano. Um plano que ainda tem clientes ativos não pode ser desativado. | aprovado |
+| RN-39 | A **receita mensal estimada** de um plano é o número de **clientes ativos** dele multiplicado pela **mensalidade**. O total é a soma dos planos ativos. É uma **estimativa informativa**: não considera pagamentos, atrasos nem descontos, e só o ADMIN a consulta. | aprovado |
 
 ### Planos iniciais (RN-03)
 
@@ -102,4 +103,4 @@ A **mensalidade** é o preço do plano e é **só informativa**: a API não cobr
 
 ## Pontos em aberto
 
-Nenhum. Todas as regras (RN-01 a RN-38) estão `aprovado`.
+Nenhum. Todas as regras (RN-01 a RN-39) estão `aprovado`.

@@ -30,12 +30,12 @@ Rotas da API, quem pode usar cada uma e a qual requisito ela atende. Os corpos d
 |---|---|
 | Acesso | 2 |
 | Clientes | 7 |
-| Planos | 5 |
+| Planos | 6 |
 | Produtos | 5 |
 | Reativação | 3 |
 | Compras | 1 |
 | Auxiliares | 1 |
-| **Total** | **24** |
+| **Total** | **25** |
 
 ---
 
@@ -67,6 +67,7 @@ Rotas da API, quem pode usar cada uma e a qual requisito ela atende. Os corpos d
 | GET | `/planos/:id` | Consulta um plano. | Ambos | RF-12 | 200, 400, 401, 403, 404 | aprovado |
 | PUT | `/planos/:id` | Atualiza um plano. | ADMIN | RF-13 | 200, 400, 401, 403, 404, 409 | aprovado |
 | DELETE | `/planos/:id` | Desativa um plano. Recusa se ele ainda tiver clientes ativos. | ADMIN | RF-14 | 204, 400, 401, 403, 404, 409 | aprovado |
+| GET | `/planos/receita-mensal` | Mostra, por plano ativo, os clientes ativos e a receita mensal estimada. | ADMIN | RF-25 | 200, 401, 403 | aprovado |
 
 ## Produtos
 
