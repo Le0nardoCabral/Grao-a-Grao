@@ -49,7 +49,7 @@ function bcryptCost(): number {
 }
 
 function validatePassword(password: string): void {
-  if (password.length < 8 || Buffer.byteLength(password, "utf8") > 72) {
+  if (Array.from(password).length < 8 || Buffer.byteLength(password, "utf8") > 72) {
     throw new Error("SEED_ADMIN_PASSWORD deve ter ao menos 8 caracteres e no máximo 72 bytes.");
   }
 }
@@ -89,7 +89,13 @@ async function main(): Promise<void> {
 
 main()
   .catch((error: unknown) => {
-    console.error("Falha ao executar a carga inicial:", error);
+    const mensagensSeguras = [
+      "Configure SEED_ADMIN_EMAIL no arquivo .env antes de executar o seed.",
+      "Configure SEED_ADMIN_PASSWORD no arquivo .env antes de executar o seed.",
+      "SEED_ADMIN_PASSWORD deve ter ao menos 8 caracteres e no máximo 72 bytes.",
+      "BCRYPT_COST deve ser um inteiro entre 4 e 31.",
+    ];
+    console.error(error instanceof Error && mensagensSeguras.includes(error.message) ? error.message : "Falha ao executar a carga inicial.");
     process.exitCode = 1;
   })
   .finally(async () => {

@@ -48,7 +48,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 
 **Fase 3 — Acesso**
 - [x] **Task 8 — Login** · 1 teste · depende de: 7
-- [ ] **Task 9 — Carga inicial (seed)** · 1 teste · depende de: 5, 6
+- [x] **Task 9 — Carga inicial (seed)** · 1 teste · depende de: 5, 6
 - [ ] **Task 10 — Cadastro de usuário** · 1 teste · depende de: 8, 9
 
 **Fase 4 — Cadastros**
