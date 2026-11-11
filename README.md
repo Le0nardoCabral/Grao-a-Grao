@@ -31,63 +31,65 @@ O extrato informa o saldo disponível, os lotes que vencem nos próximos 30 dias
 e até 50 movimentos recentes de crédito, uso e expiração. Lotes vencidos são
 ignorados no saldo mesmo antes de sua situação ser materializada no banco.
 
-## Executar localmente
+## Executar localmente via Docker
 
-Pré-requisitos: Node.js 22+, npm e MySQL 8+.
+Use Docker Compose para manter a API e os dois bancos no ambiente local. O `.env`
+fornece as demais configurações da API; dentro do Compose, as URLs do banco são
+sobrescritas para os bancos locais `grao_a_grao` e `grao_a_grao_teste`.
 
-1. Instale as dependências:
+1. Inicie o MySQL:
 
    ```bash
-   npm install
+   docker compose up -d db
    ```
 
-2. Crie o arquivo de ambiente a partir do exemplo:
+2. Construa a imagem de desenvolvimento:
 
    ```bash
-   cp .env.example .env
+   docker compose build api
    ```
 
-3. Substitua `JWT_SECRET` por uma chave aleatória, configure o banco e defina as
-   credenciais do primeiro administrador. Não compartilhe nem versione o `.env`.
+   Reconstrua a imagem depois de alterar `Dockerfile`, `package.json`,
+   `package-lock.json` ou arquivos de `scripts/`, pois esses arquivos são
+   copiados para a imagem e não são montados como volumes. Para reconstruir e
+   executar em uma etapa, use `docker compose run --build --rm api <comando>`.
 
-4. Gere o Prisma Client e aplique a migration inicial:
+3. Aplique as migrations nos bancos de desenvolvimento e teste:
 
    ```bash
-   npm run prisma:generate
-   npx prisma migrate dev --name inicial
+   docker compose run --rm api npm run db:deploy
+   docker compose run --rm api npm run db:deploy:test
    ```
 
-   A migration inicial ainda não está versionada no repositório. Uma pessoa do
-   grupo deve gerá-la e commitá-la antes da entrega.
+   O primeiro comando usa `DATABASE_URL` e o segundo seleciona e valida
+   `DATABASE_URL_TEST` antes de chamar o Prisma.
 
-5. Carregue os planos iniciais e o primeiro administrador:
+4. Carregue os planos iniciais e o administrador no banco de desenvolvimento:
 
    ```bash
-   npm run db:seed
+   docker compose run --rm api npm run db:seed
    ```
 
-   A carga pode ser repetida: ela não duplica nem sobrescreve planos ou o
-   administrador existentes. Não cria produtos, clientes ou compras fictícias.
-
-6. Inicie a API:
+5. Inicie a API:
 
    ```bash
-   npm run dev
+   docker compose up --build api
    ```
 
 A API fica em `http://localhost:3000`. `GET /health` verifica se o processo HTTP
-está respondendo.
+está respondendo. Não execute `npx prisma migrate ...` diretamente; use os
+scripts protegidos acima.
 
 ## Testes e compilação
 
 ```bash
-npm test
-npm run build
+docker compose run --rm api npm test
+docker compose run --rm api npm run build
 ```
 
-Os testes atuais cobrem o calendário de Brasília usado nos lotes e a montagem do
-extrato. A compra ainda precisa de cobertura automatizada para cálculo, limite,
-FIFO, expiração, idempotência e concorrência.
+O script de teste valida que as URLs configuradas apontam para os bancos locais
+esperados. Os testes com dados usam `grao_a_grao_teste`; a validação de ambiente
+também faz uma consulta simples aos dois bancos locais.
 
 ## Rotas disponíveis
 
@@ -118,23 +120,6 @@ curl http://localhost:3000/clientes/1/extrato \
 Somente o ADMIN pode consultar cliente desativado, usando
 `?incluirInativos=true`.
 
-## Docker Compose
-
-Depois de criar o `.env`:
-
-```bash
-docker compose up --build
-```
-
-Em outro terminal, prepare o banco e execute a carga inicial:
-
-```bash
-docker compose exec api npx prisma migrate dev --name inicial
-docker compose exec api npm run db:seed
-```
-
-Os dados permanecem no volume `mysql_data` quando os contêineres são parados.
-
 ## Estrutura
 
 ```text
@@ -149,12 +134,13 @@ context/      especificação vigente de negócio, API, dados e arquitetura
 | Comando | Descrição |
 |---|---|
 | `npm run dev` | Inicia a API com recarga automática. |
-| `npm test` | Executa os testes automatizados. |
+| `npm test` | Valida as URLs e executa os testes automatizados; prefira executar no Docker. |
 | `npm run build` | Compila TypeScript em `dist/`. |
 | `npm start` | Executa a versão compilada. |
 | `npm run prisma:generate` | Gera o Prisma Client. |
 | `npm run db:migrate` | Cria ou aplica migrations em desenvolvimento. |
-| `npm run db:deploy` | Aplica migrations versionadas. |
+| `npm run db:deploy` | Aplica migrations versionadas ao banco local indicado por `DATABASE_URL`. |
+| `npm run db:deploy:test` | Aplica migrations versionadas somente ao banco local de teste. |
 | `npm run db:seed` | Cria os planos iniciais e o primeiro admin sem sobrescrever dados. |
 
 ## Pendências prioritárias

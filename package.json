@@ -7,11 +7,15 @@
   "scripts": {
     "dev": "tsx watch src/Server.ts",
     "build": "tsc -p tsconfig.json",
+    "pretest": "tsx scripts/ValidarDestinoBanco.ts testes",
     "test": "node --import tsx --test --test-concurrency=1 tests/*.test.ts",
     "start": "node dist/src/Server.js",
     "prisma:generate": "prisma generate",
+    "predb:migrate": "tsx scripts/ValidarDestinoBanco.ts migracao",
     "db:migrate": "prisma migrate dev",
+    "predb:deploy": "tsx scripts/ValidarDestinoBanco.ts migracao",
     "db:deploy": "prisma migrate deploy",
+    "db:deploy:test": "tsx scripts/ValidarDestinoBanco.ts migracao-teste",
     "db:seed": "tsx prisma/Seed.ts"
   },
   "dependencies": {

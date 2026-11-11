@@ -9,6 +9,7 @@ COPY src ./src
 
 FROM base AS development
 COPY tests ./tests
+COPY scripts ./scripts
 EXPOSE 3000
 CMD ["npm", "run", "dev"]
 

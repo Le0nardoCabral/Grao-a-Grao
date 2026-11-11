@@ -1,7 +1,9 @@
 import "dotenv/config";
 import { hash } from "bcryptjs";
 import { Perfil, PrismaClient } from "@prisma/client";
+import { validarDestinoBanco } from "../scripts/ValidarDestinoBanco.js";
 
+validarDestinoBanco(process.env.DATABASE_URL);
 const prisma = new PrismaClient();
 
 const initialPlans = [
