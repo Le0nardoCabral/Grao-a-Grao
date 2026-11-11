@@ -30,6 +30,7 @@ Temas: `processoIa`, `codigo`, `git`, `negocio`, `api`, `seguranca`, `dados`, `d
 | 7.13 | Tasks 14 a 16 concluídas e marcadas | processoIa | aprovado |
 | 7.14 | Plano ganha a mensalidade, só informativa | negocio | aprovado |
 | 7.15 | Receita mensal estimada por plano (nova rota, só ADMIN) | api | aprovado |
+| 7.16 | Task 12 concluída; concorrência fica para Task 13 | processoIa | aprovado |
 
 ---
 
@@ -52,3 +53,4 @@ Temas: `processoIa`, `codigo`, `git`, `negocio`, `api`, `seguranca`, `dados`, `d
 | 7.13 | As **Tasks 14, 15 e 16** foram marcadas como concluídas no `tasks.md` após implementar compra, troca de plano e extrato e passar os 14 testes da suíte. | O usuário autorizou marcar as tarefas realizadas depois que a implementação e a validação foram relatadas. |
 | 7.14 | O plano passou a ter a **mensalidade** (`mensalidadeCentavos`), campo que um integrante já tinha colocado no código. O usuário decidiu que ela é **só informativa**: a API não cobra a mensalidade e **não gera cashback sobre ela**; o cashback continua só sobre a compra de produtos (RN-13). Valores de demonstração dos planos iniciais: Básico R$ 19,90, Intermediário R$ 39,90 e Premium R$ 69,90. A RN-02 e a RN-03, o `modeloDeDados.md`, o `contratos.md`, a `visaoGeralDaApi.md`, o glossário e as Tasks 9 e 12 foram atualizados. A coluna entra por uma **migration nova**, porque a `inicial` já está commitada. | A mensalidade é o preço do plano e não altera o programa de cashback, então o menor caminho é guardá-la e mostrá-la, sem fluxo de cobrança. |
 | 7.15 | O usuário pediu uma funcionalidade a mais para a mensalidade e escolheu a **receita mensal estimada por plano**: a rota `GET /planos/receita-mensal` (só ADMIN, só leitura) devolve, por plano ativo, os clientes ativos e a receita (`clientesAtivos × mensalidadeCentavos`), mais os totais. Entraram a RN-39, o RF-25 e o termo no glossário. A API passou a **25 rotas** (24 da API e o `/docs`), e a Task 13 passou a **2 testes**, num total de **19**. Sem tabela nova e sem mexer na compra. | É a opção mais simples que dá uso à mensalidade: usa só dados que já existem, sem fluxo de cobrança e sem mudar a regra do cashback. |
+| 7.16 | A Task 12 foi marcada como concluída após autorização do usuário e revisão do relatório final. A Task 13 recebe como pendência proteger, com bloqueio da linha do plano, a concorrência entre cadastro/vínculo de clientes e desativação de planos. | O usuário autorizou registrar o encerramento da Task 12 e manter essa proteção concorrente para a implementação da Task 13. |
