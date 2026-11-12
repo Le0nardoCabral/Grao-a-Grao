@@ -1,6 +1,7 @@
 import type { RequestHandler } from "express";
 import { AppError } from "../errors/AppError.js";
 import { ErrorCodes } from "../errors/ErrorCodes.js";
+import { ErrorMessages } from "../errors/ErrorMessages.js";
 import { PlanosService } from "../services/PlanosService.js";
 import type {
   AtualizacaoPlanoInputDto,
@@ -22,7 +23,7 @@ export class PlanosController {
     const incluirInativos = request.query.incluirInativos === "true";
     if (incluirInativos && request.auth?.perfil !== "ADMIN") {
       throw new AppError(
-        "Somente admin pode consultar planos inativos.",
+        ErrorMessages.INACTIVE_PLANS_ADMIN_ONLY,
         ErrorCodes.FORBIDDEN,
         "FORBIDDEN",
       );
@@ -41,7 +42,7 @@ export class PlanosController {
     const incluirInativos = request.query.incluirInativos === "true";
     if (incluirInativos && request.auth?.perfil !== "ADMIN") {
       throw new AppError(
-        "Somente admin pode consultar planos inativos.",
+        ErrorMessages.INACTIVE_PLANS_ADMIN_ONLY,
         ErrorCodes.FORBIDDEN,
         "FORBIDDEN",
       );

@@ -1,5 +1,6 @@
 import type { RequestHandler } from "express";
 import { AppError } from "../errors/AppError.js";
+import { ErrorMessages } from "../errors/ErrorMessages.js";
 import { IdempotencyKeySchema } from "../validators/CompraSchemas.js";
 import { RegistrarCompraService } from "../services/RegistrarCompraService.js";
 import type {
@@ -12,10 +13,10 @@ const service = new RegistrarCompraService();
 
 export class ComprasController {
   static criar: RequestHandler = async (request, response) => {
-    if (!request.auth) throw new AppError("Autenticação obrigatória.", 401, "UNAUTHENTICATED");
+    if (!request.auth) throw new AppError(ErrorMessages.AUTHENTICATION_REQUIRED, 401, "UNAUTHENTICATED");
     const chave = IdempotencyKeySchema.safeParse(request.get("Idempotency-Key"));
     if (!chave.success) {
-      throw new AppError("O cabeçalho Idempotency-Key é obrigatório e deve ter até 64 caracteres.", 400, "IDEMPOTENCY_KEY_REQUIRED");
+      throw new AppError(ErrorMessages.IDEMPOTENCY_KEY_REQUIRED, 400, "IDEMPOTENCY_KEY_REQUIRED");
     }
     const entrada = request.body as CriarCompraInputDto;
     const idempotencyKey: IdempotencyKeyInputDto = chave.data;

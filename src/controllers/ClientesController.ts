@@ -3,6 +3,7 @@ import {
   ClientesService,
 } from "../services/ClientesService.js";
 import { AppError } from "../errors/AppError.js";
+import { ErrorMessages } from "../errors/ErrorMessages.js";
 import { ExtratoService } from "../services/ExtratoService.js";
 import { TrocarPlanoService } from "../services/TrocarPlanoService.js";
 import type {
@@ -54,7 +55,7 @@ export class ClientesController {
   static extrato: RequestHandler = async (request, response) => {
     const incluirInativos = request.query.incluirInativos === "true";
     if (incluirInativos && request.auth?.perfil !== "ADMIN") {
-      throw new AppError("Somente admin pode consultar clientes inativos.", 403, "FORBIDDEN");
+      throw new AppError(ErrorMessages.INACTIVE_CLIENTS_ADMIN_ONLY, 403, "FORBIDDEN");
     }
 
     const resultado: ExtratoClienteResponseDto = await extratoService.executar(

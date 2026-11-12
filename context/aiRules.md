@@ -151,12 +151,13 @@ A coluna "Situação" é atualizada quando cada arquivo nascer.
 14. Todo erro de negócio é lançado como `AppError(mensagem, status, codigo)` e tratado em **um único middleware**.
 15. Controller não usa `try/catch`: o Express 5 repassa o erro de função `async`.
 16. Os códigos de erro vêm de **um catálogo único** (`ErrorCodes`), não de texto solto. Ex.: `ErrorCodes.CLIENT_NOT_FOUND`.
+17. As mensagens de erro da API e os textos fixos de detalhes de validação vêm do enum `ErrorMessages`, em `errors/ErrorMessages.ts`. O texto enviado ao cliente não deve ser escrito diretamente nos pontos de erro. Para mensagens com valores dinâmicos, mantenha o modelo no enum e substitua o marcador no ponto de uso.
 
 ### TypeScript
 
-17. Modo `strict`. Imports locais terminam em `.js` (ESM), com o nome do arquivo exatamente como ele é (em PascalCase). Usar `import type` para tipos.
-18. Sem `any`. Quando o tipo for desconhecido, usar `unknown` e validar.
-19. **Comentários:**
+18. Modo `strict`. Imports locais terminam em `.js` (ESM), com o nome do arquivo exatamente como ele é (em PascalCase). Usar `import type` para tipos.
+19. Sem `any`. Quando o tipo for desconhecido, usar `unknown` e validar.
+20. **Comentários:**
     - Só quando necessário. **Funções** recebem uma linha com o propósito, sem narrar os passos.
     - Curtos, diretos e fáceis de entender, em português.
     - Dentro do código, explicam só o **porquê** (a intenção, o motivo de uma decisão ou de um cuidado), nunca o que o código já diz.
@@ -166,8 +167,8 @@ A coluna "Situação" é atualizada quando cada arquivo nascer.
 
 ### Banco
 
-20. Models no singular; campos em camelCase.
-21. Todo model tem `id`. Os de cadastro têm `criadoEm` e `atualizadoEm`; os de registro têm só a data do fato.
+21. Models no singular; campos em camelCase.
+22. Todo model tem `id`. Os de cadastro têm `criadoEm` e `atualizadoEm`; os de registro têm só a data do fato.
 
 ### O que não está neste bloco
 

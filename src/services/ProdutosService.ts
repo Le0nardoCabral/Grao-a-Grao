@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { AppError } from "../errors/AppError.js";
+import { ErrorMessages } from "../errors/ErrorMessages.js";
 import { ProdutosRepository } from "../repositories/ProdutosRepository.js";
 import type {
   AtualizarProdutoInputDto,
@@ -13,10 +14,10 @@ const repository = new ProdutosRepository();
 
 function mapDatabaseError(error: unknown): never {
   if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-    throw new AppError("Já existe um produto com esse nome.", 409, "PRODUCT_ALREADY_EXISTS");
+    throw new AppError(ErrorMessages.PRODUCT_ALREADY_EXISTS, 409, "PRODUCT_ALREADY_EXISTS");
   }
   if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
-    throw new AppError("Produto não encontrado.", 404, "PRODUCT_NOT_FOUND");
+    throw new AppError(ErrorMessages.PRODUCT_NOT_FOUND, 404, "PRODUCT_NOT_FOUND");
   }
   throw error;
 }
@@ -36,7 +37,7 @@ export class ProdutosService {
 
   async buscarPorId(id: number): Promise<ProdutoResponseDto> {
     const produto = await repository.buscarPorId(id);
-    if (!produto) throw new AppError("Produto não encontrado.", 404, "PRODUCT_NOT_FOUND");
+    if (!produto) throw new AppError(ErrorMessages.PRODUCT_NOT_FOUND, 404, "PRODUCT_NOT_FOUND");
     return produto;
   }
 

@@ -1,5 +1,6 @@
 import type { RequestHandler } from "express";
 import { AppError } from "../errors/AppError.js";
+import { ErrorMessages } from "../errors/ErrorMessages.js";
 import { ProdutosService } from "../services/ProdutosService.js";
 import type {
   AtualizarProdutoInputDto,
@@ -22,7 +23,7 @@ export class ProdutosController {
       incluirInativos: request.query.incluirInativos === "true",
     };
     if (filtros.incluirInativos && request.auth?.perfil !== "ADMIN") {
-      throw new AppError("Somente admin pode consultar produtos inativos.", 403, "FORBIDDEN");
+      throw new AppError(ErrorMessages.INACTIVE_PRODUCTS_ADMIN_ONLY, 403, "FORBIDDEN");
     }
     const produtos: ListarProdutosResponseDto = await service.listar(filtros);
     response.status(200).json(produtos);

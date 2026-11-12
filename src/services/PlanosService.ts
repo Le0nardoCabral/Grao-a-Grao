@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { AppError } from "../errors/AppError.js";
 import { ErrorCodes } from "../errors/ErrorCodes.js";
+import { ErrorMessages } from "../errors/ErrorMessages.js";
 import { PlanosRepository } from "../repositories/PlanosRepository.js";
 import type {
   AtualizacaoPlanoInputDto,
@@ -18,14 +19,14 @@ function tratarErroBanco(error: unknown): never {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     if (error.code === "P2002") {
       throw new AppError(
-        "Já existe um plano com esse nome.",
+        ErrorMessages.PLAN_ALREADY_EXISTS,
         ErrorCodes.PLAN_ALREADY_EXISTS,
         "PLAN_ALREADY_EXISTS",
       );
     }
     if (error.code === "P2025") {
       throw new AppError(
-        "Plano não encontrado.",
+        ErrorMessages.PLAN_NOT_FOUND,
         ErrorCodes.PLAN_NOT_FOUND,
         "PLAN_NOT_FOUND",
       );
@@ -55,7 +56,7 @@ export class PlanosService {
     const plano = await repository.buscarPorId(id, incluirInativos);
     if (!plano) {
       throw new AppError(
-        "Plano não encontrado.",
+        ErrorMessages.PLAN_NOT_FOUND,
         ErrorCodes.PLAN_NOT_FOUND,
         "PLAN_NOT_FOUND",
       );
@@ -78,10 +79,10 @@ export class PlanosService {
 
     if (minimoUsoCentavos > limiteCentavos) {
       throw new AppError(
-        "O mínimo de uso não pode ser maior que o limite do plano.",
+        ErrorMessages.PLAN_MINIMUM_EXCEEDS_LIMIT,
         ErrorCodes.VALIDATION_ERROR,
         "VALIDATION_ERROR",
-        [{ campo: "minimoUsoCentavos", mensagem: "Não pode superar o limiteCentavos." }],
+        [{ campo: "minimoUsoCentavos", mensagem: ErrorMessages.PLAN_MINIMUM_VALIDATION_DETAIL }],
       );
     }
 
@@ -96,14 +97,14 @@ export class PlanosService {
     const resultado = await repository.desativar(id);
     if (resultado.tipo === "NAO_ENCONTRADO") {
       throw new AppError(
-        "Plano não encontrado.",
+        ErrorMessages.PLAN_NOT_FOUND,
         ErrorCodes.PLAN_NOT_FOUND,
         "PLAN_NOT_FOUND",
       );
     }
     if (resultado.tipo === "CLIENTES_ATIVOS") {
       throw new AppError(
-        "O plano possui clientes ativos e não pode ser desativado.",
+        ErrorMessages.PLAN_HAS_ACTIVE_CLIENTS,
         ErrorCodes.PLAN_HAS_ACTIVE_CLIENTS,
         "PLAN_HAS_ACTIVE_CLIENTS",
       );
@@ -114,14 +115,14 @@ export class PlanosService {
     const resultado = await repository.reativar(id);
     if (resultado.tipo === "NAO_ENCONTRADO") {
       throw new AppError(
-        "Plano não encontrado.",
+        ErrorMessages.PLAN_NOT_FOUND,
         ErrorCodes.PLAN_NOT_FOUND,
         "PLAN_NOT_FOUND",
       );
     }
     if (resultado.tipo === "JA_ATIVO") {
       throw new AppError(
-        "O plano já está ativo.",
+        ErrorMessages.PLAN_ALREADY_ACTIVE,
         ErrorCodes.ALREADY_ACTIVE,
         "ALREADY_ACTIVE",
       );

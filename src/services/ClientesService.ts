@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { AppError } from "../errors/AppError.js";
+import { ErrorMessages } from "../errors/ErrorMessages.js";
 import { ClientesRepository } from "../repositories/ClientesRepository.js";
 import type {
   CriarClienteInputDto,
@@ -15,7 +16,7 @@ export class ClientesService {
     const plano = await repository.buscarPlanoAtivo(data.planoId);
 
     if (!plano) {
-      throw new AppError("Plano ativo não encontrado.", 404, "PLAN_NOT_FOUND");
+      throw new AppError(ErrorMessages.ACTIVE_PLAN_NOT_FOUND, 404, "PLAN_NOT_FOUND");
     }
 
     try {
@@ -32,7 +33,7 @@ export class ClientesService {
         error.code === "P2002"
       ) {
         throw new AppError(
-          "Já existe um cliente com esse e-mail.",
+          ErrorMessages.CLIENT_ALREADY_EXISTS,
           409,
           "CLIENT_ALREADY_EXISTS"
         );

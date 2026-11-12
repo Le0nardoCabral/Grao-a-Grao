@@ -1,4 +1,5 @@
 import { AppError } from "../errors/AppError.js";
+import { ErrorMessages } from "../errors/ErrorMessages.js";
 import { ExtratoRepository } from "../repositories/ExtratoRepository.js";
 import { adicionarDiasEmBrasilia } from "./CashbackDateService.js";
 import type { ExtratoClienteResponseDto } from "../dtos/ClientesDtos.js";
@@ -44,7 +45,7 @@ export class ExtratoService {
   async executar(clienteId: number, incluirInativos: boolean, agora = new Date()): Promise<ExtratoClienteResponseDto> {
     const cliente = await this.repository.buscarCliente(clienteId);
     if (!cliente || (!cliente.ativo && !incluirInativos)) {
-      throw new AppError("Cliente não encontrado.", 404, "CLIENT_NOT_FOUND");
+      throw new AppError(ErrorMessages.CLIENT_NOT_FOUND, 404, "CLIENT_NOT_FOUND");
     }
 
     const limiteLotesAVencer = adicionarDiasEmBrasilia(agora, 30);

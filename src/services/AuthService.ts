@@ -1,6 +1,7 @@
 import { compare, hash } from "bcryptjs";
 import jwt, { type SignOptions } from "jsonwebtoken";
 import { AppError } from "../errors/AppError.js";
+import { ErrorMessages } from "../errors/ErrorMessages.js";
 import { UsuariosRepository } from "../repositories/UsuariosRepository.js";
 import type { LoginInputDto, LoginResponseDto } from "../dtos/AuthDtos.js";
 
@@ -14,7 +15,7 @@ export class AuthService {
     hashFicticio ??= hash("senha fictícia para comparação", Number(process.env.BCRYPT_COST ?? 10));
     const senhaCorreta = await compare(senha, usuario?.senhaHash ?? await hashFicticio);
     if (!usuario || !usuario.ativo || !senhaCorreta) {
-      throw new AppError("E-mail ou senha inválidos.", 401, "INVALID_CREDENTIALS");
+      throw new AppError(ErrorMessages.INVALID_CREDENTIALS, 401, "INVALID_CREDENTIALS");
     }
 
     const secret = process.env.JWT_SECRET!;

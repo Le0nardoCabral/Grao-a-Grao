@@ -1,5 +1,6 @@
 import { Prisma, StatusLote } from "@prisma/client";
 import { AppError } from "../errors/AppError.js";
+import { ErrorMessages } from "../errors/ErrorMessages.js";
 import { ComprasRepository } from "../repositories/ComprasRepository.js";
 import { adicionarDiasEmBrasilia, mesEmBrasilia } from "./CashbackDateService.js";
 import type { CriarCompraInputDto, CriarCompraResultadoDto, ItemCompraInputDto } from "../dtos/ComprasDtos.js";
@@ -69,10 +70,10 @@ export class RegistrarCompraService {
         });
         if (compraExistente) {
           if (!conteudoIgual(compraExistente, input)) {
-            throw new AppError("A chave de idempotência já foi usada com outro conteúdo.", 409, "IDEMPOTENCY_KEY_CONFLICT");
+            throw new AppError(ErrorMessages.IDEMPOTENCY_KEY_CONFLICT, 409, "IDEMPOTENCY_KEY_CONFLICT");
           }
           const cliente = await transaction.cliente.findUnique({ where: { id: compraExistente.clienteId }, include: { plano: true } });
-          if (!cliente) throw new AppError("Cliente não encontrado.", 404, "CLIENT_NOT_FOUND");
+          if (!cliente) throw new AppError(ErrorMessages.CLIENT_NOT_FOUND, 404, "CLIENT_NOT_FOUND");
           const saldoAtual = await transaction.loteCashback.aggregate({
             where: {
               clienteId: cliente.id,
@@ -102,27 +103,27 @@ export class RegistrarCompraService {
 
         const agora = new Date();
         const cliente = await transaction.cliente.findUnique({ where: { id: input.clienteId }, include: { plano: true } });
-        if (!cliente) throw new AppError("Cliente não encontrado.", 404, "CLIENT_NOT_FOUND");
-        if (!cliente.ativo) throw new AppError("Cliente inativo.", 409, "CLIENT_INACTIVE");
-        if (!cliente.plano.ativo) throw new AppError("O plano atual do cliente está inativo.", 409, "PLAN_INACTIVE");
+        if (!cliente) throw new AppError(ErrorMessages.CLIENT_NOT_FOUND, 404, "CLIENT_NOT_FOUND");
+        if (!cliente.ativo) throw new AppError(ErrorMessages.CLIENT_INACTIVE, 409, "CLIENT_INACTIVE");
+        if (!cliente.plano.ativo) throw new AppError(ErrorMessages.PLAN_CURRENTLY_INACTIVE, 409, "PLAN_INACTIVE");
 
         const produtoIds = input.itens.map((item) => item.produtoId);
         const produtos = await transaction.produto.findMany({ where: { id: { in: produtoIds } } });
         const produtoPorId = new Map(produtos.map((produto) => [produto.id, produto]));
-        if (produtoPorId.size !== produtoIds.length) throw new AppError("Um ou mais produtos não existem.", 404, "PRODUCT_NOT_FOUND");
-        if (produtos.some((produto) => !produto.ativo)) throw new AppError("Um ou mais produtos estão inativos.", 409, "PRODUCT_INACTIVE");
+        if (produtoPorId.size !== produtoIds.length) throw new AppError(ErrorMessages.PRODUCT_NOT_FOUND_IN_PURCHASE, 404, "PRODUCT_NOT_FOUND");
+        if (produtos.some((produto) => !produto.ativo)) throw new AppError(ErrorMessages.PRODUCT_INACTIVE, 409, "PRODUCT_INACTIVE");
 
         const itensCalculados = input.itens.map((item) => {
           const produto = produtoPorId.get(item.produtoId)!;
           const subtotalCentavos = produto.precoCentavos * item.quantidade;
           if (!Number.isSafeInteger(subtotalCentavos)) {
-            throw new AppError("O subtotal do item excede o limite permitido.", 400, "INVALID_PURCHASE_AMOUNT");
+            throw new AppError(ErrorMessages.PURCHASE_ITEM_AMOUNT_INVALID, 400, "INVALID_PURCHASE_AMOUNT");
           }
           return { produtoId: produto.id, quantidade: item.quantidade, precoUnitarioCentavos: produto.precoCentavos, subtotalCentavos };
         });
         const valorBrutoCentavos = itensCalculados.reduce((total, item) => total + item.subtotalCentavos, 0);
         if (!Number.isSafeInteger(valorBrutoCentavos) || valorBrutoCentavos <= 0 || valorBrutoCentavos > 100_000_000) {
-          throw new AppError("O valor total da compra é inválido.", 400, "INVALID_PURCHASE_AMOUNT");
+          throw new AppError(ErrorMessages.PURCHASE_AMOUNT_INVALID, 400, "INVALID_PURCHASE_AMOUNT");
         }
 
         await transaction.loteCashback.updateMany({
@@ -141,13 +142,13 @@ export class RegistrarCompraService {
         const saldoDisponivelCentavos = lotes.reduce((total, lote) => total + lote.saldoCentavos, 0);
         const cashbackUsadoCentavos = input.cashbackSolicitadoCentavos ?? 0;
         if (cashbackUsadoCentavos > valorBrutoCentavos) {
-          throw new AppError("Não é permitido usar cashback acima do valor da compra.", 400, "CASHBACK_EXCEEDS_PURCHASE");
+          throw new AppError(ErrorMessages.CASHBACK_EXCEEDS_PURCHASE, 400, "CASHBACK_EXCEEDS_PURCHASE");
         }
         if (cashbackUsadoCentavos > 0 && cashbackUsadoCentavos < cliente.plano.minimoUsoCentavos) {
-          throw new AppError(`O plano exige uso mínimo de ${cliente.plano.minimoUsoCentavos} centavos.`, 400, "CASHBACK_BELOW_PLAN_MINIMUM");
+          throw new AppError(ErrorMessages.CASHBACK_BELOW_PLAN_MINIMUM.replace("{valor}", String(cliente.plano.minimoUsoCentavos)), 400, "CASHBACK_BELOW_PLAN_MINIMUM");
         }
         if (cashbackUsadoCentavos > saldoDisponivelCentavos) {
-          throw new AppError("Saldo de cashback insuficiente.", 409, "INSUFFICIENT_CASHBACK");
+          throw new AppError(ErrorMessages.INSUFFICIENT_CASHBACK, 409, "INSUFFICIENT_CASHBACK");
         }
 
         let restanteParaDebitar = cashbackUsadoCentavos;
@@ -160,7 +161,7 @@ export class RegistrarCompraService {
             where: { id: lote.id, clienteId: cliente.id, saldoCentavos: lote.saldoCentavos, status: lote.status, venceEm: { gt: agora } },
             data: { saldoCentavos: saldoNovo, status: saldoNovo === 0 ? StatusLote.CONSUMIDO : StatusLote.PARCIAL },
           });
-          if (atualizado.count !== 1) throw new AppError("Conflito de concorrência ao registrar a compra.", 409, "PURCHASE_CONFLICT");
+          if (atualizado.count !== 1) throw new AppError(ErrorMessages.PURCHASE_CONFLICT, 409, "PURCHASE_CONFLICT");
           usosPlanejados.push({ loteId: lote.id, valorCentavos: valorDebitado });
           restanteParaDebitar -= valorDebitado;
         }
@@ -244,7 +245,7 @@ export class RegistrarCompraService {
         }
       }
       if (error instanceof Prisma.PrismaClientKnownRequestError && ["P2034", "P2002"].includes(error.code)) {
-        throw new AppError("Conflito de concorrência ao registrar a compra. Tente novamente.", 409, "PURCHASE_CONFLICT");
+        throw new AppError(ErrorMessages.PURCHASE_CONFLICT_RETRY, 409, "PURCHASE_CONFLICT");
       }
       throw error;
     }

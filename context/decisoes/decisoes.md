@@ -32,6 +32,7 @@ Temas: `processoIa`, `codigo`, `git`, `negocio`, `api`, `seguranca`, `dados`, `d
 | 7.15 | Receita mensal estimada por plano (nova rota, só ADMIN) | api | aprovado |
 | 7.16 | Task 12 concluída; concorrência fica para Task 13 | processoIa | aprovado |
 | 7.17 | DTOs de entrada e saída para cada operação da API | codigo | aprovado |
+| 7.18 | Mensagens de erro centralizadas em ErrorMessages | codigo | aprovado |
 
 ---
 
@@ -56,3 +57,4 @@ Temas: `processoIa`, `codigo`, `git`, `negocio`, `api`, `seguranca`, `dados`, `d
 | 7.15 | O usuário pediu uma funcionalidade a mais para a mensalidade e escolheu a **receita mensal estimada por plano**: a rota `GET /planos/receita-mensal` (só ADMIN, só leitura) devolve, por plano ativo, os clientes ativos e a receita (`clientesAtivos × mensalidadeCentavos`), mais os totais. Entraram a RN-39, o RF-25 e o termo no glossário. A API passou a **25 rotas** (24 da API e o `/docs`), e a Task 13 passou a **2 testes**, num total de **19**. Sem tabela nova e sem mexer na compra. | É a opção mais simples que dá uso à mensalidade: usa só dados que já existem, sem fluxo de cobrança e sem mudar a regra do cashback. |
 | 7.16 | A Task 12 foi marcada como concluída após autorização do usuário e revisão do relatório final. A Task 13 recebe como pendência proteger, com bloqueio da linha do plano, a concorrência entre cadastro/vínculo de clientes e desativação de planos. | O usuário autorizou registrar o encerramento da Task 12 e manter essa proteção concorrente para a implementação da Task 13. |
 | 7.17 | A IA deve definir DTOs de entrada e saída para cada operação da API, guardados em `src/dtos/` e separados dos modelos do Prisma. Os DTOs podem repetir os campos dos schemas Zod: o Zod valida dados em tempo de execução, enquanto os DTOs declaram os contratos entre camadas no TypeScript. | O usuário pediu contratos explícitos nas duas direções para que as camadas e as respostas da API tenham formatos definidos, mesmo quando isso repete os schemas de validação. |
+| 7.18 | As mensagens de erro da API e os textos fixos de detalhes de validação são centralizados no enum `ErrorMessages`, em `src/errors/ErrorMessages.ts`. Mensagens dinâmicas mantêm um marcador no enum e recebem o valor no ponto de uso. | O usuário escolheu padronizar os erros da API para substituir textos repetidos por mensagens definidas em um único catálogo. |
