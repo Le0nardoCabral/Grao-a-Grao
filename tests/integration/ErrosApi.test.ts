@@ -1,14 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { iniciarServidor } from "./AuxiliarTeste.js";
+import { iniciarContextoApi } from "../support/ApiTestContext.js";
 
 test("rota inexistente devolve erro padronizado", async () => {
-  const servidor = await iniciarServidor();
+  const contexto = await iniciarContextoApi();
   try {
-    const resposta = await fetch(`${servidor.url}/rota-inexistente`);
+    const resposta = await fetch(`${contexto.url}/rota-inexistente`);
     assert.equal(resposta.status, 404);
     assert.deepEqual(await resposta.json(), { erro: { codigo: "NOT_FOUND", mensagem: "Rota não encontrada." } });
   } finally {
-    await servidor.encerrar();
+    await contexto.encerrar();
   }
 });

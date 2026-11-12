@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { criarClienteTeste } from "./AuxiliarTeste.js";
+import { criarClienteTeste } from "./support/AuxiliarTeste.js";
 
 test("a tabela Plano tem a coluna mensalidadeCentavos", async () => {
   const prisma = criarClienteTeste();

@@ -62,6 +62,7 @@ export class RegistrarCompraService {
   async executar(usuarioId: number, input: CriarCompraInputDto, chaveIdempotencia: string): Promise<CriarCompraResultadoDto> {
     try {
       return await repository.transaction(async (transaction) => {
+        await transaction.$queryRaw(Prisma.sql`SELECT id FROM Cliente WHERE id = ${input.clienteId} FOR UPDATE`);
         const compraExistente = await transaction.compra.findUnique({
           where: { usuarioId_chaveIdempotencia: { usuarioId, chaveIdempotencia } },
           include: { itens: true },
@@ -99,7 +100,6 @@ export class RegistrarCompraService {
           return respostaIdempotente(compra, cliente.plano.limiteCentavos, saldoAtual._sum.saldoCentavos ?? 0);
         }
 
-        await transaction.$queryRaw(Prisma.sql`SELECT id FROM Cliente WHERE id = ${input.clienteId} FOR UPDATE`);
         const agora = new Date();
         const cliente = await transaction.cliente.findUnique({ where: { id: input.clienteId }, include: { plano: true } });
         if (!cliente) throw new AppError("Cliente não encontrado.", 404, "CLIENT_NOT_FOUND");

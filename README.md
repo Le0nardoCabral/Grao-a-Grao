@@ -82,6 +82,19 @@ scripts protegidos acima.
 
 ## Testes e compilação
 
+Com o MySQL do Compose ativo e as migrations aplicadas ao banco de teste, rode
+os testes HTTP da API:
+
+```bash
+docker compose run --rm api npm run test:integration
+```
+
+Os testes de integração iniciam a API em uma porta local livre, usam somente
+`grao_a_grao_teste` e limpam os dados antes e depois de cada caso. O comando
+valida o destino dos bancos antes de executar.
+
+Para rodar todos os testes (integração, unidade e infraestrutura) e compilar:
+
 ```bash
 docker compose run --rm api npm test
 docker compose run --rm api npm run build
@@ -125,7 +138,9 @@ Somente o ADMIN pode consultar cliente desativado, usando
 ```text
 src/          rotas, controllers, services, repositories e middlewares
 prisma/       schema e carga inicial
-tests/        testes automatizados
+tests/        testes unitários e de infraestrutura
+tests/integration/ testes HTTP da API com banco local de teste
+tests/support/ auxiliares, servidor isolado e contexto de integração
 context/      especificação vigente de negócio, API, dados e arquitetura
 ```
 

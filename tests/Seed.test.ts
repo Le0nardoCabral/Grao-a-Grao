@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
-import { criarClienteTeste, limparTabelas } from "./AuxiliarTeste.js";
+import { criarClienteTeste, limparTabelas } from "./support/AuxiliarTeste.js";
 
 test("a carga cria três planos e um admin sem duplicar", async () => {
   const endereco = process.env.DATABASE_URL_TEST;

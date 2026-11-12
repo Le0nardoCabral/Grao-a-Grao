@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { criarUsuario, iniciarServidor, limparTabelas } from "./AuxiliarTeste.js";
+import { iniciarContextoApi } from "../support/ApiTestContext.js";
 
 test("login válido devolve token e usuário sem senha nem hash", async () => {
-  const usuario = await criarUsuario("ATENDENTE", "SenhaTeste123!");
-  const servidor = await iniciarServidor();
+  const contexto = await iniciarContextoApi();
   try {
-    const resposta = await fetch(`${servidor.url}/auth/login`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email: usuario.email, senha: "SenhaTeste123!" }) });
+    const usuario = await contexto.criarUsuario("ATENDENTE", "SenhaTeste123!");
+    const resposta = await fetch(`${contexto.url}/auth/login`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email: usuario.email, senha: "SenhaTeste123!" }) });
     assert.equal(resposta.status, 200);
     const corpo = await resposta.json() as { token: unknown; usuario: Record<string, unknown> };
     assert.equal(typeof corpo.token, "string");
@@ -14,7 +14,6 @@ test("login válido devolve token e usuário sem senha nem hash", async () => {
     assert.ok(!("senha" in corpo.usuario));
     assert.ok(!("senhaHash" in corpo.usuario));
   } finally {
-    await servidor.encerrar();
-    await limparTabelas(["usuario"]);
+    await contexto.encerrar();
   }
 });

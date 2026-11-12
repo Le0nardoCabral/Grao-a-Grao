@@ -1,13 +1,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import test from "node:test";
-import {
-  criarCliente,
-  criarUsuario,
-  iniciarServidor,
-  limparTabelas,
-  obterToken,
-} from "./AuxiliarTeste.js";
+import { iniciarContextoApi } from "../support/ApiTestContext.js";
 
 type Plano = {
   id: number;
@@ -34,16 +28,15 @@ function novoPlano(nome: string) {
 }
 
 test("administra planos com acesso, paginação e proteção de clientes ativos", async () => {
-  await limparTabelas(["cliente", "plano", "usuario"]);
+  const contexto = await iniciarContextoApi();
   const senha = "SenhaTeste123!";
-  const admin = await criarUsuario("ADMIN", senha);
-  const atendente = await criarUsuario("ATENDENTE", senha);
-  const servidor = await iniciarServidor();
 
   try {
-    const tokenAdmin = await obterToken(servidor.url, admin.email, senha);
-    const tokenAtendente = await obterToken(servidor.url, atendente.email, senha);
-    const semToken = await fetch(`${servidor.url}/planos`);
+    const admin = await contexto.criarUsuario("ADMIN", senha);
+    const atendente = await contexto.criarUsuario("ATENDENTE", senha);
+    const tokenAdmin = await contexto.obterToken(admin.email, senha);
+    const tokenAtendente = await contexto.obterToken(atendente.email, senha);
+    const semToken = await fetch(`${contexto.url}/planos`);
     assert.equal(semToken.status, 401);
 
     const cabecalhosAdmin = {
@@ -56,14 +49,14 @@ test("administra planos com acesso, paginação e proteção de clientes ativos"
     };
     const payload = novoPlano(`Plano ${randomUUID()}`);
 
-    const criacaoAtendente = await fetch(`${servidor.url}/planos`, {
+    const criacaoAtendente = await fetch(`${contexto.url}/planos`, {
       method: "POST",
       headers: cabecalhosAtendente,
       body: JSON.stringify(payload),
     });
     assert.equal(criacaoAtendente.status, 403);
 
-    const criacao = await fetch(`${servidor.url}/planos`, {
+    const criacao = await fetch(`${contexto.url}/planos`, {
       method: "POST",
       headers: cabecalhosAdmin,
       body: JSON.stringify(payload),
@@ -74,7 +67,7 @@ test("administra planos com acesso, paginação e proteção de clientes ativos"
     assert.equal(plano.ativo, true);
 
     const listagem = await fetch(
-      `${servidor.url}/planos?pagina=1&limite=100`,
+      `${contexto.url}/planos?pagina=1&limite=100`,
       { headers: cabecalhosAtendente },
     );
     assert.equal(listagem.status, 200);
@@ -87,12 +80,12 @@ test("administra planos com acesso, paginação e proteção de clientes ativos"
     assert.equal(pagina.limite, 100);
     assert.ok(pagina.dados.some((item) => item.id === plano.id));
 
-    const consulta = await fetch(`${servidor.url}/planos/${plano.id}`, {
+    const consulta = await fetch(`${contexto.url}/planos/${plano.id}`, {
       headers: cabecalhosAtendente,
     });
     assert.equal(consulta.status, 200);
 
-    const atualizacao = await fetch(`${servidor.url}/planos/${plano.id}`, {
+    const atualizacao = await fetch(`${contexto.url}/planos/${plano.id}`, {
       method: "PUT",
       headers: cabecalhosAdmin,
       body: JSON.stringify({
@@ -104,7 +97,7 @@ test("administra planos com acesso, paginação e proteção de clientes ativos"
     const planoAtualizado = await atualizacao.json() as Plano;
     assert.equal(planoAtualizado.mensalidadeCentavos, 2_490);
 
-    const planoSemClientes = await fetch(`${servidor.url}/planos`, {
+    const planoSemClientes = await fetch(`${contexto.url}/planos`, {
       method: "POST",
       headers: cabecalhosAdmin,
       body: JSON.stringify(novoPlano(`Plano ${randomUUID()}`)),
@@ -113,42 +106,41 @@ test("administra planos com acesso, paginação e proteção de clientes ativos"
     const planoDesativavel = await planoSemClientes.json() as Plano;
 
     const desativacao = await fetch(
-      `${servidor.url}/planos/${planoDesativavel.id}`,
+      `${contexto.url}/planos/${planoDesativavel.id}`,
       { method: "DELETE", headers: cabecalhosAdmin },
     );
     assert.equal(desativacao.status, 204);
 
     const consultaInativa = await fetch(
-      `${servidor.url}/planos/${planoDesativavel.id}?incluirInativos=true`,
+      `${contexto.url}/planos/${planoDesativavel.id}?incluirInativos=true`,
       { headers: cabecalhosAdmin },
     );
     assert.equal(consultaInativa.status, 200);
 
     const reativacao = await fetch(
-      `${servidor.url}/planos/${planoDesativavel.id}/reativar`,
+      `${contexto.url}/planos/${planoDesativavel.id}/reativar`,
       { method: "POST", headers: cabecalhosAdmin },
     );
     assert.equal(reativacao.status, 200);
     assert.equal((await reativacao.json() as Plano).ativo, true);
 
-    const segundoPlano = await fetch(`${servidor.url}/planos`, {
+    const segundoPlano = await fetch(`${contexto.url}/planos`, {
       method: "POST",
       headers: cabecalhosAdmin,
       body: JSON.stringify(novoPlano(`Plano ${randomUUID()}`)),
     });
     assert.equal(segundoPlano.status, 201);
     const planoComCliente = await segundoPlano.json() as Plano;
-    await criarCliente(planoComCliente.id);
+    await contexto.criarCliente(planoComCliente.id);
 
     const desativacaoBloqueada = await fetch(
-      `${servidor.url}/planos/${planoComCliente.id}`,
+      `${contexto.url}/planos/${planoComCliente.id}`,
       { method: "DELETE", headers: cabecalhosAdmin },
     );
     assert.equal(desativacaoBloqueada.status, 409);
     const corpoErro = await desativacaoBloqueada.json() as CorpoErro;
     assert.equal(corpoErro.erro.codigo, "PLAN_HAS_ACTIVE_CLIENTS");
   } finally {
-    await servidor.encerrar();
-    await limparTabelas(["cliente", "plano", "usuario"]);
+    await contexto.encerrar();
   }
 });
