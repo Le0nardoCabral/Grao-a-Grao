@@ -21,15 +21,25 @@ estado atual do projeto.
 |---|---|
 | Login com JWT | Implementado |
 | Cadastro de usuário | Pendente; responde `501` |
-| Clientes | Cadastro, listagem e extrato implementados |
-| Planos | Pendente; rotas respondem `501` |
+| Clientes | Cadastro, listagem, extrato e troca de plano implementados; consulta, edição e desativação pendentes |
+| Planos | Cadastro, consulta, edição, desativação e reativação implementados; receita mensal estimada pendente |
 | Produtos | CRUD implementado |
-| Compra e cashback | Implementação transacional existente, ainda sem idempotência |
+| Compra e cashback | Implementados com idempotência |
 | OpenAPI/Swagger | Pendente |
 
 O extrato informa o saldo disponível, os lotes que vencem nos próximos 30 dias
 e até 50 movimentos recentes de crédito, uso e expiração. Lotes vencidos são
 ignorados no saldo mesmo antes de sua situação ser materializada no banco.
+
+## Preparar o ambiente local
+
+Crie o arquivo `.env` a partir do exemplo antes de iniciar a API ou executar os
+testes. Os valores do exemplo apontam para os bancos locais do Compose; mantenha
+`DATABASE_URL` em `grao_a_grao` e `DATABASE_URL_TEST` em `grao_a_grao_teste`.
+
+```bash
+cp .env.example .env
+```
 
 ## Executar localmente via Docker
 
@@ -82,31 +92,42 @@ scripts protegidos acima.
 
 ## Testes e compilação
 
-Com o MySQL do Compose ativo e as migrations aplicadas ao banco de teste, rode
-os testes HTTP da API:
+Instale as dependências e inicie o MySQL do Compose. Aplique as migrations no
+banco de teste antes de executar a suíte de integração:
 
 ```bash
-docker compose run --rm api npm run test:integration
+npm install
+docker compose up -d db
+docker compose run --build --rm api npm run db:deploy:test
+npm run test:integration
 ```
 
-Os testes de integração iniciam a API em uma porta local livre, usam somente
-`grao_a_grao_teste` e limpam os dados antes e depois de cada caso. O comando
-valida o destino dos bancos antes de executar.
+Os testes HTTP iniciam a API em uma porta livre e executam serialmente contra
+`grao_a_grao_teste`. Os dados são preparados e limpos em cada caso, inclusive
+quando uma asserção falha. Antes de iniciar, o comando confere se `DATABASE_URL`
+e `DATABASE_URL_TEST` apontam para os bancos locais esperados. Se essa checagem
+falhar, confira o arquivo `.env` e confirme que o MySQL está ativo.
 
-Para rodar todos os testes (integração, unidade e infraestrutura) e compilar:
+Para rodar apenas a integração pelo Compose, use:
 
 ```bash
-docker compose run --rm api npm test
-docker compose run --rm api npm run build
+docker compose run --build --rm api npm run test:integration
 ```
 
-O script de teste valida que as URLs configuradas apontam para os bancos locais
-esperados. Os testes com dados usam `grao_a_grao_teste`; a validação de ambiente
-também faz uma consulta simples aos dois bancos locais.
+Para rodar todos os testes (integração, unidade e infraestrutura) ou compilar:
+
+```bash
+npm test
+npm run build
+```
+
+Os scripts executam os testes serialmente. Os testes com dados usam
+`grao_a_grao_teste`; a validação de ambiente confere os destinos configurados
+antes de iniciar.
 
 ## Rotas disponíveis
 
-Todas as rotas abaixo, exceto login e health check, exigem
+Todas as rotas implementadas abaixo, exceto login e health check, exigem
 `Authorization: Bearer <token>`.
 
 | Método | Rota | Perfis | Situação |
@@ -117,11 +138,15 @@ Todas as rotas abaixo, exceto login e health check, exigem
 | POST | `/clientes` | ADMIN, ATENDENTE | Implementado |
 | GET | `/clientes` | ADMIN, ATENDENTE | Implementado |
 | GET | `/clientes/:id/extrato` | ADMIN, ATENDENTE | Implementado |
+| POST | `/clientes/:id/trocar-plano` | ADMIN | Implementado |
 | GET, PUT, DELETE | `/clientes/:id` | Conforme especificação | Pendente |
-| POST | `/clientes/:id/trocar-plano` | ADMIN | Pendente |
-| CRUD | `/planos` | Conforme especificação | Pendente |
-| CRUD | `/produtos` | Conforme especificação | Implementado |
-| POST | `/compras` | ADMIN, ATENDENTE | Implementado parcialmente |
+| POST, PUT, DELETE | `/planos` | ADMIN | Implementado |
+| GET | `/planos`, `/planos/:id` | ADMIN, ATENDENTE | Implementado |
+| POST | `/planos/:id/reativar` | ADMIN | Implementado |
+| GET | `/planos/receita-mensal` | ADMIN | Pendente |
+| POST, PUT, DELETE | `/produtos` | ADMIN | Implementado |
+| GET | `/produtos`, `/produtos/:id` | ADMIN, ATENDENTE | Implementado |
+| POST | `/compras` | ADMIN, ATENDENTE | Implementado |
 
 Para consultar o extrato de um cliente ativo:
 
@@ -136,12 +161,12 @@ Somente o ADMIN pode consultar cliente desativado, usando
 ## Estrutura
 
 ```text
-src/          rotas, controllers, services, repositories e middlewares
-prisma/       schema e carga inicial
-tests/        testes unitários e de infraestrutura
-tests/integration/ testes HTTP da API com banco local de teste
-tests/support/ auxiliares, servidor isolado e contexto de integração
-context/      especificação vigente de negócio, API, dados e arquitetura
+src/                 rotas, controllers, services, repositories e middlewares
+prisma/              schema, migrations e carga inicial
+tests/               testes unitários e de infraestrutura
+tests/integration/   testes HTTP da API com banco local de teste
+tests/support/       auxiliares, servidor isolado e contexto de integração
+context/             especificação vigente de negócio, API, dados e arquitetura
 ```
 
 ## Scripts
@@ -149,7 +174,8 @@ context/      especificação vigente de negócio, API, dados e arquitetura
 | Comando | Descrição |
 |---|---|
 | `npm run dev` | Inicia a API com recarga automática. |
-| `npm test` | Valida as URLs e executa os testes automatizados; prefira executar no Docker. |
+| `npm test` | Valida os bancos e executa todos os testes serialmente. |
+| `npm run test:integration` | Valida os bancos e executa somente os testes HTTP serialmente. |
 | `npm run build` | Compila TypeScript em `dist/`. |
 | `npm start` | Executa a versão compilada. |
 | `npm run prisma:generate` | Gera o Prisma Client. |
@@ -160,11 +186,10 @@ context/      especificação vigente de negócio, API, dados e arquitetura
 
 ## Pendências prioritárias
 
-1. Criar e versionar a migration inicial.
-2. Corrigir o cálculo da compra para usar o valor pago como base.
-3. Implementar idempotência e persistir o cashback cortado pelo limite.
-4. Completar clientes, planos, reativação e cadastro de atendentes.
-5. Publicar OpenAPI 3.1 e Swagger quando os contratos implementados estiverem estáveis.
+1. Implementar cadastro de usuários.
+2. Completar consulta, edição e desativação de clientes.
+3. Implementar a receita mensal estimada por plano.
+4. Publicar OpenAPI 3.1 e Swagger quando os contratos implementados estiverem estáveis.
 
 ## Integrantes
 
