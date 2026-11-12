@@ -46,6 +46,23 @@ export class PlanosRepository {
     return prisma.plano.create({ data });
   }
 
+  async receitaMensal() {
+    const planos = await prisma.plano.findMany({
+      where: { ativo: true },
+      orderBy: { id: "asc" },
+      select: {
+        id: true,
+        nome: true,
+        mensalidadeCentavos: true,
+        _count: { select: { clientes: { where: { ativo: true } } } },
+      },
+    });
+    return planos.map(({ _count, ...plano }) => ({
+      ...plano,
+      clientesAtivos: _count.clientes,
+    }));
+  }
+
   atualizar(id: number, data: Prisma.PlanoUpdateInput) {
     return prisma.plano.update({ where: { id, ativo: true }, data });
   }

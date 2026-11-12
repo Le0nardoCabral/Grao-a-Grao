@@ -54,7 +54,7 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 **Fase 4 — Cadastros**
 - [ ] **Task 11 — Produtos** · 1 teste · depende de: 8, 9
 - [x] **Task 12 — Planos** · 1 teste · depende de: 8, 9
-- [ ] **Task 13 — Clientes** · 2 testes · depende de: 12
+- [x] **Task 13 — Clientes** · 2 testes · depende de: 12
 
 **Fase 5 — Compra**
 - [x] **Task 14 — Compra** · 3 testes · depende de: 11, 13
@@ -143,7 +143,6 @@ Cada task tem uma caixa: `[ ]` pendente e `[x]` concluída. **A IA só marca `[x
 - **Entrega:** consultar, atualizar (sem mudar o plano), desativar e reativar cliente, mais os ajustes de cadastro e listagem (plano ativo, paginação, `incluirInativos`), e a rota `GET /planos/receita-mensal` (só ADMIN, declarada antes de `/planos/:id`), que precisa dos clientes.
 - **Atende:** RF-03 a RF-07, RF-20, RF-25, RN-38, RN-39.
 - **Teste:** *criar, atualizar, desativar e reativar* e *a receita por plano soma os clientes ativos vezes a mensalidade, e o ATENDENTE recebe `403`*.
-- **Pendência:** proteger a concorrência entre cadastro/vínculo de clientes a planos e desativação de planos, usando bloqueio da linha do plano; tratar na Task 13.
 
 ---
 

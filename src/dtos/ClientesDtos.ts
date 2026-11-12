@@ -6,49 +6,52 @@ export type CriarClienteInputDto = {
   planoId: number;
 };
 
-export type FiltrosListagemClientesDto = {
-  page: number;
-  limit: number;
-  busca?: string;
-  planoId?: number;
-  ativo?: boolean;
+export type AtualizarClienteInputDto = {
+  nome?: string;
+  email?: string | null;
+  telefone?: string | null;
+  dataNascimento?: Date | null;
 };
 
-export type PlanoClienteDto = {
-  id: number;
-  nome: string;
-  percentualBps: number;
-  limiteCentavos: number;
-  mensalidadeCentavos: number;
-  minimoUsoCentavos: number;
-  dobroAniversario: boolean;
-  validadeDias: number;
-  ativo: boolean;
-  criadoEm: Date;
-  atualizadoEm: Date;
+export type FiltrosListagemClientesDto = {
+  pagina: number;
+  limite: number;
+  incluirInativos: boolean;
 };
+
+export type BuscarClienteInputDto = {
+  id: number;
+  incluirInativos: boolean;
+};
+
+export type DesativarClienteInputDto = { id: number };
+export type DesativarClienteResponseDto = void;
+export type ReativarClienteInputDto = { id: number };
+export type ExtratoClienteInputDto = { id: number; incluirInativos: boolean };
 
 export type ClienteResponseDto = {
   id: number;
   nome: string;
   email: string | null;
   telefone: string | null;
-  dataNascimento: Date | null;
-  planoId: number;
+  dataNascimento: string | null;
+  plano: { id: number; nome: string };
   ativo: boolean;
   criadoEm: Date;
   atualizadoEm: Date;
-  plano: PlanoClienteDto;
 };
 
+export type CriarClienteResponseDto = ClienteResponseDto;
+export type BuscarClienteResponseDto = ClienteResponseDto;
+export type AtualizarClienteResponseDto = ClienteResponseDto;
+export type ReativarClienteResponseDto = ClienteResponseDto;
+export type TrocarPlanoResponseDto = ClienteResponseDto;
+
 export type ListarClientesResponseDto = {
-  clientes: ClienteResponseDto[];
-  paginacao: {
-    pagina: number;
-    limite: number;
-    total: number;
-    totalPaginas: number;
-  };
+  dados: ClienteResponseDto[];
+  pagina: number;
+  limite: number;
+  total: number;
 };
 
 export type ExtratoClienteResponseDto = {
@@ -71,3 +74,4 @@ export type ExtratoClienteResponseDto = {
 export type TrocarPlanoInputDto = {
   planoId: number;
 };
+

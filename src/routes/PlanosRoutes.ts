@@ -26,6 +26,11 @@ PlanosRoutes.get(
   Validate(ListarPlanosSchema, "query"),
   PlanosController.listar,
 );
+PlanosRoutes.get(
+  "/receita-mensal",
+  AuthorizeRole("ADMIN"),
+  PlanosController.receitaMensal,
+);
 PlanosRoutes.post(
   "/:id/reativar",
   AuthorizeRole("ADMIN"),

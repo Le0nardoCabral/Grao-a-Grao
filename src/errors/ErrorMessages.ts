@@ -22,6 +22,7 @@ export enum ErrorMessages {
   PLAN_NOT_FOUND = "Plano não encontrado.",
   PRODUCT_NOT_FOUND = "Produto não encontrado.",
   CLIENT_ALREADY_EXISTS = "Já existe um cliente com esse e-mail.",
+  CLIENT_ALREADY_ACTIVE = "O cliente já está ativo.",
   PLAN_ALREADY_EXISTS = "Já existe um plano com esse nome.",
   PRODUCT_ALREADY_EXISTS = "Já existe um produto com esse nome.",
   CLIENT_INACTIVE = "Cliente inativo.",

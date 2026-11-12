@@ -36,3 +36,17 @@ export type ListarPlanosResponseDto = {
   limite: number;
   total: number;
 };
+
+export type ReceitaMensalResponseDto = {
+  planos: Array<{
+    id: number;
+    nome: string;
+    mensalidadeCentavos: number;
+    clientesAtivos: number;
+    receitaMensalCentavos: number;
+  }>;
+  totalClientesAtivos: number;
+  receitaMensalTotalCentavos: number;
+};
+
+export type ReceitaMensalInputDto = void;

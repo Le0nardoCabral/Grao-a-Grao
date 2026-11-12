@@ -3,8 +3,8 @@ import { ClientesController } from "../controllers/ClientesController.js";
 import { Authenticate } from "../middlewares/Authenticate.js";
 import { AuthorizeRole } from "../middlewares/AuthorizeRole.js";
 import { Validate } from "../middlewares/Validate.js";
-import { NotImplemented } from "./NotImplemented.js";
 import {
+  AtualizarClienteSchema,
   ClienteIdSchema,
   CriarClienteSchema,
   IncluirInativosSchema,
@@ -30,6 +30,33 @@ ClientesRoutes.post(
   Validate(TrocarPlanoSchema),
   ClientesController.trocarPlano,
 );
-ClientesRoutes.get("/:id", NotImplemented);
-ClientesRoutes.put("/:id", NotImplemented);
-ClientesRoutes.delete("/:id", NotImplemented);
+ClientesRoutes.post(
+  "/:id/reativar",
+  Authenticate,
+  AuthorizeRole("ADMIN"),
+  Validate(ClienteIdSchema, "params"),
+  ClientesController.reativar,
+);
+ClientesRoutes.get(
+  "/:id",
+  Authenticate,
+  AuthorizeRole("ADMIN", "ATENDENTE"),
+  Validate(ClienteIdSchema, "params"),
+  Validate(IncluirInativosSchema, "query"),
+  ClientesController.buscarPorId,
+);
+ClientesRoutes.put(
+  "/:id",
+  Authenticate,
+  AuthorizeRole("ADMIN", "ATENDENTE"),
+  Validate(ClienteIdSchema, "params"),
+  Validate(AtualizarClienteSchema),
+  ClientesController.atualizar,
+);
+ClientesRoutes.delete(
+  "/:id",
+  Authenticate,
+  AuthorizeRole("ADMIN"),
+  Validate(ClienteIdSchema, "params"),
+  ClientesController.desativar,
+);

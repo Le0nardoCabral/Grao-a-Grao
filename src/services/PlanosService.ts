@@ -9,6 +9,7 @@ import type {
   ListarPlanosResponseDto,
   NovoPlanoInputDto,
   PlanoResponseDto,
+  ReceitaMensalResponseDto,
 } from "../dtos/PlanosDtos.js";
 
 const repository = new PlanosRepository();
@@ -37,6 +38,30 @@ function tratarErroBanco(error: unknown): never {
 }
 
 export class PlanosService {
+  async receitaMensal(): Promise<ReceitaMensalResponseDto> {
+    const planosBase = await repository.receitaMensal();
+    let totalClientesAtivos = 0;
+    let receitaMensalTotal = 0n;
+    const planos = planosBase.map((plano) => {
+      const receitaMensal = BigInt(plano.clientesAtivos) * BigInt(plano.mensalidadeCentavos);
+      totalClientesAtivos += plano.clientesAtivos;
+      receitaMensalTotal += receitaMensal;
+      if (receitaMensal > BigInt(Number.MAX_SAFE_INTEGER)) {
+        throw new RangeError("A receita mensal excede o limite numérico da resposta.");
+      }
+      return { ...plano, receitaMensalCentavos: Number(receitaMensal) };
+    });
+
+    if (receitaMensalTotal > BigInt(Number.MAX_SAFE_INTEGER)) {
+      throw new RangeError("A receita mensal excede o limite numérico da resposta.");
+    }
+    return {
+      planos,
+      totalClientesAtivos,
+      receitaMensalTotalCentavos: Number(receitaMensalTotal),
+    };
+  }
+
   async listar(filtros: FiltrosListagemPlanosDto): Promise<ListarPlanosResponseDto> {
     const { dados, total } = await repository.listar({
       skip: (filtros.pagina - 1) * filtros.limite,

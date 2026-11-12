@@ -9,11 +9,17 @@ import type {
   ListarPlanosResponseDto,
   NovoPlanoInputDto,
   PlanoResponseDto,
+  ReceitaMensalResponseDto,
 } from "../dtos/PlanosDtos.js";
 
 const service = new PlanosService();
 
 export class PlanosController {
+  static receitaMensal: RequestHandler = async (_request, response) => {
+    const receita: ReceitaMensalResponseDto = await service.receitaMensal();
+    response.status(200).json(receita);
+  };
+
   static criar: RequestHandler = async (request, response) => {
     const plano: PlanoResponseDto = await service.criar(request.body as NovoPlanoInputDto);
     response.status(201).json(plano);

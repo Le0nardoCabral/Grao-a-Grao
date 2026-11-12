@@ -12,6 +12,17 @@ export class TrocarPlanoService {
     if (resultado.tipo === "CLIENTE_INATIVO") throw new AppError(ErrorMessages.CLIENT_INACTIVE, 409, "CLIENT_INACTIVE");
     if (resultado.tipo === "PLANO_NAO_ENCONTRADO") throw new AppError(ErrorMessages.PLAN_NOT_FOUND, 404, "PLAN_NOT_FOUND");
     if (resultado.tipo === "PLANO_INATIVO") throw new AppError(ErrorMessages.PLAN_REFERENCE_INACTIVE, 409, "PLAN_INACTIVE");
-    return resultado.cliente;
+    const cliente = resultado.cliente;
+    return {
+      id: cliente.id,
+      nome: cliente.nome,
+      email: cliente.email,
+      telefone: cliente.telefone,
+      dataNascimento: cliente.dataNascimento?.toISOString().slice(0, 10) ?? null,
+      plano: { id: cliente.plano.id, nome: cliente.plano.nome },
+      ativo: cliente.ativo,
+      criadoEm: cliente.criadoEm,
+      atualizadoEm: cliente.atualizadoEm,
+    };
   }
 }
