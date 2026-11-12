@@ -1,6 +1,7 @@
 import { AppError } from "../errors/AppError.js";
 import { ExtratoRepository } from "../repositories/ExtratoRepository.js";
 import { adicionarDiasEmBrasilia } from "./CashbackDateService.js";
+import type { ExtratoClienteResponseDto } from "../dtos/ClientesDtos.js";
 
 type ClienteExtrato = { id: number; ativo: boolean };
 type LoteAVencer = { id: number; saldoCentavos: number; venceEm: Date };
@@ -40,7 +41,7 @@ type Movimento = {
 export class ExtratoService {
   constructor(private readonly repository: ExtratoRepositoryPort = new ExtratoRepository()) {}
 
-  async executar(clienteId: number, incluirInativos: boolean, agora = new Date()) {
+  async executar(clienteId: number, incluirInativos: boolean, agora = new Date()): Promise<ExtratoClienteResponseDto> {
     const cliente = await this.repository.buscarCliente(clienteId);
     if (!cliente || (!cliente.ativo && !incluirInativos)) {
       throw new AppError("Cliente não encontrado.", 404, "CLIENT_NOT_FOUND");

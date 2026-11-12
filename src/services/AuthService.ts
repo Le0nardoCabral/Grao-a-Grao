@@ -2,12 +2,14 @@ import { compare, hash } from "bcryptjs";
 import jwt, { type SignOptions } from "jsonwebtoken";
 import { AppError } from "../errors/AppError.js";
 import { UsuariosRepository } from "../repositories/UsuariosRepository.js";
+import type { LoginInputDto, LoginResponseDto } from "../dtos/AuthDtos.js";
 
 const repository = new UsuariosRepository();
 let hashFicticio: Promise<string> | undefined;
 
 export class AuthService {
-  async login(email: string, senha: string) {
+  async login(entrada: LoginInputDto): Promise<LoginResponseDto> {
+    const { email, senha } = entrada;
     const usuario = await repository.buscarPorEmail(email);
     hashFicticio ??= hash("senha fictícia para comparação", Number(process.env.BCRYPT_COST ?? 10));
     const senhaCorreta = await compare(senha, usuario?.senhaHash ?? await hashFicticio);

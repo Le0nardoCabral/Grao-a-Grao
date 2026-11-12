@@ -2,13 +2,7 @@ import { Prisma, StatusLote } from "@prisma/client";
 import { AppError } from "../errors/AppError.js";
 import { ComprasRepository } from "../repositories/ComprasRepository.js";
 import { adicionarDiasEmBrasilia, mesEmBrasilia } from "./CashbackDateService.js";
-
-type ItemCompraInput = { produtoId: number; quantidade: number };
-type CompraInput = {
-  clienteId: number;
-  itens: ItemCompraInput[];
-  cashbackSolicitadoCentavos?: number;
-};
+import type { CriarCompraInputDto, CriarCompraResultadoDto, ItemCompraInputDto } from "../dtos/ComprasDtos.js";
 
 const repository = new ComprasRepository();
 
@@ -27,7 +21,7 @@ function respostaIdempotente(
   },
   limiteCentavos: number,
   saldoDisponivelCentavos: number,
-) {
+): CriarCompraResultadoDto {
   const limiteAtingido = saldoDisponivelCentavos >= limiteCentavos;
   return {
     compra,
@@ -52,10 +46,10 @@ function calcularCashback(valorCentavos: number, percentualBps: number, multipli
 }
 
 function conteudoIgual(
-  compra: { clienteId: number; cashbackUsadoCentavos: number; itens: ItemCompraInput[] },
-  input: CompraInput,
+  compra: { clienteId: number; cashbackUsadoCentavos: number; itens: ItemCompraInputDto[] },
+  input: CriarCompraInputDto,
 ): boolean {
-  const ordenar = (itens: ItemCompraInput[]) => [...itens]
+  const ordenar = (itens: ItemCompraInputDto[]) => [...itens]
     .sort((a, b) => a.produtoId - b.produtoId)
     .map((item) => `${item.produtoId}:${item.quantidade}`)
     .join("|");
@@ -65,7 +59,7 @@ function conteudoIgual(
 }
 
 export class RegistrarCompraService {
-  async executar(usuarioId: number, input: CompraInput, chaveIdempotencia: string) {
+  async executar(usuarioId: number, input: CriarCompraInputDto, chaveIdempotencia: string): Promise<CriarCompraResultadoDto> {
     try {
       return await repository.transaction(async (transaction) => {
         const compraExistente = await transaction.compra.findUnique({

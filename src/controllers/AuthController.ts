@@ -1,10 +1,13 @@
 import type { RequestHandler } from "express";
 import { AuthService } from "../services/AuthService.js";
+import type { LoginInputDto, LoginResponseDto } from "../dtos/AuthDtos.js";
 
 const service = new AuthService();
 
 export class AuthController {
   static login: RequestHandler = async (request, response) => {
-    response.status(200).json(await service.login(request.body.email, request.body.senha));
+    const entrada = request.body as LoginInputDto;
+    const saida: LoginResponseDto = await service.login(entrada);
+    response.status(200).json(saida);
   };
 }

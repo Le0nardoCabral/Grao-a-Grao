@@ -1,27 +1,17 @@
 import { Prisma } from "@prisma/client";
 import { AppError } from "../errors/AppError.js";
 import { ClientesRepository } from "../repositories/ClientesRepository.js";
+import type {
+  CriarClienteInputDto,
+  ClienteResponseDto,
+  FiltrosListagemClientesDto,
+  ListarClientesResponseDto,
+} from "../dtos/ClientesDtos.js";
 
 const repository = new ClientesRepository();
 
-export type NovoCliente = {
-  nome: string;
-  email?: string | null;
-  telefone?: string | null;
-  dataNascimento?: Date | null;
-  planoId: number;
-};
-
-export type FiltrosListagemClientes = {
-  page: number;
-  limit: number;
-  busca?: string;
-  planoId?: number;
-  ativo?: boolean;
-};
-
 export class ClientesService {
-  async criar(data: NovoCliente) {
+  async criar(data: CriarClienteInputDto): Promise<ClienteResponseDto> {
     const plano = await repository.buscarPlanoAtivo(data.planoId);
 
     if (!plano) {
@@ -52,7 +42,7 @@ export class ClientesService {
     }
   }
 
-  async listar(filtros: FiltrosListagemClientes) {
+  async listar(filtros: FiltrosListagemClientesDto): Promise<ListarClientesResponseDto> {
     const skip = (filtros.page - 1) * filtros.limit;
 
     const { clientes, total } = await repository.listar({

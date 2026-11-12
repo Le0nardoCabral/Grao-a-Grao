@@ -2,26 +2,17 @@ import { Prisma } from "@prisma/client";
 import { AppError } from "../errors/AppError.js";
 import { ErrorCodes } from "../errors/ErrorCodes.js";
 import { PlanosRepository } from "../repositories/PlanosRepository.js";
+import type {
+  AtualizacaoPlanoInputDto,
+  FiltrosListagemPlanosDto,
+  ListarPlanosResponseDto,
+  NovoPlanoInputDto,
+  PlanoResponseDto,
+} from "../dtos/PlanosDtos.js";
 
 const repository = new PlanosRepository();
 
-export type NovoPlano = {
-  nome: string;
-  percentualBps: number;
-  limiteCentavos: number;
-  mensalidadeCentavos: number;
-  minimoUsoCentavos: number;
-  dobroAniversario: boolean;
-  validadeDias: number;
-};
-
-export type AtualizacaoPlano = Partial<NovoPlano>;
-
-export type FiltrosListagemPlanos = {
-  pagina: number;
-  limite: number;
-  incluirInativos: boolean;
-};
+export type { AtualizacaoPlanoInputDto, NovoPlanoInputDto } from "../dtos/PlanosDtos.js";
 
 function tratarErroBanco(error: unknown): never {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -45,7 +36,7 @@ function tratarErroBanco(error: unknown): never {
 }
 
 export class PlanosService {
-  async listar(filtros: FiltrosListagemPlanos) {
+  async listar(filtros: FiltrosListagemPlanosDto): Promise<ListarPlanosResponseDto> {
     const { dados, total } = await repository.listar({
       skip: (filtros.pagina - 1) * filtros.limite,
       take: filtros.limite,
@@ -60,7 +51,7 @@ export class PlanosService {
     };
   }
 
-  async buscarPorId(id: number, incluirInativos = false) {
+  async buscarPorId(id: number, incluirInativos = false): Promise<PlanoResponseDto> {
     const plano = await repository.buscarPorId(id, incluirInativos);
     if (!plano) {
       throw new AppError(
@@ -72,7 +63,7 @@ export class PlanosService {
     return plano;
   }
 
-  async criar(data: NovoPlano) {
+  async criar(data: NovoPlanoInputDto): Promise<PlanoResponseDto> {
     try {
       return await repository.criar(data);
     } catch (error) {
@@ -80,7 +71,7 @@ export class PlanosService {
     }
   }
 
-  async atualizar(id: number, data: AtualizacaoPlano) {
+  async atualizar(id: number, data: AtualizacaoPlanoInputDto): Promise<PlanoResponseDto> {
     const plano = await this.buscarPorId(id);
     const limiteCentavos = data.limiteCentavos ?? plano.limiteCentavos;
     const minimoUsoCentavos = data.minimoUsoCentavos ?? plano.minimoUsoCentavos;
@@ -119,7 +110,7 @@ export class PlanosService {
     }
   }
 
-  async reativar(id: number) {
+  async reativar(id: number): Promise<PlanoResponseDto> {
     const resultado = await repository.reativar(id);
     if (resultado.tipo === "NAO_ENCONTRADO") {
       throw new AppError(

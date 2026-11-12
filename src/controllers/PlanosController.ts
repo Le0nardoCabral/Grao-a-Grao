@@ -1,18 +1,20 @@
 import type { RequestHandler } from "express";
 import { AppError } from "../errors/AppError.js";
 import { ErrorCodes } from "../errors/ErrorCodes.js";
-import {
-  PlanosService,
-  type AtualizacaoPlano,
-  type FiltrosListagemPlanos,
-  type NovoPlano,
-} from "../services/PlanosService.js";
+import { PlanosService } from "../services/PlanosService.js";
+import type {
+  AtualizacaoPlanoInputDto,
+  FiltrosListagemPlanosDto,
+  ListarPlanosResponseDto,
+  NovoPlanoInputDto,
+  PlanoResponseDto,
+} from "../dtos/PlanosDtos.js";
 
 const service = new PlanosService();
 
 export class PlanosController {
   static criar: RequestHandler = async (request, response) => {
-    const plano = await service.criar(request.body as NovoPlano);
+    const plano: PlanoResponseDto = await service.criar(request.body as NovoPlanoInputDto);
     response.status(201).json(plano);
   };
 
@@ -26,12 +28,13 @@ export class PlanosController {
       );
     }
 
-    const filtros: FiltrosListagemPlanos = {
+    const filtros: FiltrosListagemPlanosDto = {
       pagina: Number(request.query.pagina ?? 1),
       limite: Number(request.query.limite ?? 20),
       incluirInativos,
     };
-    response.status(200).json(await service.listar(filtros));
+    const saida: ListarPlanosResponseDto = await service.listar(filtros);
+    response.status(200).json(saida);
   };
 
   static buscarPorId: RequestHandler = async (request, response) => {
@@ -44,7 +47,7 @@ export class PlanosController {
       );
     }
 
-    const plano = await service.buscarPorId(
+    const plano: PlanoResponseDto = await service.buscarPorId(
       Number(request.params.id),
       incluirInativos,
     );
@@ -52,9 +55,9 @@ export class PlanosController {
   };
 
   static atualizar: RequestHandler = async (request, response) => {
-    const plano = await service.atualizar(
+    const plano: PlanoResponseDto = await service.atualizar(
       Number(request.params.id),
-      request.body as AtualizacaoPlano,
+      request.body as AtualizacaoPlanoInputDto,
     );
     response.status(200).json(plano);
   };
@@ -65,7 +68,7 @@ export class PlanosController {
   };
 
   static reativar: RequestHandler = async (request, response) => {
-    const plano = await service.reativar(Number(request.params.id));
+    const plano: PlanoResponseDto = await service.reativar(Number(request.params.id));
     response.status(200).json(plano);
   };
 }

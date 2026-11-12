@@ -1,6 +1,13 @@
 import { Prisma } from "@prisma/client";
 import { AppError } from "../errors/AppError.js";
 import { ProdutosRepository } from "../repositories/ProdutosRepository.js";
+import type {
+  AtualizarProdutoInputDto,
+  CriarProdutoInputDto,
+  FiltrosListagemProdutosDto,
+  ListarProdutosResponseDto,
+  ProdutoResponseDto,
+} from "../dtos/ProdutosDtos.js";
 
 const repository = new ProdutosRepository();
 
@@ -15,7 +22,7 @@ function mapDatabaseError(error: unknown): never {
 }
 
 export class ProdutosService {
-  async criar(data: { nome: string; descricao?: string | null; precoCentavos: number }) {
+  async criar(data: CriarProdutoInputDto): Promise<ProdutoResponseDto> {
     try {
       return await repository.criar(data);
     } catch (error) {
@@ -23,17 +30,17 @@ export class ProdutosService {
     }
   }
 
-  listar(incluirInativos = false) {
-    return repository.listar(incluirInativos);
+  listar(filtros: FiltrosListagemProdutosDto): Promise<ListarProdutosResponseDto> {
+    return repository.listar(filtros.incluirInativos);
   }
 
-  async buscarPorId(id: number) {
+  async buscarPorId(id: number): Promise<ProdutoResponseDto> {
     const produto = await repository.buscarPorId(id);
     if (!produto) throw new AppError("Produto não encontrado.", 404, "PRODUCT_NOT_FOUND");
     return produto;
   }
 
-  async atualizar(id: number, data: { nome?: string; descricao?: string | null; precoCentavos?: number }) {
+  async atualizar(id: number, data: AtualizarProdutoInputDto): Promise<ProdutoResponseDto> {
     try {
       return await repository.atualizar(id, data);
     } catch (error) {

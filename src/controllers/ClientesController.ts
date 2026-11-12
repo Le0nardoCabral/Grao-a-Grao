@@ -1,11 +1,18 @@
 import type { RequestHandler } from "express";
 import {
   ClientesService,
-  type FiltrosListagemClientes,
 } from "../services/ClientesService.js";
 import { AppError } from "../errors/AppError.js";
 import { ExtratoService } from "../services/ExtratoService.js";
 import { TrocarPlanoService } from "../services/TrocarPlanoService.js";
+import type {
+  ClienteResponseDto,
+  CriarClienteInputDto,
+  ExtratoClienteResponseDto,
+  FiltrosListagemClientesDto,
+  ListarClientesResponseDto,
+  TrocarPlanoInputDto,
+} from "../dtos/ClientesDtos.js";
 
 const service = new ClientesService();
 const extratoService = new ExtratoService();
@@ -13,12 +20,13 @@ const trocarPlanoService = new TrocarPlanoService();
 
 export class ClientesController {
   static criar: RequestHandler = async (request, response) => {
-    const cliente = await service.criar(request.body);
-    response.status(201).json(cliente);
+    const entrada = request.body as CriarClienteInputDto;
+    const saida: ClienteResponseDto = await service.criar(entrada);
+    response.status(201).json(saida);
   };
 
   static listar: RequestHandler = async (request, response) => {
-    const filtros: FiltrosListagemClientes = {
+    const filtros: FiltrosListagemClientesDto = {
       page: Number(request.query.page ?? 1),
       limit: Number(request.query.limit ?? 10),
 
@@ -38,7 +46,7 @@ export class ClientesController {
           : undefined,
     };
 
-    const resultado = await service.listar(filtros);
+    const resultado: ListarClientesResponseDto = await service.listar(filtros);
 
     response.status(200).json(resultado);
   };
@@ -49,7 +57,7 @@ export class ClientesController {
       throw new AppError("Somente admin pode consultar clientes inativos.", 403, "FORBIDDEN");
     }
 
-    const resultado = await extratoService.executar(
+    const resultado: ExtratoClienteResponseDto = await extratoService.executar(
       Number(request.params.id),
       incluirInativos,
     );
@@ -57,7 +65,8 @@ export class ClientesController {
   };
 
   static trocarPlano: RequestHandler = async (request, response) => {
-    const cliente = await trocarPlanoService.executar(Number(request.params.id), request.body.planoId);
-    response.status(200).json(cliente);
+    const entrada = request.body as TrocarPlanoInputDto;
+    const saida: ClienteResponseDto = await trocarPlanoService.executar(Number(request.params.id), entrada);
+    response.status(200).json(saida);
   };
 }

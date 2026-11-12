@@ -141,17 +141,22 @@ A coluna "Situação" é atualizada quando cada arquivo nascer.
 10. Toda entrada (`body`, `params`, `query`) é validada com **Zod** antes de chegar ao service.
 11. Schemas ficam em `validators/`, com sufixo `Schema` e prefixo de ação (`CriarProdutoSchema`, `AtualizarProdutoSchema`).
 
+### DTOs
+
+12. Toda operação da API define DTOs de **entrada e saída**, separados dos modelos do Prisma. DTO de entrada descreve o que o service recebe; DTO de saída descreve o que a API devolve. Isso vale também para filtros de listagem e respostas sem corpo (como `void` em `204`).
+13. DTOs ficam em `dtos/`, com nomes por recurso e sufixo `Dto`. Podem repetir campos dos schemas Zod: o schema valida e transforma dados em tempo de execução; o DTO declara o contrato entre camadas no TypeScript. Não derivar nem substituir o DTO pelo tipo do Prisma.
+
 ### Erros
 
-12. Todo erro de negócio é lançado como `AppError(mensagem, status, codigo)` e tratado em **um único middleware**.
-13. Controller não usa `try/catch`: o Express 5 repassa o erro de função `async`.
-14. Os códigos de erro vêm de **um catálogo único** (`ErrorCodes`), não de texto solto. Ex.: `ErrorCodes.CLIENT_NOT_FOUND`.
+14. Todo erro de negócio é lançado como `AppError(mensagem, status, codigo)` e tratado em **um único middleware**.
+15. Controller não usa `try/catch`: o Express 5 repassa o erro de função `async`.
+16. Os códigos de erro vêm de **um catálogo único** (`ErrorCodes`), não de texto solto. Ex.: `ErrorCodes.CLIENT_NOT_FOUND`.
 
 ### TypeScript
 
-15. Modo `strict`. Imports locais terminam em `.js` (ESM), com o nome do arquivo exatamente como ele é (em PascalCase). Usar `import type` para tipos.
-16. Sem `any`. Quando o tipo for desconhecido, usar `unknown` e validar.
-17. **Comentários:**
+17. Modo `strict`. Imports locais terminam em `.js` (ESM), com o nome do arquivo exatamente como ele é (em PascalCase). Usar `import type` para tipos.
+18. Sem `any`. Quando o tipo for desconhecido, usar `unknown` e validar.
+19. **Comentários:**
     - Só quando necessário. **Funções** recebem uma linha com o propósito, sem narrar os passos.
     - Curtos, diretos e fáceis de entender, em português.
     - Dentro do código, explicam só o **porquê** (a intenção, o motivo de uma decisão ou de um cuidado), nunca o que o código já diz.
@@ -161,8 +166,8 @@ A coluna "Situação" é atualizada quando cada arquivo nascer.
 
 ### Banco
 
-18. Models no singular; campos em camelCase.
-19. Todo model tem `id`. Os de cadastro têm `criadoEm` e `atualizadoEm`; os de registro têm só a data do fato.
+20. Models no singular; campos em camelCase.
+21. Todo model tem `id`. Os de cadastro têm `criadoEm` e `atualizadoEm`; os de registro têm só a data do fato.
 
 ### O que não está neste bloco
 
