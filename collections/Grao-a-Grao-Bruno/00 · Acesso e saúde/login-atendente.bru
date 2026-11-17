@@ -1,0 +1,35 @@
+meta {
+  name: Login ATENDENTE
+  type: http
+  seq: 5
+}
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{attendantDemoEmail}}",
+    "senha": "{{attendantDemoPassword}}"
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (res.getStatus() === 200) {
+    bru.setEnvVar("token", body.token);
+  }
+}
+
+tests {
+  test("login retorna perfil ATENDENTE", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().usuario.perfil).to.equal("ATENDENTE");
+  });
+}

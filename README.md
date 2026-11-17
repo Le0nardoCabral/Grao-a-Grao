@@ -105,7 +105,9 @@ mesmo ambiente e execute os passos de criação antes dos endpoints que dependem
 deles. Esses valores ficam no arquivo local `environments/local.bru` e não são
 compartilhados entre computadores. Em outro computador, execute o login e as
 criações novamente; se o token expirar ou o banco for recriado, repita os passos
-correspondentes.
+correspondentes. No Bruno, **Login ADMIN** e **Login ATENDENTE** atualizam a
+mesma variável `token`; execute o login do perfil que deseja usar antes das
+requisições protegidas.
 
 O seed também deixa dados prontos no banco local: três planos, três usuários,
 seis clientes (um inativo), seis produtos (um inativo), seis compras e seus lotes
