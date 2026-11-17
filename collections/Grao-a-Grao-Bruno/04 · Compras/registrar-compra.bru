@@ -1,0 +1,38 @@
+meta {
+  name: Registrar compra
+  type: http
+  seq: 26
+}
+post {
+  url: {{baseUrl}}/compras
+  body: json
+  auth: bearer
+}
+
+headers {
+  Idempotency-Key: demo-{{$guid}}
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "clienteId": {{clienteId}},
+    "itens": [
+      {
+        "produtoId": {{produtoId}},
+        "quantidade": 2
+      }
+    ],
+    "cashbackSolicitadoCentavos": 0
+  }
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}

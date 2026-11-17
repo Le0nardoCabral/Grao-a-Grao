@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Grão a Grão API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -31,7 +31,7 @@ export const CriarClienteSchema = CamposClienteSchema.extend({
   planoId: z.number().int().positive().safe(),
 });
 
-export const AtualizarClienteSchema = CamposClienteSchema
+export const AtualizarClienteSchema = CamposClienteSchema.partial()
   .refine((data) => Object.keys(data).length > 0);
 
 export const ListarClientesSchema = z.object({

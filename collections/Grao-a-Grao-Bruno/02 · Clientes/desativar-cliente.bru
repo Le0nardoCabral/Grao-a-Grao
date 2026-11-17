@@ -1,0 +1,19 @@
+meta {
+  name: Desativar cliente
+  type: http
+  seq: 18
+}
+delete {
+  url: {{baseUrl}}/clientes/{{clienteId}}
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

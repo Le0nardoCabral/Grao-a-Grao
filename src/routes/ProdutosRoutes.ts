@@ -11,3 +11,4 @@ ProdutosRoutes.get("/", AuthorizeRole("ADMIN", "ATENDENTE"), Validate(ListarProd
 ProdutosRoutes.get("/:id", AuthorizeRole("ADMIN", "ATENDENTE"), Validate(ProdutoIdSchema, "params"), ProdutosController.buscarPorId);
 ProdutosRoutes.put("/:id", AuthorizeRole("ADMIN"), Validate(ProdutoIdSchema, "params"), Validate(AtualizarProdutoSchema), ProdutosController.atualizar);
 ProdutosRoutes.delete("/:id", AuthorizeRole("ADMIN"), Validate(ProdutoIdSchema, "params"), ProdutosController.excluir);
+ProdutosRoutes.post("/:id/reativar", AuthorizeRole("ADMIN"), Validate(ProdutoIdSchema, "params"), ProdutosController.reativar);

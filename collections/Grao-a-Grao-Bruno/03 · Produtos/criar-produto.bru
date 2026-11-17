@@ -1,0 +1,39 @@
+meta {
+  name: Criar produto
+  type: http
+  seq: 20
+}
+post {
+  url: {{baseUrl}}/produtos
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "nome": "Café Demo {{$guid}}",
+    "descricao": "Produto de demonstração",
+    "precoCentavos": 1250
+  }
+}
+
+script:post-response {
+  if (res.getStatus() >= 200 && res.getStatus() < 300) {
+    const body = res.getBody();
+    bru.setVar("produtoId", String(body.id));
+  }
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}

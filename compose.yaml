@@ -39,3 +39,4 @@ services:
       retries: 20
 volumes:
   mysql_data:
+    name: groagro_mysql_data

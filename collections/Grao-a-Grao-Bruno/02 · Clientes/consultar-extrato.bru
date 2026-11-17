@@ -1,0 +1,19 @@
+meta {
+  name: Consultar extrato
+  type: http
+  seq: 16
+}
+get {
+  url: {{baseUrl}}/clientes/{{clienteId}}/extrato
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}

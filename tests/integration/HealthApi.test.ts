@@ -7,6 +7,9 @@ test("o servidor sobe e responde", async () => {
   try {
     const resposta = await fetch(`${contexto.url}/health`);
     assert.equal(resposta.status, 200);
+    const docs = await fetch(`${contexto.url}/docs`);
+    assert.equal(docs.status, 200);
+    assert.match(docs.headers.get("content-type") ?? "", /text\/html/);
   } finally {
     await contexto.encerrar();
   }

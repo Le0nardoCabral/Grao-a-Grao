@@ -3,12 +3,12 @@ import test from "node:test";
 import { randomUUID } from "node:crypto";
 import { iniciarContextoApi } from "../support/ApiTestContext.js";
 
-async function prepararCompra() {
+async function prepararCompra(minimoUsoCentavos = 0) {
   const contexto = await iniciarContextoApi();
   try {
     const usuario = await contexto.criarUsuario("ATENDENTE", "SenhaTeste123!");
     const plano = await contexto.consultarBanco((prisma) => prisma.plano.create({
-      data: { nome: `Plano ${randomUUID()}`, percentualBps: 200, limiteCentavos: 1_000_000, mensalidadeCentavos: 0, minimoUsoCentavos: 0, validadeDias: 180 },
+      data: { nome: `Plano ${randomUUID()}`, percentualBps: 200, limiteCentavos: 1_000_000, mensalidadeCentavos: 0, minimoUsoCentavos, validadeDias: 180 },
     }));
     const cliente = await contexto.criarCliente(plano.id);
     const produto = await contexto.criarProduto();
@@ -21,11 +21,11 @@ async function prepararCompra() {
   }
 }
 
-async function registrarCompra(url: string, token: string, chave: string, clienteId: number, produtoId: number, cashbackSolicitadoCentavos = 0) {
+async function registrarCompra(url: string, token: string, chave: string, clienteId: number, produtoId: number, cashbackSolicitadoCentavos = 0, quantidade = 1) {
   return fetch(`${url}/compras`, {
     method: "POST",
     headers: { authorization: `Bearer ${token}`, "content-type": "application/json", "Idempotency-Key": chave },
-    body: JSON.stringify({ clienteId, itens: [{ produtoId, quantidade: 1 }], cashbackSolicitadoCentavos }),
+    body: JSON.stringify({ clienteId, itens: [{ produtoId, quantidade }], cashbackSolicitadoCentavos }),
   });
 }
 
@@ -63,9 +63,31 @@ test("a mesma chave devolve a compra original sem duplicá-la", async () => {
     assert.equal(primeira.status, 201);
     const repetida = await registrarCompra(estado.contexto.url, estado.token, chave, estado.cliente.id, estado.produto.id);
     assert.equal(repetida.status, 200);
+    const conflito = await registrarCompra(estado.contexto.url, estado.token, chave, estado.cliente.id, estado.produto.id, 0, 2);
+    assert.equal(conflito.status, 409);
+    assert.equal((await conflito.json() as { erro: { codigo: string } }).erro.codigo, "IDEMPOTENCY_KEY_CONFLICT");
     await estado.contexto.consultarBanco(async (prisma) => {
       assert.equal(await prisma.compra.count({ where: { usuarioId: estado.usuario.id, chaveIdempotencia: chave } }), 1);
     });
+  } finally {
+    await estado.contexto.encerrar();
+  }
+});
+
+test("compra rejeita cashback acima do total, abaixo do mínimo e acima do saldo", async () => {
+  const estado = await prepararCompra(2_000);
+  try {
+    const acimaDoTotal = await registrarCompra(estado.contexto.url, estado.token, randomUUID(), estado.cliente.id, estado.produto.id, 10_001);
+    assert.equal(acimaDoTotal.status, 400);
+    assert.equal((await acimaDoTotal.json() as { erro: { codigo: string } }).erro.codigo, "CASHBACK_EXCEEDS_PURCHASE");
+
+    const abaixoDoMinimo = await registrarCompra(estado.contexto.url, estado.token, randomUUID(), estado.cliente.id, estado.produto.id, 1_000);
+    assert.equal(abaixoDoMinimo.status, 400);
+    assert.equal((await abaixoDoMinimo.json() as { erro: { codigo: string } }).erro.codigo, "CASHBACK_BELOW_PLAN_MINIMUM");
+
+    const saldoInsuficiente = await registrarCompra(estado.contexto.url, estado.token, randomUUID(), estado.cliente.id, estado.produto.id, 2_000);
+    assert.equal(saldoInsuficiente.status, 409);
+    assert.equal((await saldoInsuficiente.json() as { erro: { codigo: string } }).erro.codigo, "INSUFFICIENT_CASHBACK");
   } finally {
     await estado.contexto.encerrar();
   }

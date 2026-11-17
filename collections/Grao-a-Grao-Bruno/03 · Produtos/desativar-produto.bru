@@ -1,0 +1,19 @@
+meta {
+  name: Desativar produto
+  type: http
+  seq: 24
+}
+delete {
+  url: {{baseUrl}}/produtos/{{produtoId}}
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

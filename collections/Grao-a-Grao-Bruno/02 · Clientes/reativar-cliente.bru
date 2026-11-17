@@ -1,0 +1,19 @@
+meta {
+  name: Reativar cliente
+  type: http
+  seq: 19
+}
+post {
+  url: {{baseUrl}}/clientes/{{clienteId}}/reativar
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}

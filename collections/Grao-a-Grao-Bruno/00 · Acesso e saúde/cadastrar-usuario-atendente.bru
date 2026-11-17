@@ -1,0 +1,32 @@
+meta {
+  name: Cadastrar usuário atendente
+  type: http
+  seq: 4
+}
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "nome": "Atendente Demonstração",
+    "email": "{{atendenteEmail}}",
+    "senha": "SenhaAtendente123!"
+  }
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}

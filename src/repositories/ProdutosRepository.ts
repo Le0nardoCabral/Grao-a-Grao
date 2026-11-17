@@ -24,4 +24,8 @@ export class ProdutosRepository {
   desativar(id: number) {
     return prisma.produto.update({ where: { id }, data: { ativo: false } });
   }
+
+  reativar(id: number) {
+    return prisma.produto.updateMany({ where: { id, ativo: false }, data: { ativo: true } });
+  }
 }

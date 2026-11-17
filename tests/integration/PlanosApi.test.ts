@@ -66,6 +66,17 @@ test("administra planos com acesso, paginação e proteção de clientes ativos"
     assert.equal(plano.mensalidadeCentavos, payload.mensalidadeCentavos);
     assert.equal(plano.ativo, true);
 
+    const atualizacaoAtendente = await fetch(`${contexto.url}/planos/${plano.id}`, {
+      method: "PUT", headers: cabecalhosAtendente, body: JSON.stringify({ mensalidadeCentavos: 100 }),
+    });
+    const desativacaoAtendente = await fetch(`${contexto.url}/planos/${plano.id}`, {
+      method: "DELETE", headers: cabecalhosAtendente,
+    });
+    const reativacaoAtendente = await fetch(`${contexto.url}/planos/${plano.id}/reativar`, {
+      method: "POST", headers: cabecalhosAtendente,
+    });
+    assert.deepEqual([atualizacaoAtendente.status, desativacaoAtendente.status, reativacaoAtendente.status], [403, 403, 403]);
+
     const listagem = await fetch(
       `${contexto.url}/planos?pagina=1&limite=100`,
       { headers: cabecalhosAtendente },

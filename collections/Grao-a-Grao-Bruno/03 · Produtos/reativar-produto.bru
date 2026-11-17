@@ -1,0 +1,19 @@
+meta {
+  name: Reativar produto
+  type: http
+  seq: 25
+}
+post {
+  url: {{baseUrl}}/produtos/{{produtoId}}/reativar
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}

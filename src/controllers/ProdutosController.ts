@@ -43,4 +43,9 @@ export class ProdutosController {
     await service.excluir(Number(request.params.id));
     response.status(204).send();
   };
+
+  static reativar: RequestHandler = async (request, response) => {
+    const produto = await service.reativar(Number(request.params.id));
+    response.status(200).json(produto);
+  };
 }

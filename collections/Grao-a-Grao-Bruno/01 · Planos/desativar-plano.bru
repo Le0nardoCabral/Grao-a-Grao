@@ -1,0 +1,19 @@
+meta {
+  name: Desativar plano
+  type: http
+  seq: 10
+}
+delete {
+  url: {{baseUrl}}/planos/{{planoId}}
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

@@ -90,6 +90,27 @@ A API fica em `http://localhost:3000`. `GET /health` verifica se o processo HTTP
 está respondendo. Não execute `npx prisma migrate ...` diretamente; use os
 scripts protegidos acima.
 
+## Demonstração no Bruno ou Postman
+
+Com o banco iniciado, migrations aplicadas e a carga inicial executada, inicie a
+API. No Bruno, use **Open Collection** e selecione a pasta
+[`collections/Grao-a-Grao-Bruno`](./collections/Grao-a-Grao-Bruno), depois escolha
+o ambiente **Local**. No Postman, importe
+[`collections/Grao-a-Grao.postman_collection.json`](./collections/Grao-a-Grao.postman_collection.json).
+Ambas usam `http://localhost:3000`, fazem login com o administrador de
+demonstração (`admin.demo@grao.local` / `admin`) e salvam o token e os IDs criados
+durante a execução. Execute as requisições na ordem das pastas, começando por
+**Login ADMIN**.
+
+O seed também deixa dados prontos no banco local: três planos, três usuários,
+seis clientes (um inativo), seis produtos (um inativo), seis compras e seus lotes
+de cashback. Há um caso com uso parcial de cashback e um lote perto do vencimento
+para demonstrar o extrato. Além do administrador configurado no `.env`, existe o
+atendente `atendente.demo@grao.local`, com senha local `Atendente123!`, e um
+administrador de demonstração chamado `admin`, com senha `admin`. A carga pode
+ser executada novamente sem duplicar dados; ela não apaga nem atualiza registros
+já existentes.
+
 ## Testes e compilação
 
 Instale as dependências e inicie o MySQL do Compose. Aplique as migrations no

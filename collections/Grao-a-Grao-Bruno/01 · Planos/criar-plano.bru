@@ -1,0 +1,43 @@
+meta {
+  name: Criar plano
+  type: http
+  seq: 5
+}
+post {
+  url: {{baseUrl}}/planos
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "nome": "Plano Demo {{$guid}}",
+    "percentualBps": 500,
+    "limiteCentavos": 50000,
+    "mensalidadeCentavos": 3990,
+    "minimoUsoCentavos": 2000,
+    "dobroAniversario": true,
+    "validadeDias": 180
+  }
+}
+
+script:post-response {
+  if (res.getStatus() >= 200 && res.getStatus() < 300) {
+    const body = res.getBody();
+    bru.setVar("planoId", String(body.id));
+  }
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}

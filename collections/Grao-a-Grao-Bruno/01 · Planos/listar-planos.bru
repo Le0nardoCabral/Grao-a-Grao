@@ -1,0 +1,19 @@
+meta {
+  name: Listar planos
+  type: http
+  seq: 6
+}
+get {
+  url: {{baseUrl}}/planos?pagina=1&limite=20
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}

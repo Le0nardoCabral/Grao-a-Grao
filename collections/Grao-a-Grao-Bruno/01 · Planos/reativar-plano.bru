@@ -1,0 +1,19 @@
+meta {
+  name: Reativar plano
+  type: http
+  seq: 11
+}
+post {
+  url: {{baseUrl}}/planos/{{planoId}}/reativar
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}

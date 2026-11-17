@@ -7,7 +7,7 @@ import {
   iniciarServidor,
   limparTabelas,
   obterToken,
-} from "./support/AuxiliarTeste.js";
+} from "../support/AuxiliarTeste.js";
 
 type PlanoApi = {
   id: number;
@@ -20,6 +20,7 @@ type ClienteApi = {
   id: number;
   nome: string;
   email: string | null;
+  telefone: string | null;
   dataNascimento: string | null;
   ativo: boolean;
   plano: { id: number; nome: string };
@@ -113,11 +114,12 @@ test("cadastra, consulta, atualiza, lista, desativa e reativa clientes com acess
     const atualizacao = await fetch(`${servidor.url}/clientes/${cliente.id}`, {
       method: "PUT",
       headers: headersAtendente,
-      body: JSON.stringify({ nome: "Cliente Atualizado" }),
+      body: JSON.stringify({ telefone: "11988887777" }),
     });
     assert.equal(atualizacao.status, 200);
     const clienteAtualizado = await atualizacao.json() as ClienteApi;
-    assert.equal(clienteAtualizado.nome, "Cliente Atualizado");
+    assert.equal(clienteAtualizado.nome, "Cliente da Task");
+    assert.equal(clienteAtualizado.telefone, "11988887777");
     assert.equal(clienteAtualizado.plano.id, plano.id);
 
     const incluirInativosAtendente = await fetch(
@@ -131,6 +133,19 @@ test("cadastra, consulta, atualiza, lista, desativa e reativa clientes com acess
       headers: headersAtendente,
     });
     assert.equal(semPermissao.status, 403);
+
+    const semPermissaoTroca = await fetch(`${servidor.url}/clientes/${cliente.id}/trocar-plano`, {
+      method: "POST",
+      headers: headersAtendente,
+      body: JSON.stringify({ planoId: plano.id }),
+    });
+    assert.equal(semPermissaoTroca.status, 403);
+
+    const semPermissaoReativacao = await fetch(`${servidor.url}/clientes/${cliente.id}/reativar`, {
+      method: "POST",
+      headers: headersAtendente,
+    });
+    assert.equal(semPermissaoReativacao.status, 403);
 
     const desativacao = await fetch(`${servidor.url}/clientes/${cliente.id}`, {
       method: "DELETE",

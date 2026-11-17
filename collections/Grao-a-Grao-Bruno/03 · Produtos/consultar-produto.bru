@@ -1,0 +1,19 @@
+meta {
+  name: Consultar produto
+  type: http
+  seq: 22
+}
+get {
+  url: {{baseUrl}}/produtos/{{produtoId}}
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Consultar plano
+  type: http
+  seq: 7
+}
+get {
+  url: {{baseUrl}}/planos/{{planoId}}
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}

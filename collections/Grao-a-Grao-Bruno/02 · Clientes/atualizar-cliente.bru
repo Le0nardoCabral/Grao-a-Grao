@@ -1,0 +1,30 @@
+meta {
+  name: Atualizar cliente
+  type: http
+  seq: 15
+}
+put {
+  url: {{baseUrl}}/clientes/{{clienteId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "telefone": "11988887777"
+  }
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}

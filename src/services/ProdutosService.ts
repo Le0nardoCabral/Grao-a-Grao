@@ -56,4 +56,12 @@ export class ProdutosService {
       return mapDatabaseError(error);
     }
   }
+
+  async reativar(id: number): Promise<ProdutoResponseDto> {
+    const produto = await repository.buscarPorId(id);
+    if (!produto) throw new AppError(ErrorMessages.PRODUCT_NOT_FOUND, 404, "PRODUCT_NOT_FOUND");
+    if (produto.ativo) throw new AppError(ErrorMessages.PRODUCT_ALREADY_ACTIVE, 409, "ALREADY_ACTIVE");
+    await repository.reativar(id);
+    return (await repository.buscarPorId(id))!;
+  }
 }

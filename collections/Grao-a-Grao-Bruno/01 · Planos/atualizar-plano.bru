@@ -1,0 +1,30 @@
+meta {
+  name: Atualizar plano
+  type: http
+  seq: 8
+}
+put {
+  url: {{baseUrl}}/planos/{{planoId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "mensalidadeCentavos": 4590
+  }
+}
+
+tests {
+  test("status HTTP esperado", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}

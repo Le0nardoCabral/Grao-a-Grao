@@ -22,12 +22,12 @@ test("cadastro de cliente aparece na listagem", async () => {
     assert.equal(criacao.status, 201);
     const cliente = await criacao.json() as { id: number };
 
-    const listagem = await fetch(`${contexto.url}/clientes?page=1&limit=10`, {
+    const listagem = await fetch(`${contexto.url}/clientes?pagina=1&limite=10`, {
       headers: cabecalhos,
     });
     assert.equal(listagem.status, 200);
-    const corpo = await listagem.json() as { clientes: Array<{ id: number }> };
-    assert.ok(corpo.clientes.some((item) => item.id === cliente.id));
+    const corpo = await listagem.json() as { dados: Array<{ id: number }> };
+    assert.ok(corpo.dados.some((item) => item.id === cliente.id));
   } finally {
     await contexto.encerrar();
   }
