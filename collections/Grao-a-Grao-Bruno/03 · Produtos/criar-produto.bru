@@ -28,7 +28,7 @@ body:json {
 script:post-response {
   if (res.getStatus() >= 200 && res.getStatus() < 300) {
     const body = res.getBody();
-    bru.setVar("produtoId", String(body.id));
+    bru.setEnvVar("produtoId", String(body.id));
   }
 }
 

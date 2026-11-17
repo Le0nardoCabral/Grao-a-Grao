@@ -97,10 +97,15 @@ API. No Bruno, use **Open Collection** e selecione a pasta
 [`collections/Grao-a-Grao-Bruno`](./collections/Grao-a-Grao-Bruno), depois escolha
 o ambiente **Local**. No Postman, importe
 [`collections/Grao-a-Grao.postman_collection.json`](./collections/Grao-a-Grao.postman_collection.json).
-Ambas usam `http://localhost:3000`, fazem login com o administrador de
-demonstração (`admin.demo@grao.local` / `admin`) e salvam o token e os IDs criados
-durante a execução. Execute as requisições na ordem das pastas, começando por
-**Login ADMIN**.
+Ambas usam `http://localhost:3000` e o administrador de demonstração
+(`admin.demo@grao.local` / `admin`). No Bruno, o login salva o token no ambiente
+`local`, e as requisições de criação salvam `planoId`, `clienteId` e `produtoId`
+nesse mesmo ambiente. Assim, você pode executar as requisições uma a uma; use o
+mesmo ambiente e execute os passos de criação antes dos endpoints que dependem
+deles. Esses valores ficam no arquivo local `environments/local.bru` e não são
+compartilhados entre computadores. Em outro computador, execute o login e as
+criações novamente; se o token expirar ou o banco for recriado, repita os passos
+correspondentes.
 
 O seed também deixa dados prontos no banco local: três planos, três usuários,
 seis clientes (um inativo), seis produtos (um inativo), seis compras e seus lotes

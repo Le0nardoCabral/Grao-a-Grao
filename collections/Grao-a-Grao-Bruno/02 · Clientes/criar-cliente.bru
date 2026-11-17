@@ -30,7 +30,7 @@ body:json {
 script:post-response {
   if (res.getStatus() >= 200 && res.getStatus() < 300) {
     const body = res.getBody();
-    bru.setVar("clienteId", String(body.id));
+    bru.setEnvVar("clienteId", String(body.id));
   }
 }
 
